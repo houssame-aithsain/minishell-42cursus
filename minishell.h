@@ -5,7 +5,7 @@
 #include <stdlib.h>
 #include <unistd.h>
 #include <readline/readline.h>
-#include "./libftt/libft.h"
+#include "./libft/libft.h"
 
 void display_prompt(char **line);
 

@@ -1,6 +1,6 @@
-LIBFT = ./libftt
+LIBFT = ./libft
 
-LIB = ./libftt/libft.a
+LIB = ./libft/libft.a
 
 NAME = minishell
 
