@@ -7,6 +7,6 @@
 #include <readline/readline.h>
 #include "./libft/libft.h"
 
-void display_prompt(char **line);
+void	readl_and_exec();
 
 #endif
