@@ -9,6 +9,6 @@
 
 #define TRUE 1
 
-void	readl_and_exec();
+void	readl_and_parse();
 
 #endif

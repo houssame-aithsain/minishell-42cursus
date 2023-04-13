@@ -6,7 +6,7 @@
 /*   By: hait-hsa <hait-hsa@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/04/01 21:33:53 by hait-hsa          #+#    #+#             */
-/*   Updated: 2023/04/13 20:51:41 by hait-hsa         ###   ########.fr       */
+/*   Updated: 2023/04/13 20:57:37 by hait-hsa         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -16,10 +16,13 @@ int	ft_checker(char *line, int count, int cout)
 {
 	char x;
 
-	
+	if (cout == 1)
+		x = '"';
+	else
+		x = 39;
 	while(line && line[count])
 	{
-		if (line[count++] == '"' || line[count++] == 39)
+		if (line[count++] == x)
 			return 1;
 	}
 	return 0;

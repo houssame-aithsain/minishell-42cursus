@@ -6,7 +6,7 @@
 /*   By: hait-hsa <hait-hsa@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/04/01 19:42:55 by hait-hsa          #+#    #+#             */
-/*   Updated: 2023/04/01 21:34:00 by hait-hsa         ###   ########.fr       */
+/*   Updated: 2023/04/13 20:55:26 by hait-hsa         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,5 +14,5 @@
 
 int main(int argc, char **argv)
 {
-	readl_and_exec();
+	readl_and_parse();
 }
