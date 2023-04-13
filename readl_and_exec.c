@@ -6,7 +6,7 @@
 /*   By: hait-hsa <hait-hsa@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/04/01 21:33:53 by hait-hsa          #+#    #+#             */
-/*   Updated: 2023/04/13 20:57:37 by hait-hsa         ###   ########.fr       */
+/*   Updated: 2023/04/13 21:07:36 by hait-hsa         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -30,6 +30,7 @@ int	ft_checker(char *line, int count, int cout)
 
 char	*ft_parse(char *line)
 {
+	int		valid;
 	int		cout;
 	int		check;
 	int		count;
@@ -42,6 +43,7 @@ char	*ft_parse(char *line)
 	j = 0;
 	index = 0;
 	check = 0;
+	valid = 0;
 	arr = malloc(ft_strlen(line) + 1);
 	while(line && line[i])
 	{
@@ -53,14 +55,14 @@ char	*ft_parse(char *line)
 				cout = 2;
 			count = i;
 			count++;
+			valid++;
 			check = ft_checker(line, count, cout);
 			while(line[count] && check && (line[count] != '"' || line[count] != 39))
 			{
 				if (line[count] == '"' || line[count] == 39)
 					break;
-				if (line[count] == ' ')
+				if (line[count] == ' ' && (valid % 2))
 					line[count] = '^';
-				// printf("line:=> |%c|",line[count]);
 				count++;
 			}
 			i++;
@@ -68,7 +70,6 @@ char	*ft_parse(char *line)
 		else
 		{
 			arr[j++] = line[i++];
-			// printf("->|%c|<-",arr[j++]);
 		}
 	}
 	arr[j] = 0;
