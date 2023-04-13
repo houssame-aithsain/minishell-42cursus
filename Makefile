@@ -1,4 +1,3 @@
-
 LIBFT = ./libft
 
 LIB = ./libft/libft.a
