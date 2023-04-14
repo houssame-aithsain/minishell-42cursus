@@ -6,7 +6,7 @@
 /*   By: hait-hsa <hait-hsa@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/04/01 21:33:53 by hait-hsa          #+#    #+#             */
-/*   Updated: 2023/04/14 21:24:59 by hait-hsa         ###   ########.fr       */
+/*   Updated: 2023/04/14 22:09:32 by hait-hsa         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -44,6 +44,8 @@ int	ft_quote_type(char *line, int i)
 			return 2;
 		else if (line[i] == ' ')
 			return 3;
+		else
+			return 0;
 	}
 	return 0;
 }
@@ -80,6 +82,7 @@ void	ft_pipe_handler(char *line, t_var *var)
 
 void	ft_test1(char *line, t_var *var)
 {
+	var->copy_count = 0;
 	if (if_grep(line , var->i, 2))
 	{
 		while(line[var->i] && line[var->i] != '|')
@@ -92,15 +95,19 @@ void	ft_test1(char *line, t_var *var)
 			var->parsed_arr[var->j++] = line[var->i++];
 			var->copy_count++;
 		}
-		if ((ft_quote_type(line, var->i)) == 1)
+		if (line[var->i] != ' ')
+			var->parsed_arr[var->j++] = '^';
+		if ((ft_quote_type(line, var->i+1)) == 1)
 			var->quote_holder = '"';
-		else if ((ft_quote_type(line, var->i)) == 2)
+		else if ((ft_quote_type(line, var->i+1)) == 2)
 			var->quote_holder = 39;
-		else if ((ft_quote_type(line, var->i)) == 3)
+		else if ((ft_quote_type(line, var->i+1)) == 3)
 			var->quote_holder = ' ';
+		var->parsed_arr[var->j++] = line[var->i++];
 		var->parsed_arr[var->j++] = line[var->i++];
 		while(line[var->i] && line[var->i] != var->quote_holder)
 			var->parsed_arr[var->j++] = line[var->i++];
+		var->parsed_arr[var->j++] = var->quote_holder;
 	}
 	else
 		var->parsed_arr[var->j++] = line[var->i++];
@@ -139,11 +146,10 @@ char	*parse_input(char *line, t_var *var)
 	var->index = 0;
 	var->if_quote = 0;
 	var->valid_quote = 0;
-	var->copy_count = 0;
 	var->pipe_count = 0;
 	if (!ft_check_s_qoute(line))
 		return "ERROR: missing a quote!\n";
-	var->parsed_arr = malloc(ft_strlen(line) + 1);
+	var->parsed_arr = malloc(ft_strlen(line) + 10);
 	while(line && line[var->i])
 	{
 		if (!var->pipe_count)
