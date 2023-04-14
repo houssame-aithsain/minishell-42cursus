@@ -6,13 +6,35 @@
 /*   By: hait-hsa <hait-hsa@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/04/01 21:33:53 by hait-hsa          #+#    #+#             */
-/*   Updated: 2023/04/14 01:48:06 by hait-hsa         ###   ########.fr       */
+/*   Updated: 2023/04/14 18:41:06 by hait-hsa         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
 
-int	ft_grep(char *line, int i)
+int	ft_check_s_qoute(char *line)
+{
+	int	i;
+	int	s_qoute;
+	int	d_qoute;
+
+	i = 0;
+	s_qoute = 0;
+	d_qoute = 0;
+	while(line && line[i])
+	{
+		if (line[i] == '"')
+			s_qoute++;
+		else if (line[i] == 39)
+			d_qoute++;
+		i++;
+	}
+	if ((s_qoute % 2) || (d_qoute % 2))
+		return 0;
+	return 1;
+}
+
+int	ft_quote_type(char *line, int i)
 {
 	while(line[i])
 	{
@@ -26,67 +48,69 @@ int	ft_grep(char *line, int i)
 	return 0;
 }
 
-int	ft_checker(char *line, int count, int cout)
+int	check_quotes(char *line, int count, int cout)
 {
-	char x;
+	char quote_char;
 
 	if (cout == 1)
-		x = '"';
+		quote_char = '"';
 	else
-		x = 39;
+		quote_char = 39;
 	while(line && line[count])
 	{
-		if (line[count++] == x)
+		if (line[count++] == quote_char)
 			return 1;
 	}
 	return 0;
 }
 
-char	*ft_parse(char *line)
+char	*parse_input(char *line)
 {
-	int		pipe;
-	int		copy;
-	int		valid;
-	int		cout;
-	int		check;
-	int		count;
 	int		j;
 	int		i;
 	int		index;
-	char	*arr;
-	char	swit;
+	int		pipe_count;
+	int		copy_count;
+	int		valid_quote;
+	int		quote_type;
+	int		if_quote;
+	int		quote_count;
+	char	*parsed_arr;
+	char	quote_holder;
 
 	i = 0;
 	j = 0;
 	index = 0;
-	check = 0;
-	valid = 0;
-	copy = 0;
-	pipe = 0;
-	arr = malloc(ft_strlen(line) + 1);
+	if_quote = 0;
+	valid_quote = 0;
+	copy_count = 0;
+	pipe_count = 0;
+	if (!ft_check_s_qoute(line))
+		return "ERROR: missing a quote!\n";
+	parsed_arr = malloc(ft_strlen(line) + 1);
 	while(line && line[i])
 	{
-		if (!pipe)
+		if (!pipe_count)
 			if(line[i] && line[i] == '|' && (((line[i + 1] && line[i + 1] == 39) || (line[i - 1] && line[i - 1] == 39))
 				|| ((line[i + 1] && line[i + 1] == '"') || (line[i - 1] && line[i - 1] == '"'))))
-				arr[j++] = '^';
+				parsed_arr[j++] = '^';
 		if (line[i] && (line[i] == '"' || line[i] == 39) && (ft_memcmp(line + i, "echo", 4 || ft_memcmp(line + i, "ECHO", 4))))
 		{
 			if (line[i] == '"')
-				cout = 1;
+				quote_type = 1;
 			else
-				cout = 2;
-			count = i;
-			count++;
-			valid++;
-			check = ft_checker(line, count, cout);
-			while(line[count] && check && (line[count] != '"' || line[count] != 39))
+				quote_type = 2;
+			quote_count = i;
+			quote_count++;
+			valid_quote++;
+			if_quote = check_quotes(line, quote_count, quote_type);
+			while(line[quote_count] && if_quote && (line[quote_count] != '"' || line[quote_count] != 39))
 			{
-				if (line[count] == '"' || line[count] == 39)
+				if (line[quote_count] == '"' || line[quote_count] == 39)
 					break;
-				if (line[count] == ' ' && (valid % 2))
-					line[count] = '^';
-				count++;
+				if (line[quote_count] == ' ' && (valid_quote % 2))
+					line[quote_count] = '^';
+				quote_count++;
 			}
 			i++;
 		}
@@ -95,31 +119,31 @@ char	*ft_parse(char *line)
 			if (!ft_memcmp(line + i, "echo", 4) || !ft_memcmp(line + i, "ECHO", 4))
 			{
 				while(line[i] && line[i] != '|')
-					arr[j++] = line[i++];
+					parsed_arr[j++] = line[i++];
 			}
 			else if (!ft_memcmp(line + i, "grep", 4) || !ft_memcmp(line + i, "GREP", 4))
 			{
-				while(line[i] && copy < 4)
+				while(line[i] && copy_count < 4)
 				{
-					arr[j++] = line[i++];
-					copy++;
+					parsed_arr[j++] = line[i++];
+					copy_count++;
 				}
-				if ((ft_grep(line, i)) == 1)
-					swit = '"';
-				else if ((ft_grep(line, i)) == 2)
-					swit = 39;
-				else if ((ft_grep(line, i)) == 3)
-					swit = ' ';
-				arr[j++] = line[i++];
-				while(line[i] && line[i] != swit)
-					arr[j++] = line[i++];
+				if ((ft_quote_type(line, i)) == 1)
+					quote_holder = '"';
+				else if ((ft_quote_type(line, i)) == 2)
+					quote_holder = 39;
+				else if ((ft_quote_type(line, i)) == 3)
+					quote_holder = ' ';
+				parsed_arr[j++] = line[i++];
+				while(line[i] && line[i] != quote_holder)
+					parsed_arr[j++] = line[i++];
 			}
 			else
-				arr[j++] = line[i++];
+				parsed_arr[j++] = line[i++];
 		}
 	}
-	arr[j] = 0;
-	return arr;
+	parsed_arr[j] = 0;
+	return parsed_arr;
 }
 
 void readl_and_parse()
@@ -134,7 +158,7 @@ void readl_and_parse()
 		i = 0;
 		line = NULL;
 		line = readline("minishell$> ");
-		ncoom = ft_parse(line);
+		ncoom = parse_input(line);
 		printf("str: %s\n",ncoom);
 	}
 }
