@@ -6,7 +6,7 @@
 /*   By: hait-hsa <hait-hsa@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/04/01 21:33:53 by hait-hsa          #+#    #+#             */
-/*   Updated: 2023/04/14 18:41:06 by hait-hsa         ###   ########.fr       */
+/*   Updated: 2023/04/14 18:43:55 by hait-hsa         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -146,7 +146,7 @@ char	*parse_input(char *line)
 	return parsed_arr;
 }
 
-void readl_and_parse()
+void readl_to_parse()
 {
 	int i;
 	char *line;
