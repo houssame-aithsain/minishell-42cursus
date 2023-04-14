@@ -6,7 +6,7 @@
 /*   By: hait-hsa <hait-hsa@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/04/01 21:33:53 by hait-hsa          #+#    #+#             */
-/*   Updated: 2023/04/14 18:43:55 by hait-hsa         ###   ########.fr       */
+/*   Updated: 2023/04/14 21:24:59 by hait-hsa         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -64,101 +64,111 @@ int	check_quotes(char *line, int count, int cout)
 	return 0;
 }
 
-char	*parse_input(char *line)
+void	ft_pipe_handler(char *line, t_var *var)
 {
-	int		j;
-	int		i;
-	int		index;
-	int		pipe_count;
-	int		copy_count;
-	int		valid_quote;
-	int		quote_type;
-	int		if_quote;
-	int		quote_count;
-	char	*parsed_arr;
-	char	quote_holder;
+	if(line[var->i] && line[var->i] == '|'
+		&& (((line[var->i + 1] && line[var->i + 1] == 39)
+		|| (line[var->i - 1] && line[var->i - 1] == 39))
+		|| ((line[var->i + 1] && line[var->i + 1] == '"')
+		|| (line[var->i - 1] && line[var->i - 1] == '"'))))
+	{
+		var->parsed_arr[var->j] = '^';
+		var->j += 1;
+	}
+		
+}
 
-	i = 0;
-	j = 0;
-	index = 0;
-	if_quote = 0;
-	valid_quote = 0;
-	copy_count = 0;
-	pipe_count = 0;
+void	ft_test1(char *line, t_var *var)
+{
+	if (if_grep(line , var->i, 2))
+	{
+		while(line[var->i] && line[var->i] != '|')
+			var->parsed_arr[var->j++] = line[var->i++];
+	}
+	else if (if_grep(line, var->i, 1))
+	{
+		while(line[var->i] && var->copy_count < 4)
+		{
+			var->parsed_arr[var->j++] = line[var->i++];
+			var->copy_count++;
+		}
+		if ((ft_quote_type(line, var->i)) == 1)
+			var->quote_holder = '"';
+		else if ((ft_quote_type(line, var->i)) == 2)
+			var->quote_holder = 39;
+		else if ((ft_quote_type(line, var->i)) == 3)
+			var->quote_holder = ' ';
+		var->parsed_arr[var->j++] = line[var->i++];
+		while(line[var->i] && line[var->i] != var->quote_holder)
+			var->parsed_arr[var->j++] = line[var->i++];
+	}
+	else
+		var->parsed_arr[var->j++] = line[var->i++];
+}
+
+void	ft_test(char *line, t_var *var)
+{
+	if (if_grep(line, var->i, 0))
+	{
+		if (line[var->i] == '"')
+			var->quote_type = 1;
+		else
+			var->quote_type = 2;
+		var->quote_count = var->i;
+		var->quote_count++;
+		var->valid_quote++;
+		var->if_quote = check_quotes(line, var->quote_count, var->quote_type);
+		while(ft_loop(line, var))
+		{
+			if (line[var->quote_count] == '"' || line[var->quote_count] == 39)
+				break;
+			if (line[var->quote_count] == ' ' && (var->valid_quote % 2))
+				line[var->quote_count] = '^';
+			var->quote_count++;
+		}
+		var->i++;
+	}
+	else
+		ft_test1(line, var);
+}
+
+char	*parse_input(char *line, t_var *var)
+{
+	var->i = 0;
+	var->j = 0;
+	var->index = 0;
+	var->if_quote = 0;
+	var->valid_quote = 0;
+	var->copy_count = 0;
+	var->pipe_count = 0;
 	if (!ft_check_s_qoute(line))
 		return "ERROR: missing a quote!\n";
-	parsed_arr = malloc(ft_strlen(line) + 1);
-	while(line && line[i])
+	var->parsed_arr = malloc(ft_strlen(line) + 1);
+	while(line && line[var->i])
 	{
-		if (!pipe_count)
-			if(line[i] && line[i] == '|' && (((line[i + 1] && line[i + 1] == 39) || (line[i - 1] && line[i - 1] == 39))
-				|| ((line[i + 1] && line[i + 1] == '"') || (line[i - 1] && line[i - 1] == '"'))))
-				parsed_arr[j++] = '^';
-		if (line[i] && (line[i] == '"' || line[i] == 39) && (ft_memcmp(line + i, "echo", 4 || ft_memcmp(line + i, "ECHO", 4))))
-		{
-			if (line[i] == '"')
-				quote_type = 1;
-			else
-				quote_type = 2;
-			quote_count = i;
-			quote_count++;
-			valid_quote++;
-			if_quote = check_quotes(line, quote_count, quote_type);
-			while(line[quote_count] && if_quote && (line[quote_count] != '"' || line[quote_count] != 39))
-			{
-				if (line[quote_count] == '"' || line[quote_count] == 39)
-					break;
-				if (line[quote_count] == ' ' && (valid_quote % 2))
-					line[quote_count] = '^';
-				quote_count++;
-			}
-			i++;
-		}
-		else
-		{
-			if (!ft_memcmp(line + i, "echo", 4) || !ft_memcmp(line + i, "ECHO", 4))
-			{
-				while(line[i] && line[i] != '|')
-					parsed_arr[j++] = line[i++];
-			}
-			else if (!ft_memcmp(line + i, "grep", 4) || !ft_memcmp(line + i, "GREP", 4))
-			{
-				while(line[i] && copy_count < 4)
-				{
-					parsed_arr[j++] = line[i++];
-					copy_count++;
-				}
-				if ((ft_quote_type(line, i)) == 1)
-					quote_holder = '"';
-				else if ((ft_quote_type(line, i)) == 2)
-					quote_holder = 39;
-				else if ((ft_quote_type(line, i)) == 3)
-					quote_holder = ' ';
-				parsed_arr[j++] = line[i++];
-				while(line[i] && line[i] != quote_holder)
-					parsed_arr[j++] = line[i++];
-			}
-			else
-				parsed_arr[j++] = line[i++];
-		}
+		if (!var->pipe_count)
+			ft_pipe_handler(line, var);
+		ft_test(line, var);
 	}
-	parsed_arr[j] = 0;
-	return parsed_arr;
+	var->parsed_arr[var->j] = 0;
+	return var->parsed_arr;
 }
 
 void readl_to_parse()
 {
+	t_var *var;
 	int i;
 	char *line;
 	char *ncoom;
 
 	ncoom = NULL;
+	var = malloc(sizeof(t_var));
 	while (TRUE)
 	{
 		i = 0;
 		line = NULL;
 		line = readline("minishell$> ");
-		ncoom = parse_input(line);
+		ncoom = parse_input(line, var);
 		printf("str: %s\n",ncoom);
 	}
 }
