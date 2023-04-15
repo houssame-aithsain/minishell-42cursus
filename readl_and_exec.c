@@ -6,7 +6,7 @@
 /*   By: hait-hsa <hait-hsa@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/04/01 21:33:53 by hait-hsa          #+#    #+#             */
-/*   Updated: 2023/04/14 22:09:32 by hait-hsa         ###   ########.fr       */
+/*   Updated: 2023/04/15 00:00:54 by hait-hsa         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -64,6 +64,27 @@ int	check_quotes(char *line, int count, int cout)
 			return 1;
 	}
 	return 0;
+}
+
+void	ft_equale(char *line, t_var *var)
+{
+	int quote_type;
+	var->parsed_arr[var->j++] = line[var->i];
+	if (line[++var->i] == ' ')
+		var->parsed_arr[var->j++] = '^';
+	else if (line[var->i] == '"' || line[var->i] == 39)
+	{
+		if (ft_quote_type(line, var->i) == 1)
+			quote_type = '"';
+		else if ((ft_quote_type(line, var->i)) == 2)
+			quote_type = 39;
+		var->parsed_arr[var->j++] = line[var->i++];
+		while(line[var->i] && line[var->i] != quote_type)
+			var->parsed_arr[var->j++] = line[var->i++];
+		var->parsed_arr[var->j++] = line[var->i++];
+	}
+	printf("|%s|\n",var->parsed_arr);
+	exit(0);
 }
 
 void	ft_pipe_handler(char *line, t_var *var)
@@ -152,6 +173,8 @@ char	*parse_input(char *line, t_var *var)
 	var->parsed_arr = malloc(ft_strlen(line) + 10);
 	while(line && line[var->i])
 	{
+		// if (line[var->i] == '=')
+		// 	ft_equale(line, var);
 		if (!var->pipe_count)
 			ft_pipe_handler(line, var);
 		ft_test(line, var);
