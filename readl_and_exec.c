@@ -6,7 +6,11 @@
 /*   By: hait-hsa <hait-hsa@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/04/01 21:33:53 by hait-hsa          #+#    #+#             */
+<<<<<<< Updated upstream
 /*   Updated: 2023/04/15 00:01:13 by hait-hsa         ###   ########.fr       */
+=======
+/*   Updated: 2023/04/15 20:58:42 by hait-hsa         ###   ########.fr       */
+>>>>>>> Stashed changes
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -64,6 +68,30 @@ int	check_quotes(char *line, int count, int cout)
 			return 1;
 	}
 	return 0;
+}
+
+void	ft_echo_flag(char *line, t_var *var)
+{
+	int copy;
+
+	copy = 0;
+	while(line[var->i])
+	{
+		if (line[var->i] == ' ')
+		{
+			while(line[var->i++] == ' ')
+			{
+				if(ft_memcmp("-n", line + var->i, 2))
+				{
+					while(copy < 2)
+						var->parsed_arr[copy++] = line[var->i++];
+				}
+				var->i++;
+			}
+			
+		}
+		var->i++;
+	}
 }
 
 void	ft_equale(char *line, t_var *var)
@@ -212,6 +240,8 @@ void readl_to_parse()
 		line = NULL;
 		line = readline("minishell$> ");
 		ncoom = parse_input(line, var);
-		printf("str: %s\n",ncoom);
+		printf("(%s)\n",ncoom);
+		// free(line);
+		// free(ncoom);
 	}
 }
