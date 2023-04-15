@@ -6,7 +6,7 @@
 /*   By: hait-hsa <hait-hsa@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/04/01 21:33:53 by hait-hsa          #+#    #+#             */
-/*   Updated: 2023/04/15 18:13:23 by hait-hsa         ###   ########.fr       */
+/*   Updated: 2023/04/15 18:28:00 by hait-hsa         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -115,6 +115,21 @@ void	ft_test1(char *line, t_var *var)
 	{
 		while(line[var->i] && line[var->i] != '|')
 			var->parsed_arr[var->j++] = line[var->i++];
+		if (line[var->i] == '|')
+		{
+			var->parsed_arr[var->j++] = '|';
+			var->i++;
+		}
+		if (line[var->i] == '"')
+		{
+			var->parsed_arr[var->j++] = '"';
+			var->i++;
+		}
+		if (line[var->i] == 39)
+		{
+			var->parsed_arr[var->j++] = 39;
+			var->i++;
+		}
 	}
 	else if (if_grep(line, var->i, GREP))
 	{
