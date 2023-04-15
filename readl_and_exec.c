@@ -6,7 +6,7 @@
 /*   By: hait-hsa <hait-hsa@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/04/01 21:33:53 by hait-hsa          #+#    #+#             */
-/*   Updated: 2023/04/15 00:00:54 by hait-hsa         ###   ########.fr       */
+/*   Updated: 2023/04/15 00:01:13 by hait-hsa         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -173,6 +173,7 @@ char	*parse_input(char *line, t_var *var)
 	var->parsed_arr = malloc(ft_strlen(line) + 10);
 	while(line && line[var->i])
 	{
+		
 		// if (line[var->i] == '=')
 		// 	ft_equale(line, var);
 		if (!var->pipe_count)
