@@ -92,6 +92,7 @@ void	ft_echo_flag(char *line, t_var *var)
 		}
 		var->i++;
 	}
+	
 }
 
 void	ft_equale(char *line, t_var *var)
