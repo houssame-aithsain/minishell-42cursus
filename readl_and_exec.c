@@ -6,7 +6,7 @@
 /*   By: hait-hsa <hait-hsa@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/04/01 21:33:53 by hait-hsa          #+#    #+#             */
-/*   Updated: 2023/04/15 00:01:13 by hait-hsa         ###   ########.fr       */
+/*   Updated: 2023/04/15 18:13:23 by hait-hsa         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -83,8 +83,15 @@ void	ft_equale(char *line, t_var *var)
 			var->parsed_arr[var->j++] = line[var->i++];
 		var->parsed_arr[var->j++] = line[var->i++];
 	}
-	printf("|%s|\n",var->parsed_arr);
-	exit(0);
+	else
+	{
+		while(line[var->i] && line[var->i] != ' ')
+			var->parsed_arr[var->j++] = line[var->i++];
+		while(line[var->i] && line[var->i] == ' ')
+			var->i++;
+		if (line[var->i])
+			var->parsed_arr[var->j++] = '^';
+	}
 }
 
 void	ft_pipe_handler(char *line, t_var *var)
@@ -104,12 +111,12 @@ void	ft_pipe_handler(char *line, t_var *var)
 void	ft_test1(char *line, t_var *var)
 {
 	var->copy_count = 0;
-	if (if_grep(line , var->i, 2))
+	if (if_grep(line , var->i, ECHO))
 	{
 		while(line[var->i] && line[var->i] != '|')
 			var->parsed_arr[var->j++] = line[var->i++];
 	}
-	else if (if_grep(line, var->i, 1))
+	else if (if_grep(line, var->i, GREP))
 	{
 		while(line[var->i] && var->copy_count < 4)
 		{
@@ -136,7 +143,7 @@ void	ft_test1(char *line, t_var *var)
 
 void	ft_test(char *line, t_var *var)
 {
-	if (if_grep(line, var->i, 0))
+	if (if_grep(line, var->i, ECHO_CHECK))
 	{
 		if (line[var->i] == '"')
 			var->quote_type = 1;
@@ -174,8 +181,8 @@ char	*parse_input(char *line, t_var *var)
 	while(line && line[var->i])
 	{
 		
-		// if (line[var->i] == '=')
-		// 	ft_equale(line, var);
+		if (line[var->i] == '=')
+			ft_equale(line, var);
 		if (!var->pipe_count)
 			ft_pipe_handler(line, var);
 		ft_test(line, var);
@@ -198,6 +205,7 @@ void readl_to_parse()
 		i = 0;
 		line = NULL;
 		line = readline("minishell$> ");
+		add_history(line);
 		ncoom = parse_input(line, var);
 		printf("str: %s\n",ncoom);
 	}

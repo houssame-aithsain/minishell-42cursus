@@ -8,6 +8,10 @@
 #include "./libft/libft.h"
 
 #define TRUE 1
+#define ECHO 2
+#define GREP 1
+#define ECHO_CHECK 0
+
 
 typedef struct var
 {
