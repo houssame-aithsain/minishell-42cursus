@@ -4,7 +4,7 @@ LIB = ./libft/libft.a
 
 NAME = minishell
 
-SRC = minishell.c readl_and_exec.c
+SRC = minishell.c readl_and_exec.c utils.C
 
 OBJCTS = ${SRC:.c=.o}
 

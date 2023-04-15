@@ -28,6 +28,7 @@ typedef struct var
 	char	quote_holder;
 } t_var;
 
+
 void	readl_to_parse();
 int		if_grep(char *line, int i, int flag);
 char	*parse_input(char *line, t_var *var);

@@ -6,13 +6,10 @@
 /*   By: hait-hsa <hait-hsa@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/04/01 21:33:53 by hait-hsa          #+#    #+#             */
-<<<<<<< Updated upstream
-/*   Updated: 2023/04/15 00:01:13 by hait-hsa         ###   ########.fr       */
-=======
-/*   Updated: 2023/04/15 20:58:42 by hait-hsa         ###   ########.fr       */
->>>>>>> Stashed changes
+/*   Updated: 2023/04/15 21:36:05 by hait-hsa         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
+
 
 #include "minishell.h"
 
@@ -92,7 +89,7 @@ void	ft_echo_flag(char *line, t_var *var)
 		}
 		var->i++;
 	}
-	
+
 }
 
 void	ft_equale(char *line, t_var *var)
