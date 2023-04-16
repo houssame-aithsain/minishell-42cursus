@@ -6,7 +6,7 @@
 /*   By: hait-hsa <hait-hsa@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/04/01 21:33:53 by hait-hsa          #+#    #+#             */
-/*   Updated: 2023/04/15 21:46:34 by hait-hsa         ###   ########.fr       */
+/*   Updated: 2023/04/16 21:46:15 by hait-hsa         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -66,27 +66,68 @@ int	check_quotes(char *line, int count, int cout)
 	return 0;
 }
 
+int	if_n(char *line, int i)
+{
+	int	check;
+
+	check = 0;
+	while(line[i])
+	{
+		if (!ft_memcmp("-n", line + i, 2))
+		{
+			i += 2;
+			if (check)
+			{
+				if (line[i] != '"' && line[i] != 39)
+					return 0;
+				else
+				{
+					while(line[i] && (line[i] == '"' || line[i] == 39))
+						i++;
+					if (line[i] == ' ' || !line[i])
+						return 1;
+					else
+						return 0;
+				}
+			}
+			else
+				return 1;
+		}
+		if (line[i] == '"' || line[i] == 39)
+		{
+			check = 1;
+			while(line[i] == '"' || line[i] == 39)
+				i++;
+			if (!ft_memcmp("-n", line + i, 2))
+				i--;
+			else
+				return 0;
+		}
+		i++;
+	}
+	return 0;
+}
+
 void	ft_echo_flag(char *line, t_var *var)
 {
 	int copy;
 
+	// printf("yeah!\n");
+		// exit(0);
 	copy = 0;
-	while(line[var->i])
-	{
-		if (line[var->i] == ' ')
-		{
-			while(line[var->i++] == ' ')
-			{
-				if(ft_memcmp("-n", line + var->i, 2))
-				{
-					while(copy < 2)
-						var->parsed_arr[copy++] = line[var->i++];
-				}
-				var->i++;
-			}
-		}
+	while(line[var->i] && (line[var->i] == '"' || line[var->i] == 39 || line[var->i] == ' '))
 		var->i++;
+	if(ft_memcmp("-n", line + var->i, 2))
+	{
+		while(line[var->i] && copy < 2)
+		{
+			var->parsed_arr[var->j++] = line[var->i++];
+			copy++;
+		}
 	}
+	printf("|%c|\n",line[var->i]);
+	while(line[var->i] && (line[var->i] == '"' || line[var->i] == 39))
+		var->i++;
 }
 
 void	ft_equale(char *line, t_var *var)
@@ -133,11 +174,22 @@ void	ft_pipe_handler(char *line, t_var *var)
 
 void	ft_test1(char *line, t_var *var)
 {
+	int echo;
+
+	echo = 0;
 	var->copy_count = 0;
 	if (if_grep(line , var->i, ECHO))
 	{
 		while(line[var->i] && line[var->i] != '|')
+		{
+			if (echo >= 4)
+				if(if_n(line, var->i))
+					ft_echo_flag(line, var);
+			// printf("nope!\n");
+				// exit(0);
 			var->parsed_arr[var->j++] = line[var->i++];
+			echo++;
+		}
 		if (line[var->i] == '|')
 		{
 			var->parsed_arr[var->j++] = '|';
