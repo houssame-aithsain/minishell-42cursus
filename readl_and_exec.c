@@ -6,7 +6,7 @@
 /*   By: hait-hsa <hait-hsa@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/04/01 21:33:53 by hait-hsa          #+#    #+#             */
-/*   Updated: 2023/04/16 21:46:15 by hait-hsa         ###   ########.fr       */
+/*   Updated: 2023/04/17 16:56:37 by hait-hsa         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -117,7 +117,8 @@ void	ft_echo_flag(char *line, t_var *var)
 	copy = 0;
 	while(line[var->i] && (line[var->i] == '"' || line[var->i] == 39 || line[var->i] == ' '))
 		var->i++;
-	if(ft_memcmp("-n", line + var->i, 2))
+	var->parsed_arr[var->j++] = ' ';
+	if(!ft_memcmp("-n", line + var->i, 2))
 	{
 		while(line[var->i] && copy < 2)
 		{
@@ -125,7 +126,6 @@ void	ft_echo_flag(char *line, t_var *var)
 			copy++;
 		}
 	}
-	printf("|%c|\n",line[var->i]);
 	while(line[var->i] && (line[var->i] == '"' || line[var->i] == 39))
 		var->i++;
 }
