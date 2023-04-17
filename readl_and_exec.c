@@ -6,7 +6,7 @@
 /*   By: hait-hsa <hait-hsa@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/04/01 21:33:53 by hait-hsa          #+#    #+#             */
-/*   Updated: 2023/04/17 16:56:37 by hait-hsa         ###   ########.fr       */
+/*   Updated: 2023/04/17 18:32:08 by hait-hsa         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -68,9 +68,11 @@ int	check_quotes(char *line, int count, int cout)
 
 int	if_n(char *line, int i)
 {
+	int qoute_numb;
 	int	check;
 
 	check = 0;
+	qoute_numb = 0;
 	while(line[i])
 	{
 		if (!ft_memcmp("-n", line + i, 2))
@@ -78,7 +80,7 @@ int	if_n(char *line, int i)
 			i += 2;
 			if (check)
 			{
-				if (line[i] != '"' && line[i] != 39)
+				if (line[i] != '"' && line[i] != 39 && (qoute_numb % 2))
 					return 0;
 				else
 				{
@@ -97,7 +99,10 @@ int	if_n(char *line, int i)
 		{
 			check = 1;
 			while(line[i] == '"' || line[i] == 39)
+			{
 				i++;
+				qoute_numb++;
+			}
 			if (!ft_memcmp("-n", line + i, 2))
 				i--;
 			else
@@ -113,7 +118,17 @@ void	ft_echo_flag(char *line, t_var *var)
 	int copy;
 
 	// printf("yeah!\n");
-		// exit(0);
+	// 	exit(0);
+	// copy = 0;
+	// if(!ft_memcmp("-n", line + var->i, 2))
+	// {
+	// 	while(line[var->i] && copy < 2)
+	// 	{
+	// 		var->parsed_arr[var->j++] = line[var->i++];
+	// 		copy++;
+	// 	}
+	// }
+	// printf("|%s|\n",line + var->i);
 	copy = 0;
 	while(line[var->i] && (line[var->i] == '"' || line[var->i] == 39 || line[var->i] == ' '))
 		var->i++;
@@ -186,7 +201,7 @@ void	ft_test1(char *line, t_var *var)
 				if(if_n(line, var->i))
 					ft_echo_flag(line, var);
 			// printf("nope!\n");
-				// exit(0);
+			// 	exit(0);
 			var->parsed_arr[var->j++] = line[var->i++];
 			echo++;
 		}
