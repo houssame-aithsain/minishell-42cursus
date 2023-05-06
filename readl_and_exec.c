@@ -6,14 +6,36 @@
 /*   By: hait-hsa <hait-hsa@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/04/01 21:33:53 by hait-hsa          #+#    #+#             */
-/*   Updated: 2023/04/17 18:32:08 by hait-hsa         ###   ########.fr       */
+/*   Updated: 2023/05/06 16:40:31 by hait-hsa         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
 
+// void	check_qoute_inside(char *line, char qoute_type)
+// {
+// 	char qoute_holder;
+// 	int  qoute_count;
+// 	int  originale_qoute;
+// 	int i;
+
+// 	i = 0;
+// 	originale_qoute = 0;
+// 	qoute_count = 0;
+// 	if (qoute_type == '"')
+// 		qoute_holder = 39;
+// 	else if (qoute_type == 39)
+// 		qoute_holder = '"';
+// 	while(line[i])
+// 	{
+// 		if (line[i] == qoute_holder && !originale_qoute)
+// 			qoute_count++;
+// 	}
+// }
+
 int	ft_check_s_qoute(char *line)
 {
+	char	qoute_type;
 	int	i;
 	int	s_qoute;
 	int	d_qoute;
@@ -23,14 +45,33 @@ int	ft_check_s_qoute(char *line)
 	d_qoute = 0;
 	while(line && line[i])
 	{
+		if (if_grep(line, i, ECHO) || if_grep(line, i, GREP))
+		{
+			while(line[i])
+			{
+				if (line[i] == '|' && (!line[i + 1] || line[i + 1] == ' '))
+				{
+					i++;
+					break;
+				}
+				i++;
+			}
+		}
 		if (line[i] == '"')
 			s_qoute++;
 		else if (line[i] == 39)
 			d_qoute++;
+		if (line[i] == '|')
+			break;
 		i++;
 	}
 	if ((s_qoute % 2) || (d_qoute % 2))
-		return 0;
+		return (0);
+	// if (s_qoute % 2)
+	// 	qoute_type = 39;
+	// else if (d_qoute %2)
+	// 	qoute_type = '"';
+	// check_qoute_inside(line, qoute_type);
 	return 1;
 }
 
@@ -132,7 +173,7 @@ void	ft_echo_flag(char *line, t_var *var)
 	copy = 0;
 	while(line[var->i] && (line[var->i] == '"' || line[var->i] == 39 || line[var->i] == ' '))
 		var->i++;
-	var->parsed_arr[var->j++] = ' ';
+	// var->parsed_arr[var->j++] = ' ';
 	if(!ft_memcmp("-n", line + var->i, 2))
 	{
 		while(line[var->i] && copy < 2)
@@ -143,6 +184,8 @@ void	ft_echo_flag(char *line, t_var *var)
 	}
 	while(line[var->i] && (line[var->i] == '"' || line[var->i] == 39))
 		var->i++;
+	// printf("%s|\n",var->parsed_arr);
+	// exit(0);
 }
 
 void	ft_equale(char *line, t_var *var)
@@ -175,16 +218,8 @@ void	ft_equale(char *line, t_var *var)
 
 void	ft_pipe_handler(char *line, t_var *var)
 {
-	if(line[var->i] && line[var->i] == '|'
-		&& (((line[var->i + 1] && line[var->i + 1] == 39)
-		|| (line[var->i - 1] && line[var->i - 1] == 39))
-		|| ((line[var->i + 1] && line[var->i + 1] == '"')
-		|| (line[var->i - 1] && line[var->i - 1] == '"'))))
-	{
-		var->parsed_arr[var->j] = '^';
-		var->j += 1;
-	}
-		
+	if(line[var->i] && line[var->i] == '|' && (!line[var->i + 1]))
+		printf("pipe error!\n");
 }
 
 void	ft_test1(char *line, t_var *var)
@@ -197,7 +232,7 @@ void	ft_test1(char *line, t_var *var)
 	{
 		while(line[var->i] && line[var->i] != '|')
 		{
-			if (echo >= 4)
+			if (echo >= 5)
 				if(if_n(line, var->i))
 					ft_echo_flag(line, var);
 			// printf("nope!\n");
