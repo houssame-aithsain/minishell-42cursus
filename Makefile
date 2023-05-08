@@ -4,7 +4,7 @@ LIB = ./libft/libft.a
 
 NAME = minishell
 
-SRC = minishell.c readl_and_exec.c utils.c
+SRC = minishell.c readl_and_exec.c utils.c nodepush.c
 
 OBJCTS = ${SRC:.c=.o}
 
@@ -16,5 +16,8 @@ all : ${OBJCTS}
 
 re : fclean all
 
-fclean:
+clean :
+		rm -f *.o
+
+fclean: clean
 	rm -rf *.o ${NAME}

@@ -6,7 +6,7 @@
 /*   By: hait-hsa <hait-hsa@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/04/01 21:33:53 by hait-hsa          #+#    #+#             */
-/*   Updated: 2023/05/06 16:40:31 by hait-hsa         ###   ########.fr       */
+/*   Updated: 2023/05/08 18:17:51 by hait-hsa         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -263,8 +263,8 @@ void	ft_test1(char *line, t_var *var)
 			var->parsed_arr[var->j++] = line[var->i++];
 			var->copy_count++;
 		}
-		if (line[var->i] != ' ')
-			var->parsed_arr[var->j++] = '^';
+		// if (line[var->i] != ' ')
+		// 	var->parsed_arr[var->j++] = '^';
 		if ((ft_quote_type(line, var->i+1)) == 1)
 			var->quote_holder = '"';
 		else if ((ft_quote_type(line, var->i+1)) == 2)
@@ -331,8 +331,47 @@ char	*parse_input(char *line, t_var *var)
 	return var->parsed_arr;
 }
 
+void	get_the_right_forma(char *ncoom, t_list **ptr)
+{
+	char *holder;
+	int i;
+	int j;
+	
+	i = 0;
+	holder = malloc(sizeof(char) * ft_strlen(ncoom));
+	*ptr = malloc(sizeof(t_list));
+	*ptr = NULL;
+	while(ncoom && ncoom[i])
+	{
+		j = 0;
+		while(ncoom[i] && ncoom[i] != '|')
+			holder[j++] = ncoom[i++];
+		if (ncoom[i] == '|')
+		{
+			holder[j++] = '|';
+			i++;
+		}
+		holder[j] = 0;
+		// printf("holder = %s\n", holder);
+		nodepush(ptr, holder, 1);
+	}
+
+	// int x = 0;
+	// while(ptr)
+	// {
+	// 	x = 0;
+	// 	printf("-------------------\n");
+	// 	printf("command=[%s]\n",ptr->command);
+	// 	while(ptr->arg[x])
+	// 		printf("arg=[%s]\n",ptr->arg[x++]);
+	// 	printf("operator=[%c]\n",ptr->operator);
+	// 	ptr = ptr->link;
+	// }
+}
+
 void readl_to_parse()
 {
+	t_list *ptr;
 	t_var *var;
 	int i;
 	char *line;
@@ -347,8 +386,25 @@ void readl_to_parse()
 		line = readline("minishell$> ");
 		add_history(line);
 		ncoom = parse_input(line, var);
-		printf("(%s)\n",ncoom);
+		get_the_right_forma(ncoom, &ptr);
+
+
+		// =========================>ptr is the head bitch!
+
+		
+		// printf("(%s)\n",ncoom);
 		// free(line);
 		// free(ncoom);
+	// 	int x = 0;
+	// while(ptr)
+	// {
+	// 	x = 0;
+	// 	printf("-------------------\n");
+	// 	printf("command=[%s]\n",ptr->command);
+	// 	while(ptr->arg[x])
+	// 		printf("arg=[%s]\n",ptr->arg[x++]);
+	// 	printf("operator=[%c]\n",ptr->operator);
+	// 	ptr = ptr->link;
+	// }
 	}
 }

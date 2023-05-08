@@ -12,6 +12,12 @@
 #define GREP 1
 #define ECHO_CHECK 0
 
+typedef struct node{
+	char *command;
+	char **arg;
+	char operator;
+	struct node *link;
+} t_list;
 
 typedef struct var
 {
@@ -32,4 +38,5 @@ void	readl_to_parse();
 int		if_grep(char *line, int i, int flag);
 char	*parse_input(char *line, t_var *var);
 int		ft_loop(char *line, t_var *var);
+void	nodepush(t_list **head, char *result, int lent);
 #endif
