@@ -6,7 +6,7 @@
 /*   By: hait-hsa <hait-hsa@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/04/01 21:33:53 by hait-hsa          #+#    #+#             */
-/*   Updated: 2023/05/08 21:15:17 by hait-hsa         ###   ########.fr       */
+/*   Updated: 2023/05/08 21:37:37 by hait-hsa         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -46,11 +46,6 @@ int	ft_check_s_qoute(char *line)
 	}
 	if ((s_qoute % 2) || (d_qoute % 2))
 		return (0);
-	// if (s_qoute % 2)
-	// 	qoute_type = 39;
-	// else if (d_qoute %2)
-	// 	qoute_type = '"';
-	// check_qoute_inside(line, qoute_type);
 	return 1;
 }
 
@@ -198,7 +193,7 @@ void	ft_equale(char *line, t_var *var)
 void	ft_pipe_handler(char *line, t_var *var)
 {
 	if(line[var->i] && line[var->i] == '|' && (!line[var->i + 1]))
-		printf("pipe error!\n");
+		printf("pipe error!");
 }
 
 void	ft_test1(char *line, t_var *var)
@@ -295,7 +290,7 @@ char	*parse_input(char *line, t_var *var)
 	var->valid_quote = 0;
 	var->pipe_count = 0;
 	if (!ft_check_s_qoute(line))
-		return "ERROR: missing a quote!\n";
+		return "ERROR: missing a quote!";
 	var->parsed_arr = malloc(ft_strlen(line) + 10);
 	while(line && line[var->i])
 	{
@@ -362,16 +357,16 @@ void readl_to_parse()
 		// printf("(%s)\n",ncoom);
 		// free(line);
 		// free(ncoom);
-		// int x = 0;
-		// while(ptr)
-		// {
-		// 	x = 0;
-		// 	printf("-------------------\n");
-		// 	printf("command=[%s]\n",ptr->command);
-		// 	while(ptr->arg[x])
-		// 		printf("arg=[%s]\n",ptr->arg[x++]);
-		// 	printf("operator=[%c]\n",ptr->operator);
-		// 	ptr = ptr->link;
-		// }
+		int x = 0;
+		while(ptr)
+		{
+			x = 0;
+			printf("-------------------\n");
+			printf("command=[%s]\n",ptr->command);
+			while(ptr->arg[x])
+				printf("arg=[%s]\n",ptr->arg[x++]);
+			printf("operator=[%c]\n",ptr->operator);
+			ptr = ptr->link;
+		}
 	}
 }
