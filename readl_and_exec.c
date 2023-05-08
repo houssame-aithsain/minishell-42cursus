@@ -6,32 +6,11 @@
 /*   By: hait-hsa <hait-hsa@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/04/01 21:33:53 by hait-hsa          #+#    #+#             */
-/*   Updated: 2023/05/08 21:10:45 by hait-hsa         ###   ########.fr       */
+/*   Updated: 2023/05/08 21:13:56 by hait-hsa         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
-
-// void	check_qoute_inside(char *line, char qoute_type)
-// {
-// 	char qoute_holder;
-// 	int  qoute_count;
-// 	int  originale_qoute;
-// 	int i;
-
-// 	i = 0;
-// 	originale_qoute = 0;
-// 	qoute_count = 0;
-// 	if (qoute_type == '"')
-// 		qoute_holder = 39;
-// 	else if (qoute_type == 39)
-// 		qoute_holder = '"';
-// 	while(line[i])
-// 	{
-// 		if (line[i] == qoute_holder && !originale_qoute)
-// 			qoute_count++;
-// 	}
-// }
 
 int	ft_check_s_qoute(char *line)
 {
@@ -356,17 +335,6 @@ void	get_the_right_forma(char *ncoom, t_list **ptr)
 		nodepush(ptr, holder, 1);
 	}
 
-	// int x = 0;
-	// while(ptr)
-	// {
-	// 	x = 0;
-	// 	printf("-------------------\n");
-	// 	printf("command=[%s]\n",ptr->command);
-	// 	while(ptr->arg[x])
-	// 		printf("arg=[%s]\n",ptr->arg[x++]);
-	// 	printf("operator=[%c]\n",ptr->operator);
-	// 	ptr = ptr->link;
-	// }
 }
 
 void readl_to_parse()
@@ -389,22 +357,21 @@ void readl_to_parse()
 		get_the_right_forma(ncoom, &ptr);
 
 
-		// =========================>ptr is the head bitch!<==========================//
+		// =========================>ptr is the head bitch!<===========================//
 
-		
 		// printf("(%s)\n",ncoom);
 		// free(line);
 		// free(ncoom);
-	// int x = 0;
-	// while(ptr)
-	// {
-	// 	x = 0;
-	// 	printf("-------------------\n");
-	// 	printf("command=[%s]\n",ptr->command);
-	// 	while(ptr->arg[x])
-	// 		printf("arg=[%s]\n",ptr->arg[x++]);
-	// 	printf("operator=[%c]\n",ptr->operator);
-	// 	ptr = ptr->link;
-	// }
+		// int x = 0;
+		// while(ptr)
+		// {
+		// 	x = 0;
+		// 	printf("-------------------\n");
+		// 	printf("command=[%s]\n",ptr->command);
+		// 	while(ptr->arg[x])
+		// 		printf("arg=[%s]\n",ptr->arg[x++]);
+		// 	printf("operator=[%c]\n",ptr->operator);
+		// 	ptr = ptr->link;
+		// }
 	}
 }
