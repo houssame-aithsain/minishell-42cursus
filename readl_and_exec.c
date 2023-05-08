@@ -6,7 +6,7 @@
 /*   By: hait-hsa <hait-hsa@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/04/01 21:33:53 by hait-hsa          #+#    #+#             */
-/*   Updated: 2023/05/08 18:17:51 by hait-hsa         ###   ########.fr       */
+/*   Updated: 2023/05/08 21:10:45 by hait-hsa         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -389,13 +389,13 @@ void readl_to_parse()
 		get_the_right_forma(ncoom, &ptr);
 
 
-		// =========================>ptr is the head bitch!
+		// =========================>ptr is the head bitch!<==========================//
 
 		
 		// printf("(%s)\n",ncoom);
 		// free(line);
 		// free(ncoom);
-	// 	int x = 0;
+	// int x = 0;
 	// while(ptr)
 	// {
 	// 	x = 0;
