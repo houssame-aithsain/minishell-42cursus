@@ -6,11 +6,55 @@
 /*   By: hait-hsa <hait-hsa@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/04/01 21:33:53 by hait-hsa          #+#    #+#             */
-/*   Updated: 2023/05/08 21:37:37 by hait-hsa         ###   ########.fr       */
+/*   Updated: 2023/05/09 17:51:56 by hait-hsa         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
+
+char	*leave_it_for_me(char *str)
+{
+	// char *arr;
+	char qoute_type;
+	int i;
+	int single_qoute;
+	int doble_qoute;
+
+	single_qoute = 0;
+	doble_qoute = 0;
+	i = 0;
+	while(str && str[i])
+	{
+		if (str[i] == '"')
+			doble_qoute++;
+		else if (str[i] == 39)
+			single_qoute++;
+		i++;
+	}
+	if (!(single_qoute % 2) && single_qoute)
+		qoute_type =  39;
+	else if (!(doble_qoute % 2) && doble_qoute)
+		qoute_type =  '"';
+	i = 0;
+	while(str && str[i])
+	{
+		if (str[i] == qoute_type)
+		{
+			while(str && str[i])
+			{
+				i++;
+				if (str[i] == qoute_type)
+					break;
+				if (str[i] == ' ')
+					str[i] = '~';
+			}
+		}
+		if (!str[i])
+			break;
+		i++;
+	}
+	return str;
+}
 
 int	ft_check_s_qoute(char *line)
 {
@@ -327,7 +371,9 @@ void	get_the_right_forma(char *ncoom, t_list **ptr)
 		}
 		holder[j] = 0;
 		// printf("holder = %s\n", holder);
-		nodepush(ptr, holder, 1);
+		holder = leave_it_for_me(holder);
+		printf("[%s]\n",holder);
+		// nodepush(ptr, holder, 1);
 	}
 
 }

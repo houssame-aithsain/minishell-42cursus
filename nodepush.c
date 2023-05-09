@@ -6,11 +6,35 @@
 /*   By: hait-hsa <hait-hsa@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/01/19 18:49:57 by hait-hsa          #+#    #+#             */
-/*   Updated: 2023/05/08 18:12:39 by hait-hsa         ###   ########.fr       */
+/*   Updated: 2023/05/09 17:22:34 by hait-hsa         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
+
+int	check_if_a_qoute(char *str)
+{
+	int i;
+	int single_qoute;
+	int doble_qoute;
+
+	single_qoute = 0;
+	doble_qoute = 0;
+	i = 0;
+	while(str && str[i])
+	{
+		if (str[i] == '"')
+			doble_qoute++;
+		else if (str[i] == 39)
+			single_qoute++;
+		i++;
+	}
+	if (!(single_qoute % 2) && single_qoute)
+		return 1;
+	else if (!(doble_qoute % 2) && doble_qoute)
+		return 2;
+	return 0;
+}
 
 void	ft_strlcpy_shell(t_list *dst, char *str)
 {
@@ -22,7 +46,12 @@ void	ft_strlcpy_shell(t_list *dst, char *str)
 	i = 0;
 	j = 0;
 	dst->operator = 0;
-	split = ft_split(str, ' ');
+	if (!check_if_a_qoute(str))
+		split = ft_split(str, ' ');
+	else if (check_if_a_qoute(str) == 1)
+		split = ft_split(str, 39);
+	else if (check_if_a_qoute(str) == 2)
+		split = ft_split(str, '"');
 	while(split[i])
 		i++;
 	dst->arg = malloc(sizeof(char *) * i + 1);
