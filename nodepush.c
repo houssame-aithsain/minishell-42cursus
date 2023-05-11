@@ -6,38 +6,15 @@
 /*   By: hait-hsa <hait-hsa@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/01/19 18:49:57 by hait-hsa          #+#    #+#             */
-/*   Updated: 2023/05/09 17:22:34 by hait-hsa         ###   ########.fr       */
+/*   Updated: 2023/05/11 17:12:25 by hait-hsa         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
 
-int	check_if_a_qoute(char *str)
-{
-	int i;
-	int single_qoute;
-	int doble_qoute;
-
-	single_qoute = 0;
-	doble_qoute = 0;
-	i = 0;
-	while(str && str[i])
-	{
-		if (str[i] == '"')
-			doble_qoute++;
-		else if (str[i] == 39)
-			single_qoute++;
-		i++;
-	}
-	if (!(single_qoute % 2) && single_qoute)
-		return 1;
-	else if (!(doble_qoute % 2) && doble_qoute)
-		return 2;
-	return 0;
-}
-
 void	ft_strlcpy_shell(t_list *dst, char *str)
 {
+	int space;
 	int j;
 	int i;
 	char **split;
@@ -45,13 +22,9 @@ void	ft_strlcpy_shell(t_list *dst, char *str)
 	// printf("str => %s\n", str);
 	i = 0;
 	j = 0;
+	space = 0;
 	dst->operator = 0;
-	if (!check_if_a_qoute(str))
 		split = ft_split(str, ' ');
-	else if (check_if_a_qoute(str) == 1)
-		split = ft_split(str, 39);
-	else if (check_if_a_qoute(str) == 2)
-		split = ft_split(str, '"');
 	while(split[i])
 		i++;
 	dst->arg = malloc(sizeof(char *) * i + 1);
@@ -63,21 +36,37 @@ void	ft_strlcpy_shell(t_list *dst, char *str)
 		if (split[i][j] == '|')
 		{
 			dst->operator = split[i][j];
+			split[i][j] = 0;
 			break;
 		}
+	}
+	while(dst->command && dst->command[space])
+	{
+		if (dst->command[space] == '~')
+			dst->command[space] = ' ';
+		space++;
 	}
 	dst->command[j] = 0;
 	j = 0;
 	while(split && split[++i])
 	{
 		if (split[i][ft_strlen(split[i]) - 1] == '|')
-			dst->operator = split[i][ft_strlen(split[i]) - 1];
-		else
 		{
-			dst->arg[j] = malloc(sizeof(char) * ft_strlen(split[i]));
-			ft_strlcpy(dst->arg[j], split[i], ft_strlen(split[i]) + 1);
-			j++;	
+			dst->operator = split[i][ft_strlen(split[i]) - 1];
+			split[i][ft_strlen(split[i]) - 1] = 0;
 		}
+		space = 0;
+		dst->arg[j] = malloc(sizeof(char) * ft_strlen(split[i]));
+		ft_strlcpy(dst->arg[j], split[i], ft_strlen(split[i]) + 1);
+		if (dst->arg[j] && dst->arg[j][ft_strlen(dst->arg[j]) - 1] == '|')
+			dst->arg[j][ft_strlen(dst->arg[j]) - 1] = 0;
+		while(dst->arg[j] && dst->arg[j][space])
+		{
+			if (dst->arg[j][space] == '~')
+				dst->arg[j][space] = ' ';
+			space++;
+		}
+		j++;		
 	}
 	dst->arg[j] = NULL;
 }

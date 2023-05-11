@@ -8,14 +8,15 @@
 #include "./libft/libft.h"
 
 #define TRUE 1
-#define ECHO 2
-#define GREP 1
+#define D_QOUTE 2
+#define S_QOUTE 1
 #define ECHO_CHECK 0
 
 typedef struct node{
 	char *command;
 	char **arg;
 	char operator;
+	int	error;
 	struct node *link;
 } t_list;
 
