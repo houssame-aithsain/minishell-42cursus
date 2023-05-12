@@ -6,7 +6,7 @@
 /*   By: hait-hsa <hait-hsa@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/01/19 18:49:57 by hait-hsa          #+#    #+#             */
-/*   Updated: 2023/05/12 23:24:48 by hait-hsa         ###   ########.fr       */
+/*   Updated: 2023/05/12 23:42:47 by hait-hsa         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -23,6 +23,8 @@ void	ft_strlcpy_shell(t_list *dst, char *str)
 	i = 0;
 	j = 0;
 	space = 0;
+	dst->error = malloc(sizeof(int));
+	*dst->error = 0;
 	dst->operator = 0;
 		split = ft_split(str, ' ');
 	while(split[i])

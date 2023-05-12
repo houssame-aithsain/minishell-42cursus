@@ -16,7 +16,7 @@ typedef struct node{
 	char	*command;
 	char	**arg;
 	char	operator;
-	int		error;
+	int		*error;
 	struct node *link;
 } t_list;
 
