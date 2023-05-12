@@ -7,10 +7,10 @@
 #include <readline/readline.h>
 #include "./libft/libft.h"
 
-#define TRUE 1
-#define D_QOUTE 2
-#define S_QOUTE 1
-#define ECHO_CHECK 0
+#define TRUE	1
+#define D_QUOTE	2
+#define S_QUOTE	1
+#define PIPE	3
 
 typedef struct node{
 	char	*command;

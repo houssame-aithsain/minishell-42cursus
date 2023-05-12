@@ -6,7 +6,7 @@
 /*   By: hait-hsa <hait-hsa@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/04/01 21:33:53 by hait-hsa          #+#    #+#             */
-/*   Updated: 2023/05/12 13:37:14 by hait-hsa         ###   ########.fr       */
+/*   Updated: 2023/05/12 18:54:25 by hait-hsa         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -17,6 +17,8 @@ void	qoutes_counter(char *arg, int *s_qoute, int *d_qoute)
 	int i;
 	
 	i = 0;
+	*s_qoute = 0;
+	*d_qoute = 0;
 	while(arg[i])
 	{
 		if (arg[i] == 39)
@@ -46,13 +48,12 @@ void	ft_copy(char *dst, char qoute_type, int *v, int *j, char *command)
 	(*v)++;
 	while (dst[*v])
 	{
-		if (dst[*v] == qoute_type)
-		{
-			(*v)++;
-			break;
-		}
-		command[(*j)++] = dst[(*v)++];
+		if (dst[*v] != qoute_type)
+			command[(*j)++] = dst[*v];
+		(*v)++;
 	}
+	command[*j] = 0;
+	// printf("command=|%s|\n",command);
 }
 
 int	arg_lent(char **arg)
@@ -93,12 +94,13 @@ void	qoutes_remover(t_list **ptr)
 			d_qoute++;
 		i++;
 	}
+	arg = tmp->arg;
 	while(tmp)
 	{
 		i = 0;
 		j = 0;
 		v = 0;
-		command = malloc(sizeof(char) * ft_strlen((*ptr)->command));
+		command = malloc(sizeof(char) * ft_strlen(tmp->command) + 100);
 		arg = malloc(sizeof(char *) * arg_lent(tmp->arg) + 1);
 		while(tmp->command[v])
 		{
@@ -107,41 +109,46 @@ void	qoutes_remover(t_list **ptr)
 				qoute_type = 39;
 				ft_copy(tmp->command, qoute_type, &v, &j, command);
 			}
-			if (tmp->command[v] == '"')
+			else if (tmp->command[v] == '"')
 			{
 				qoute_type = '"';
 				ft_copy(tmp->command, qoute_type, &v, &j, command);
 			}
-			command[j++] = tmp->command[v];
-			v++;
+			else
+				command[j++] = tmp->command[v++];
 		}
-		check_for_error(&tmp->error,qoute_type, s_qoute, d_qoute);
 		command[j] = 0;
-		s_qoute = 0;
-		d_qoute = 0;
+		check_for_error(&tmp->error,qoute_type, s_qoute, d_qoute);
 		while(tmp->arg[i])
 		{
 			j = 0;
 			arg_count = 0;
 			arg[i] = malloc(sizeof(char) * ft_strlen(tmp->arg[i]));
+			// printf("hahwa=%s\n",tmp->arg[i]);
 			qoutes_counter(tmp->arg[i], &s_qoute, &d_qoute);
+			// printf("d_quote=%d\n",d_qoute);
 			while(tmp->arg[i] && tmp->arg[i][j])
 			{
 				if (tmp->arg[i][j] == 39)
 				{
+					// printf("yeah!\n");
 					qoute_type = 39;
 					ft_copy(tmp->arg[i], qoute_type, &j, &arg_count, arg[i]);
 				}
-				if (tmp->arg[i][j] == '"')
+				else if (tmp->arg[i][j] == '"')
 				{
 					qoute_type = '"';
 					ft_copy(tmp->arg[i], qoute_type, &j, &arg_count, arg[i]);
 				}
-				arg[i][arg_count++] = tmp->arg[i][j];
-				j++;
+				else
+					arg[i][arg_count++] = tmp->arg[i][j++];
 			}
 			arg[i][arg_count] = 0;
+			// printf("d_quote=%d\n",d_qoute);
+			// printf("quote_type=%c\n",qoute_type );
 			check_for_error(&tmp->error,qoute_type, s_qoute, d_qoute);
+			// printf("error=[%d]\n",tmp->error);
+			
 			i++;
 		}
 		arg[i] = NULL;
@@ -247,10 +254,21 @@ void	get_the_right_forma(char *ncoom, t_list **ptr)
 		while(ncoom[i] && pipe_checker(ncoom, i, qoute_numb, dqoute_numb))
 		{
 			if (ncoom[i] == '"')
-				dqoute_numb++;
-			if (ncoom[i] == 39)
-				qoute_numb++;
-			holder[j++] = ncoom[i++];
+			{
+				while(ncoom[i] && ncoom[i] != '"')
+					holder[j++] = ncoom[i++];
+				// if (ncoom[i] == '"')
+				// 	holder[j++] = '"';
+			}
+			else if (ncoom[i] == 39)
+			{
+				while(ncoom[i] && ncoom[i] != 39)
+					holder[j++] = ncoom[i++];
+				// if (ncoom[i] == 39)
+				// 	holder[j++] = 39;
+			}
+			if (ncoom[i])
+				holder[j++] = ncoom[i++];
 		}
 		if (ncoom[i] == '|')
 		{
@@ -259,10 +277,10 @@ void	get_the_right_forma(char *ncoom, t_list **ptr)
 		}
 		holder[j] = 0;
 		holder = leave_it_for_me(holder);
-		// printf("[%s]\n",holder);
+		// printf("before[%s]\n",holder);
 		nodepush(ptr, holder, 1);
-		qoutes_remover(ptr);
 	}
+		qoutes_remover(ptr);
 
 }
 

@@ -6,7 +6,7 @@
 /*   By: hait-hsa <hait-hsa@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/01/19 18:49:57 by hait-hsa          #+#    #+#             */
-/*   Updated: 2023/05/11 17:12:25 by hait-hsa         ###   ########.fr       */
+/*   Updated: 2023/05/12 18:49:38 by hait-hsa         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -19,7 +19,7 @@ void	ft_strlcpy_shell(t_list *dst, char *str)
 	int i;
 	char **split;
 
-	// printf("str => %s\n", str);
+	// printf("\n\n%s\n\n",str);
 	i = 0;
 	j = 0;
 	space = 0;
@@ -55,18 +55,21 @@ void	ft_strlcpy_shell(t_list *dst, char *str)
 			dst->operator = split[i][ft_strlen(split[i]) - 1];
 			split[i][ft_strlen(split[i]) - 1] = 0;
 		}
-		space = 0;
-		dst->arg[j] = malloc(sizeof(char) * ft_strlen(split[i]));
-		ft_strlcpy(dst->arg[j], split[i], ft_strlen(split[i]) + 1);
-		if (dst->arg[j] && dst->arg[j][ft_strlen(dst->arg[j]) - 1] == '|')
-			dst->arg[j][ft_strlen(dst->arg[j]) - 1] = 0;
-		while(dst->arg[j] && dst->arg[j][space])
+		else
 		{
-			if (dst->arg[j][space] == '~')
-				dst->arg[j][space] = ' ';
-			space++;
-		}
-		j++;		
+			space = 0;
+			dst->arg[j] = malloc(sizeof(char) * ft_strlen(split[i]) + 1);
+			ft_strlcpy(dst->arg[j], split[i], ft_strlen(split[i]) + 1);
+			if (dst->arg[j] && dst->arg[j][ft_strlen(dst->arg[j]) - 1] == '|')
+				dst->arg[j][ft_strlen(dst->arg[j]) - 1] = 0;
+			while(dst->arg[j] && dst->arg[j][space])
+			{
+				if (dst->arg[j][space] == '~')
+					dst->arg[j][space] = ' ';
+				space++;
+			}
+			j++;
+		}	
 	}
 	dst->arg[j] = NULL;
 }
