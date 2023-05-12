@@ -13,10 +13,10 @@
 #define ECHO_CHECK 0
 
 typedef struct node{
-	char *command;
-	char **arg;
-	char operator;
-	int	error;
+	char	*command;
+	char	**arg;
+	char	operator;
+	int		error;
 	struct node *link;
 } t_list;
 

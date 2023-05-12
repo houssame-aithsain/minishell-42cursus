@@ -6,11 +6,54 @@
 /*   By: hait-hsa <hait-hsa@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/04/01 21:33:53 by hait-hsa          #+#    #+#             */
-/*   Updated: 2023/05/11 21:36:40 by hait-hsa         ###   ########.fr       */
+/*   Updated: 2023/05/12 13:37:14 by hait-hsa         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
+
+void	qoutes_counter(char *arg, int *s_qoute, int *d_qoute)
+{
+	int i;
+	
+	i = 0;
+	while(arg[i])
+	{
+		if (arg[i] == 39)
+			*s_qoute += 1;
+		if (arg[i] == '"')
+			*d_qoute += 1;
+		i++;
+	}
+}
+
+void	check_for_error(int *error,int qoute_type, int s_qoute, int d_qoute)
+{
+	if (qoute_type == 39)
+	{
+		if (s_qoute % 2 && s_qoute)
+			*error = 1;
+	}
+	if (qoute_type == '"')
+	{
+		if (d_qoute % 2 && d_qoute)
+			*error = 2;
+	}
+}
+
+void	ft_copy(char *dst, char qoute_type, int *v, int *j, char *command)
+{
+	(*v)++;
+	while (dst[*v])
+	{
+		if (dst[*v] == qoute_type)
+		{
+			(*v)++;
+			break;
+		}
+		command[(*j)++] = dst[(*v)++];
+	}
+}
 
 int	arg_lent(char **arg)
 {
@@ -21,6 +64,7 @@ int	arg_lent(char **arg)
 		i++;
 	return i;
 }
+
 void	qoutes_remover(t_list **ptr)
 {
 	t_list	*tmp;
@@ -33,6 +77,7 @@ void	qoutes_remover(t_list **ptr)
 	int		d_qoute;
 	char	*command;
 	char	**arg;
+	char	qoute_type;
 	
 	i = 0;
 	v = 0;
@@ -57,23 +102,46 @@ void	qoutes_remover(t_list **ptr)
 		arg = malloc(sizeof(char *) * arg_lent(tmp->arg) + 1);
 		while(tmp->command[v])
 		{
-			if (tmp->command[v] != 39 && tmp->command[v] != '"')
-				command[j++] = tmp->command[v];
+			if (tmp->command[v] == 39)
+			{
+				qoute_type = 39;
+				ft_copy(tmp->command, qoute_type, &v, &j, command);
+			}
+			if (tmp->command[v] == '"')
+			{
+				qoute_type = '"';
+				ft_copy(tmp->command, qoute_type, &v, &j, command);
+			}
+			command[j++] = tmp->command[v];
 			v++;
 		}
+		check_for_error(&tmp->error,qoute_type, s_qoute, d_qoute);
 		command[j] = 0;
+		s_qoute = 0;
+		d_qoute = 0;
 		while(tmp->arg[i])
 		{
 			j = 0;
 			arg_count = 0;
 			arg[i] = malloc(sizeof(char) * ft_strlen(tmp->arg[i]));
+			qoutes_counter(tmp->arg[i], &s_qoute, &d_qoute);
 			while(tmp->arg[i] && tmp->arg[i][j])
 			{
-				if (tmp->arg[i][j] != 39 && tmp->arg[i][j] != '"')
-					arg[i][arg_count++] = tmp->arg[i][j];
+				if (tmp->arg[i][j] == 39)
+				{
+					qoute_type = 39;
+					ft_copy(tmp->arg[i], qoute_type, &j, &arg_count, arg[i]);
+				}
+				if (tmp->arg[i][j] == '"')
+				{
+					qoute_type = '"';
+					ft_copy(tmp->arg[i], qoute_type, &j, &arg_count, arg[i]);
+				}
+				arg[i][arg_count++] = tmp->arg[i][j];
 				j++;
 			}
 			arg[i][arg_count] = 0;
+			check_for_error(&tmp->error,qoute_type, s_qoute, d_qoute);
 			i++;
 		}
 		arg[i] = NULL;
@@ -169,6 +237,7 @@ void	get_the_right_forma(char *ncoom, t_list **ptr)
 	i = 0;
 	holder = malloc(sizeof(char) * ft_strlen(ncoom));
 	*ptr = malloc(sizeof(t_list));
+	(*ptr)->error = 0;
 	*ptr = NULL;
 	while(ncoom && ncoom[i])
 	{
@@ -206,7 +275,6 @@ void readl_to_parse()
 	char *ncoom;
 
 	ncoom = NULL;
-	//ptr->error = 0;
 	var = malloc(sizeof(t_var));
 	while (TRUE)
 	{
@@ -231,6 +299,7 @@ void readl_to_parse()
 			while(ptr->arg[x])
 				printf("arg=[%s]\n",ptr->arg[x++]);
 			printf("operator=[%c]\n",ptr->operator);
+			printf("error=[%d]\n",ptr->error);
 			ptr = ptr->link;
 		}
 	}
