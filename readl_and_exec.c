@@ -6,7 +6,7 @@
 /*   By: hait-hsa <hait-hsa@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/04/01 21:33:53 by hait-hsa          #+#    #+#             */
-/*   Updated: 2023/05/12 18:54:25 by hait-hsa         ###   ########.fr       */
+/*   Updated: 2023/05/12 23:24:03 by hait-hsa         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -159,21 +159,16 @@ void	qoutes_remover(t_list **ptr)
 	ptr = &head;
 }
 
-int	pipe_checker(char *ncoom, int i, int qoute_numb, int dqoute_numb)
+int	pipe_checker(char *ncoom)
 {
-	if (ncoom[i] && ncoom[i] == '|')
-	{
-		while(ncoom[i])
-		{
-			if ((ncoom[i] == '"' && dqoute_numb && dqoute_numb % 2) || (ncoom[i] == 39 && qoute_numb && qoute_numb % 2))
-			{
-				return (1);
-			}
-			i++;
-		}
-		return (0);
-	}
-	return 1;
+	int i;
+
+	i = 0;
+	while (ncoom[i] && ncoom[i] == ' ')
+		i++;
+	if (ncoom[i++] == '|')
+		return (1);
+	return 0;
 }
 
 char	*leave_it_for_me(char *str)
@@ -208,7 +203,7 @@ char	*leave_it_for_me(char *str)
 			while(str && str[i])
 			{
 				i++;
-				if ((str[i] == '"' || str[i] == 39) && str[i - 1] == str[i])
+				if ((str[i] == '"' || str[i] == 39))
 					break;
 				
 				if (str[i] == ' ' && str[i + 1] != '|')
@@ -251,24 +246,28 @@ void	get_the_right_forma(char *ncoom, t_list **ptr)
 		j = 0;
 		qoute_numb = 0;
 		dqoute_numb = 0;
-		while(ncoom[i] && pipe_checker(ncoom, i, qoute_numb, dqoute_numb))
+		while(ncoom[i])
 		{
 			if (ncoom[i] == '"')
 			{
+				holder[j++] = ncoom[i++];
 				while(ncoom[i] && ncoom[i] != '"')
 					holder[j++] = ncoom[i++];
-				// if (ncoom[i] == '"')
-				// 	holder[j++] = '"';
 			}
-			else if (ncoom[i] == 39)
+				// printf("holder====={%s\n}",holder);
+			if (ncoom[i] == 39)
 			{
+				holder[j++] = ncoom[i++];
 				while(ncoom[i] && ncoom[i] != 39)
 					holder[j++] = ncoom[i++];
-				// if (ncoom[i] == 39)
-				// 	holder[j++] = 39;
 			}
 			if (ncoom[i])
-				holder[j++] = ncoom[i++];
+			{
+				if (ncoom[i] == '|')
+					break;
+				else
+					holder[j++] = ncoom[i++];
+			}
 		}
 		if (ncoom[i] == '|')
 		{
