@@ -6,20 +6,22 @@
 /*   By: hait-hsa <hait-hsa@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/01/19 18:49:57 by hait-hsa          #+#    #+#             */
-/*   Updated: 2023/05/14 19:24:53 by hait-hsa         ###   ########.fr       */
+/*   Updated: 2023/05/14 20:03:58 by hait-hsa         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
 
-int	get_operatore(t_list **dst, char *operatore, char *split, char *split_plus)
+int	get_operatore(t_list **dst, char *operatore, char *split, char *split_plus, int flag)
 {
 	int j;
 	int	i;
 
 	i = 0;
 	j = 0;
-	while(split && split[i])
+	if (flag)
+	{
+		while(split && split[i] && operatore)
 	{
 		if (if_operatore(split + ft_strlen(split + 3)))
 			j++;
@@ -46,6 +48,30 @@ int	get_operatore(t_list **dst, char *operatore, char *split, char *split_plus)
 			break;
 		}
 		i++;
+	}	
+	}
+	else
+	{
+		while(split && split[i] && operatore)
+		{
+			if (!ft_memcmp(operatore, split + i, ft_strlen(operatore)))
+			{
+				split[i] = 0;
+				(*dst)->redirection = malloc(sizeof(char) * ft_strlen(operatore) + 1);
+				ft_strlcpy((*dst)->redirection, operatore, ft_strlen(operatore) + 1);
+				i++;
+				if (split[i] == '>' || split[i] == '<')
+					i++;
+				if (split[i])
+				{
+					(*dst)->file = malloc(sizeof(char) * ft_strlen(split + i) + 1);
+					ft_strlcpy((*dst)->file, split + i, ft_strlen(split + i) + 1);
+					return 1;
+				}
+				break;
+			}
+			i++;
+		}	
 	}
 	return 0;
 }
@@ -78,6 +104,7 @@ void	ft_strlcpy_shell(t_list *dst, char *str)
 	space = 0;
 	dst->error = 0;
 	dst->operator = 0;
+	dst->file = NULL;
 		split = ft_split(str, ' ');
 	while(split[i])
 		i++;
@@ -101,6 +128,7 @@ void	ft_strlcpy_shell(t_list *dst, char *str)
 		space++;
 	}
 	dst->command[j] = 0;
+	get_operatore(&dst, if_operatore(dst->command), dst->command, NULL, 0);
 	j = 0;
 	while(split && split[++i])
 	{
@@ -111,7 +139,7 @@ void	ft_strlcpy_shell(t_list *dst, char *str)
 		}
 		if (if_operatore(split[i]))
 		{
-			check = get_operatore(&dst, if_operatore(split[i]), split[i], split[i + 1]);
+			check = get_operatore(&dst, if_operatore(split[i]), split[i], split[i + 1], 1);
 			if (check == 2)
 				i++;
 			else if (check == 3)
