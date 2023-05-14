@@ -6,7 +6,7 @@
 /*   By: hait-hsa <hait-hsa@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/01/19 18:49:57 by hait-hsa          #+#    #+#             */
-/*   Updated: 2023/05/14 20:03:58 by hait-hsa         ###   ########.fr       */
+/*   Updated: 2023/05/14 20:24:57 by hait-hsa         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -23,7 +23,7 @@ int	get_operatore(t_list **dst, char *operatore, char *split, char *split_plus, 
 	{
 		while(split && split[i] && operatore)
 	{
-		if (if_operatore(split + ft_strlen(split + 3)))
+		if (if_operatore(split + ft_strlen(split) - 3))
 			j++;
 		if (!ft_memcmp(operatore, split + i, ft_strlen(operatore)))
 		{
