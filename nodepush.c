@@ -6,7 +6,7 @@
 /*   By: hait-hsa <hait-hsa@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/01/19 18:49:57 by hait-hsa          #+#    #+#             */
-/*   Updated: 2023/05/14 20:24:57 by hait-hsa         ###   ########.fr       */
+/*   Updated: 2023/05/14 21:51:50 by hait-hsa         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -104,6 +104,7 @@ void	ft_strlcpy_shell(t_list *dst, char *str)
 	space = 0;
 	dst->error = 0;
 	dst->operator = 0;
+	dst->redirection = NULL;
 	dst->file = NULL;
 		split = ft_split(str, ' ');
 	while(split[i])

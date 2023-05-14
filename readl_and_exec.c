@@ -6,7 +6,7 @@
 /*   By: hait-hsa <hait-hsa@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/04/01 21:33:53 by hait-hsa          #+#    #+#             */
-/*   Updated: 2023/05/14 20:09:05 by hait-hsa         ###   ########.fr       */
+/*   Updated: 2023/05/14 21:51:42 by hait-hsa         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -91,18 +91,18 @@ void	check_for_error(char *tmp, int *error,int qoute_type, int s_qoute, int d_qo
 
 void	ft_copy(char *dst, char qoute_type, int *v, int *j, char *command)
 {
+	int quote_numb;
+
+	quote_numb = 1;
 	(*v)++;
 	while (dst[*v])
 	{
 		if (dst[*v] == '"' || dst[*v] == 39)
 		{
-			if (dst[*v - 1] == qoute_type)
-			{
-				if (qoute_type == '"')
-					qoute_type = 39;
-				else if (qoute_type == 39)
-					qoute_type = '"';
-			}
+			if (dst[*v] == qoute_type)
+				quote_numb++;
+			if (dst[*v] != qoute_type && !(quote_numb % 2))
+				break;
 		}
 		if (dst[*v] != qoute_type)
 			command[(*j)++] = dst[*v];
