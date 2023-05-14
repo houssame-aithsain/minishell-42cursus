@@ -6,11 +6,32 @@
 /*   By: hait-hsa <hait-hsa@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/04/01 21:33:53 by hait-hsa          #+#    #+#             */
-/*   Updated: 2023/05/13 00:53:08 by hait-hsa         ###   ########.fr       */
+/*   Updated: 2023/05/14 19:07:08 by hait-hsa         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
+
+char	*if_operatore(char *ncoom)
+{
+	int i;
+
+	i = 0;
+	//printf("\n\n\n\n//%c//\n\n\n\n",ncoom[i]);
+	while (ncoom && ncoom[i])
+	{
+		if (!ft_memcmp(ncoom + i, ">>", 2))
+			return ">>\0";
+		else if (!ft_memcmp(ncoom + i, "<<", 2))
+			return "<<\0";
+		else if (ncoom[i] == '>')
+			return ">\0";
+		else if (ncoom[i] == '<')
+			return "<\0";
+		i++;
+	}
+		return 0;
+}
 
 void	qoutes_counter(char *arg, int *s_qoute, int *d_qoute)
 {
@@ -29,18 +50,43 @@ void	qoutes_counter(char *arg, int *s_qoute, int *d_qoute)
 	}
 }
 
-void	check_for_error(int *error,int qoute_type, int s_qoute, int d_qoute)
+void	check_for_error(char *tmp, int *error,int qoute_type, int s_qoute, int d_qoute, int flag)
 {
+	int i;
+
+	i = 0;
+	if (flag == 0)
+	{
+		i = s_qoute;
+		while(tmp && tmp[s_qoute] && tmp[s_qoute] == ' ')
+		{
+			if (tmp[s_qoute] == '|')
+				*error = S_ERROR;
+			s_qoute++;
+		}
+		if (tmp[s_qoute] == '|')
+			*error = S_ERROR;
+		return ;
+	}
+	while(tmp && tmp[i])
+	{
+		if (tmp[i] == '\\')
+			*error = BACK_SLASH;
+		if (tmp[i] == ';')
+			*error = SEMICOLON;
+		i++;
+	}
 	if (qoute_type == 39)
 	{
 		if (s_qoute % 2 && s_qoute)
-			*error = 1;
+			*error = S_QUOTE;
 	}
 	if (qoute_type == '"')
 	{
 		if (d_qoute % 2 && d_qoute)
-			*error = 2;
+			*error = D_QUOTE;
 	}
+	
 }
 
 void	ft_copy(char *dst, char qoute_type, int *v, int *j, char *command)
@@ -53,7 +99,6 @@ void	ft_copy(char *dst, char qoute_type, int *v, int *j, char *command)
 		(*v)++;
 	}
 	command[*j] = 0;
-	// printf("command=|%s|\n",command);
 }
 
 int	arg_lent(char **arg)
@@ -118,7 +163,7 @@ void	qoutes_remover(t_list **ptr)
 				command[j++] = tmp->command[v++];
 		}
 		command[j] = 0;
-		check_for_error(tmp->error,qoute_type, s_qoute, d_qoute);
+		check_for_error(command, &tmp->error,qoute_type, s_qoute, d_qoute, 1);
 		while(tmp->arg[i])
 		{
 			j = 0;
@@ -141,7 +186,7 @@ void	qoutes_remover(t_list **ptr)
 					arg[i][arg_count++] = tmp->arg[i][j++];
 			}
 			arg[i][arg_count] = 0;
-			check_for_error(tmp->error,qoute_type, s_qoute, d_qoute);
+			check_for_error(arg[i], &tmp->error,qoute_type, s_qoute, d_qoute, 1);
 			
 			i++;
 		}
@@ -208,13 +253,17 @@ char	*leave_it_for_me(char *str)
 
 void	get_the_right_forma(char *ncoom, t_list **ptr)
 {
+	char *tmp;
 	char *holder;
+	int error;
 	int qoute_numb;
 	int dqoute_numb;
+	int o_count;
 	int i;
 	int j;
 	
 	i = 0;
+	error = 0;
 	holder = malloc(sizeof(char) * ft_strlen(ncoom));
 	*ptr = NULL;
 	while(ncoom && ncoom[i])
@@ -240,7 +289,10 @@ void	get_the_right_forma(char *ncoom, t_list **ptr)
 			if (ncoom[i])
 			{
 				if (ncoom[i] == '|')
+				{
+					check_for_error(ncoom , &error, 0, i + 1, 0, 0);
 					break;
+				}
 				else
 					holder[j++] = ncoom[i++];
 			}
@@ -250,10 +302,12 @@ void	get_the_right_forma(char *ncoom, t_list **ptr)
 			holder[j++] = '|';
 			i++;
 		}
+		// printf("==%s==\n", holder);
 		holder[j] = 0;
 		holder = leave_it_for_me(holder);
-		printf("before[%s]\n",holder);
+		// printf("before[%s]\n",holder);
 		nodepush(ptr, holder, 1);
+		(*ptr)->error = error;
 	}
 		qoutes_remover(ptr);
 
@@ -292,8 +346,10 @@ void readl_to_parse()
 			printf("command=[%s]\n",ptr->command);
 			while(ptr->arg[x])
 				printf("arg=[%s]\n",ptr->arg[x++]);
+			printf("redirection=[%s]\n",ptr->redirection);
+			printf("file=[%s]\n",ptr->file);
 			printf("operator=[%c]\n",ptr->operator);
-			printf("error=[%d]\n",*ptr->error);
+			printf("error=[%d]\n",ptr->error);
 			ptr = ptr->link;
 		}
 	}

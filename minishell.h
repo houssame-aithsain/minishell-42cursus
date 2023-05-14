@@ -7,16 +7,21 @@
 #include <readline/readline.h>
 #include "./libft/libft.h"
 
-#define TRUE	1
-#define D_QUOTE	2
-#define S_QUOTE	1
-#define PIPE	3
+#define TRUE		1
+#define D_QUOTE		2
+#define S_QUOTE		1
+#define PIPE		3
+#define BACK_SLASH	4
+#define SEMICOLON	5
+#define S_ERROR		6
 
 typedef struct node{
+	char	*file;
+	char	*redirection;
 	char	*command;
 	char	**arg;
 	char	operator;
-	int		*error;
+	int		error;
 	struct node *link;
 } t_list;
 
@@ -35,6 +40,7 @@ typedef struct var
 	char	quote_holder;
 } t_var;
 
+char	*if_operatore(char *ncoom);
 void	readl_to_parse();
 int		if_grep(char *line, int i, int flag);
 char	*parse_input(char *line, t_var *var);
