@@ -6,7 +6,7 @@
 /*   By: hait-hsa <hait-hsa@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/04/01 21:33:53 by hait-hsa          #+#    #+#             */
-/*   Updated: 2023/05/14 21:51:42 by hait-hsa         ###   ########.fr       */
+/*   Updated: 2023/05/15 17:21:58 by hait-hsa         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -141,6 +141,8 @@ void	qoutes_remover(t_list **ptr)
 	d_qoute = 0;
 	tmp = *ptr;
 	head = *ptr;
+	if (!ptr || !*ptr)
+		return ;
 	while((*ptr)->command && (*ptr)->command[i])
 	{
 		if ((*ptr)->command[i] == 39)
