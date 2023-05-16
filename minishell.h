@@ -14,16 +14,18 @@
 #define BACK_SLASH	4
 #define SEMICOLON	5
 #define S_ERROR		6
+#define NSFOD		9
 
-typedef struct node{
-	char	*file;
-	char	*redirection;
+typedef struct s_node{
+	int		flex;
+	char	**file;
+	char	**redirection;
 	char	*command;
 	char	**arg;
 	char	operator;
 	int		error;
-	struct node *link;
-} t_list;
+	struct s_node *link;
+} t_bash;
 
 typedef struct var
 {
@@ -45,5 +47,5 @@ void	readl_to_parse();
 int		if_grep(char *line, int i, int flag);
 char	*parse_input(char *line, t_var *var);
 int		ft_loop(char *line, t_var *var);
-void	nodepush(t_list **head, char *result, int lent);
+void	nodepush(t_bash **head, char *result, int lent);
 #endif
