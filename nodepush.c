@@ -6,7 +6,7 @@
 /*   By: hait-hsa <hait-hsa@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/01/19 18:49:57 by hait-hsa          #+#    #+#             */
-/*   Updated: 2023/05/17 21:45:14 by hait-hsa         ###   ########.fr       */
+/*   Updated: 2023/05/17 21:53:54 by hait-hsa         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -189,7 +189,7 @@ void ft_strlcpy_shell(t_bash *dst, char *str)
 	j = 0;
 	while (split && split[++i])
 	{
-		printf("split[%s]\n",split[i]);
+		// printf("split[%s]\n",split[i]);
 		if (split[i][ft_strlen(split[i]) - 1] == '|')
 		{
 			dst->operator= '|';
