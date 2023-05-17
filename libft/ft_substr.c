@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   ft_substr.c                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: hait-hsa <hait-hsa@student.42.fr>          +#+  +:+       +#+        */
+/*   By: gothmane <gothmane@student.1337.ma>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2022/10/16 18:45:42 by hait-hsa          #+#    #+#             */
-/*   Updated: 2022/10/20 22:15:51 by hait-hsa         ###   ########.fr       */
+/*   Created: 2022/10/03 15:22:17 by gothmane          #+#    #+#             */
+/*   Updated: 2023/05/13 15:51:19 by gothmane         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,29 +14,25 @@
 
 char	*ft_substr(char const *s, unsigned int start, size_t len)
 {
-	char	*arr;
-	size_t	i;
-	size_t	j;
+	char				*substring;
+	unsigned int		i;
+	size_t				j;
 
 	i = 0;
 	j = start;
+	if (!s)
+		return (0);
+	if (len >= ft_strlen(s))
+		len = ft_strlen(s);
 	if (start >= ft_strlen(s))
-		return (ft_strdup(""));
-	if (len > ft_strlen(s) - start)
-		len = ft_strlen(s) - start;
-	if (s[start] != 0)
+		return (ft_calloc(1, 1));
+	substring = malloc (len + 1);
+	if (!substring)
+		return (0);
+	while (s[j] && i < len)
 	{
-		arr = malloc(len + 1);
-		if (!arr)
-			return (0);
-		i = 0;
-		while (len)
-		{
-			arr[i++] = s[j++];
-			len--;
-		}
-		arr[i] = 0;
-		return (arr);
+		substring[i++] = s[j++];
 	}
-	return (0);
+	substring[i] = '\0';
+	return (substring);
 }

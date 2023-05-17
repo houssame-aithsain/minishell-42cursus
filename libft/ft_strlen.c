@@ -3,16 +3,16 @@
 /*                                                        :::      ::::::::   */
 /*   ft_strlen.c                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: hait-hsa <hait-hsa@student.42.fr>          +#+  +:+       +#+        */
+/*   By: gothmane <gothmane@student.1337.ma>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2022/09/29 14:39:02 by hait-hsa          #+#    #+#             */
-/*   Updated: 2022/10/19 20:28:08 by hait-hsa         ###   ########.fr       */
+/*   Created: 2022/09/28 13:23:50 by gothmane          #+#    #+#             */
+/*   Updated: 2022/10/01 11:03:53 by gothmane         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "libft.h"
 
-size_t	ft_strlen(const	char *s)
+size_t	ft_strlen(const char *s)
 {
 	size_t	i;
 

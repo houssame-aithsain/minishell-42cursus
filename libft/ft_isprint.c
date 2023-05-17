@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   ft_isprint.c                                       :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: hait-hsa <hait-hsa@student.42.fr>          +#+  +:+       +#+        */
+/*   By: gothmane <gothmane@student.1337.ma>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2022/09/29 19:56:29 by hait-hsa          #+#    #+#             */
-/*   Updated: 2022/10/14 23:19:20 by hait-hsa         ###   ########.fr       */
+/*   Created: 2022/09/28 15:54:52 by gothmane          #+#    #+#             */
+/*   Updated: 2022/10/01 12:38:45 by gothmane         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,5 +14,7 @@
 
 int	ft_isprint(int c)
 {
-	return (c >= 32 && c <= 126);
+	if (c >= 32 && c < 127)
+		return (1);
+	return (0);
 }

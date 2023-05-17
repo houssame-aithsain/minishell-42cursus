@@ -3,23 +3,18 @@
 /*                                                        :::      ::::::::   */
 /*   ft_toupper.c                                       :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: hait-hsa <hait-hsa@student.42.fr>          +#+  +:+       +#+        */
+/*   By: gothmane <gothmane@student.1337.ma>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2022/09/30 14:47:42 by hait-hsa          #+#    #+#             */
-/*   Updated: 2023/04/15 22:00:39 by hait-hsa         ###   ########.fr       */
+/*   Created: 2022/09/28 14:35:52 by gothmane          #+#    #+#             */
+/*   Updated: 2022/09/29 12:51:44 by gothmane         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "libft.h"
 
-int	ft_toupper(int ch)
+int	ft_toupper(int c)
 {
-	if ((ch >= 65 && ch <= 90) || (ch >= 97 && ch <= 122))
-	{
-		if (ch >= 65 && ch <= 90)
-			return (ch);
-		else if (ch >= 97 && ch <= 122)
-			return (ch - 32);
-	}
-	return (ch);
+	if (c >= 97 && c <= 122)
+		c = c - (97 - 65);
+	return (c);
 }

@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   ft_memcpy.c                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: hait-hsa <hait-hsa@student.42.fr>          +#+  +:+       +#+        */
+/*   By: gothmane <gothmane@student.1337.ma>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2022/10/04 18:52:38 by hait-hsa          #+#    #+#             */
-/*   Updated: 2022/10/19 20:13:31 by hait-hsa         ###   ########.fr       */
+/*   Created: 2022/09/30 14:26:53 by gothmane          #+#    #+#             */
+/*   Updated: 2022/10/21 18:51:28 by gothmane         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -15,14 +15,18 @@
 void	*ft_memcpy(void *dst, const void *src, size_t n)
 {
 	size_t	i;
+	char	*casteddst;
+	char	*castedsrc;	
 
 	i = 0;
-	if ((char *)dst == 0 && (char *)src == 0)
+	if (!dst && !src)
 		return (0);
+	castedsrc = (void *) src;
+	casteddst = dst;
 	while (i < n)
 	{
-		((char *)dst)[i] = ((char *)src)[i];
+		casteddst[i] = castedsrc[i];
 		i++;
 	}
-	return (dst);
+	return (casteddst);
 }

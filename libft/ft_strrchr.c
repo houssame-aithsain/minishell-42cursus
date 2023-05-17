@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   ft_strrchr.c                                       :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: hait-hsa <hait-hsa@student.42.fr>          +#+  +:+       +#+        */
+/*   By: gothmane <gothmane@student.1337.ma>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2022/10/04 18:53:33 by hait-hsa          #+#    #+#             */
-/*   Updated: 2022/10/20 22:13:52 by hait-hsa         ###   ########.fr       */
+/*   Created: 2022/09/29 12:54:32 by gothmane          #+#    #+#             */
+/*   Updated: 2022/10/01 16:30:44 by gothmane         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,16 +14,25 @@
 
 char	*ft_strrchr(const char *s, int c)
 {
-	size_t	i;
-	char	*arr;
+	int	i;
+	int	j;
+	int	check;
+	int	size;
 
-	arr = NULL;
 	i = 0;
-	while (i <= ft_strlen(s))
+	j = 0;
+	check = 0;
+	size = ft_strlen(s);
+	while (i <= size)
 	{
 		if (s[i] == (char)c)
-			arr = ft_strchr(&s[i], c);
+		{
+			j = i;
+			check = 1;
+		}	
 		i++;
 	}
-	return (arr);
+	if (check)
+		return ((char *) &s[j]);
+	return (0);
 }

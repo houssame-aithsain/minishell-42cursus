@@ -3,25 +3,24 @@
 /*                                                        :::      ::::::::   */
 /*   ft_strchr.c                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: hait-hsa <hait-hsa@student.42.fr>          +#+  +:+       +#+        */
+/*   By: gothmane <gothmane@student.1337.ma>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2022/10/04 18:53:01 by hait-hsa          #+#    #+#             */
-/*   Updated: 2022/10/19 20:20:02 by hait-hsa         ###   ########.fr       */
+/*   Created: 2022/09/28 15:35:24 by gothmane          #+#    #+#             */
+/*   Updated: 2022/10/03 11:20:43 by gothmane         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
-
 #include "libft.h"
 
 char	*ft_strchr(const char *s, int c)
 {
-	size_t	i;
+	int	i;
 
 	i = 0;
-	while (s[i] != (char)c)
+	while (s[i] != (char) c)
 	{
-		if (s[i] == 0)
+		if (s[i] == '\0')
 			return (0);
 		i++;
 	}
-	return (&((char *)s)[i]);
+	return ((char *) &s[i]);
 }

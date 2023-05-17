@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   ft_putendl_fd.c                                    :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: hait-hsa <hait-hsa@student.42.fr>          +#+  +:+       +#+        */
+/*   By: gothmane <gothmane@student.1337.ma>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2022/10/16 18:44:31 by hait-hsa          #+#    #+#             */
-/*   Updated: 2022/10/19 20:16:20 by hait-hsa         ###   ########.fr       */
+/*   Created: 2022/10/07 12:56:07 by gothmane          #+#    #+#             */
+/*   Updated: 2022/10/21 11:16:03 by gothmane         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,10 +14,10 @@
 
 void	ft_putendl_fd(char *s, int fd)
 {
-	int	i;
-
-	i = 0;
-	while (s[i])
-		write(fd, &s[i++], 1);
-	write(fd, "\n", 1);
+	if (s)
+	{
+		while (*s)
+			write(fd, s++, 1);
+		write(fd, "\n", 1);
+	}
 }

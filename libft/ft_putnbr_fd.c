@@ -3,33 +3,37 @@
 /*                                                        :::      ::::::::   */
 /*   ft_putnbr_fd.c                                     :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: hait-hsa <hait-hsa@student.42.fr>          +#+  +:+       +#+        */
+/*   By: gothmane <gothmane@student.1337.ma>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2022/10/16 18:44:35 by hait-hsa          #+#    #+#             */
-/*   Updated: 2022/10/19 20:16:43 by hait-hsa         ###   ########.fr       */
+/*   Created: 2022/10/07 13:00:32 by gothmane          #+#    #+#             */
+/*   Updated: 2022/10/17 14:52:34 by gothmane         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "libft.h"
 
+void	ft_putchar(char c, int fd)
+{
+	write(fd, &c, 1);
+}
+
 void	ft_putnbr_fd(int n, int fd)
 {
 	if (n == -2147483648)
 	{
-		ft_putchar_fd(45, fd);
-		ft_putchar_fd('2', fd);
-		n = 147483648;
+		write(fd, "-2147483648", 11);
+		return ;
 	}
 	if (n < 0)
 	{
-		ft_putchar_fd(45, fd);
-		ft_putnbr_fd(n * -1, fd);
+		write(fd, "-", 1);
+		ft_putnbr_fd((n * -1), fd);
 	}
-	if (n >= 0 && n <= 9)
-		ft_putchar_fd(n + 48, fd);
-	if (n > 9)
+	else if (n < 10)
+		ft_putchar(n + 48, fd);
+	else if (n >= 10)
 	{
-		ft_putnbr_fd(n / 10, fd);
-		ft_putnbr_fd(n % 10, fd);
+		ft_putnbr_fd((n / 10), fd);
+		ft_putnbr_fd((n % 10), fd);
 	}
 }
