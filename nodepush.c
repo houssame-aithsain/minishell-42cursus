@@ -6,36 +6,48 @@
 /*   By: hait-hsa <hait-hsa@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/01/19 18:49:57 by hait-hsa          #+#    #+#             */
-/*   Updated: 2023/05/17 19:42:41 by hait-hsa         ###   ########.fr       */
+/*   Updated: 2023/05/17 21:45:14 by hait-hsa         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
 
-int	ft_strln_operatore(char *str)
+int ft_strln_operatore(char *str)
 {
 	int i;
 
 	i = 0;
-	while(str && str[i] && str[i] != '>' && str[i] != '>')
+	while (str && str[i] && str[i] != '>' && str[i] != '>')
 		i++;
-	return i;	
+	return i;
 }
 int get_operatore(t_bash **dst, char *operatore, char *split, char *split_plus, int flag)
 {
+	int d_quote;
+	int s_quote;
 	int j;
 	int i;
 
 	i = 0;
 	j = 0;
+	d_quote = 0;
+	s_quote = 0;
+	if (split_plus && split_plus[ft_strlen(split_plus) - 1] == '|')
+	{
+		(*dst)->operator= '|';
+		split_plus[ft_strlen(split_plus) - 1] = 0;
+	}
 	if (flag)
 	{
-		printf("operatore===={%s}\n",operatore);
 		while (split && split[i] && operatore)
 		{
+			if (split[i] == '"')
+				d_quote++;
+			if (split[i] == 39)
+				s_quote++;
 			if (if_operatore(split + ft_strlen(split) - 1))
 				j++;
-			if (!ft_memcmp(operatore, split + i, ft_strlen(operatore)))
+			if (!ft_memcmp(operatore, split + i, ft_strlen(operatore)) && !(d_quote % 2) && !(s_quote % 2))
 			{
 				split[i] = 0;
 				(*dst)->redirection[(*dst)->flex] = malloc(sizeof(char) * ft_strlen(operatore));
@@ -65,10 +77,15 @@ int get_operatore(t_bash **dst, char *operatore, char *split, char *split_plus, 
 	}
 	else
 	{
-		printf("operatore===={%s}\n",operatore);
 		while (split && split[i] && operatore)
 		{
-			if (!ft_memcmp(operatore, split + i, ft_strlen(operatore)))
+			if (split[i] == '"')
+				d_quote++;
+			if (split[i] == 39)
+				s_quote++;
+			if (if_operatore(split + ft_strlen(split) - 1))
+				j++;
+			if (!ft_memcmp(operatore, split + i, ft_strlen(operatore)) && !(d_quote % 2) && !(s_quote % 2))
 			{
 				split[i] = 0;
 				(*dst)->redirection[(*dst)->flex] = malloc(sizeof(char) * ft_strlen(operatore));
@@ -145,7 +162,6 @@ void ft_strlcpy_shell(t_bash *dst, char *str)
 			red++;
 		i++;
 	}
-	// printf("%d\n", red);
 	dst->redirection = malloc(sizeof(char *) * red + 1);
 	dst->file = malloc(sizeof(char *) * red + 1);
 	i = 0;
@@ -173,18 +189,37 @@ void ft_strlcpy_shell(t_bash *dst, char *str)
 	j = 0;
 	while (split && split[++i])
 	{
+		printf("split[%s]\n",split[i]);
 		if (split[i][ft_strlen(split[i]) - 1] == '|')
 		{
-			dst->operator= split[i][ft_strlen(split[i]) - 1];
+			dst->operator= '|';
 			split[i][ft_strlen(split[i]) - 1] = 0;
 		}
 		while (split && split[i] && if_operatore(split[i]))
 		{
 			check = get_operatore(&dst, if_operatore(split[i]), split[i], split[i + 1], 1);
 			if (check == 2)
+			{
+				if (split[i] && split[i][0])
+				{
+					dst->arg[j] = malloc(sizeof(char) * ft_strlen(split[i]) + 1);
+					ft_strlcpy(dst->arg[j], split[i], ft_strlen(split[i]) + 1);
+					j++;
+				}
 				i++;
+			}
 			else if (check > 2)
+			{
+				if (split[i] && split[i][0])
+				{
+					dst->arg[j] = malloc(sizeof(char) * ft_strlen(split[i]) + 1);
+					ft_strlcpy(dst->arg[j], split[i], ft_strlen(split[i]) + 1);
+					j++;
+				}
 				i += 2;
+			}
+			else
+				break;
 			if (!split[i])
 				break;
 		}
@@ -212,6 +247,11 @@ void ft_strlcpy_shell(t_bash *dst, char *str)
 				space++;
 			}
 			j++;
+		}
+	if (split[i][ft_strlen(split[i]) - 1] == '|')
+		{
+			dst->operator= '|';
+			split[i][ft_strlen(split[i]) - 1] = 0;
 		}
 	}
 	dst->redirection[dst->flex] = NULL;
