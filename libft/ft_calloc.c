@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   ft_calloc.c                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: hait-hsa <hait-hsa@student.42.fr>          +#+  +:+       +#+        */
+/*   By: gothmane <gothmane@student.1337.ma>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2022/10/05 10:22:33 by hait-hsa          #+#    #+#             */
-/*   Updated: 2022/10/14 23:15:06 by hait-hsa         ###   ########.fr       */
+/*   Created: 2022/10/03 11:42:42 by gothmane          #+#    #+#             */
+/*   Updated: 2022/10/21 10:04:59 by gothmane         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,15 +14,18 @@
 
 void	*ft_calloc(size_t count, size_t size)
 {
-	char	*arr;
-	size_t	i;
+	void	*cv;
+	size_t	nbits;
 
-	i = 0;
+	nbits = count * size;
+	cv = malloc(nbits);
 	if (count == SIZE_MAX || size == SIZE_MAX)
 		return (0);
-	arr = malloc(count * size);
-	if (!arr)
-		return (NULL);
-	ft_bzero(arr, (count * size));
-	return (arr);
+	if (cv)
+	{
+		ft_bzero(cv, nbits);
+		return (cv);
+	}
+	else
+		return (0);
 }

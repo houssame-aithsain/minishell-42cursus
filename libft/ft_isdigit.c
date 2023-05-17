@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   ft_isdigit.c                                       :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: hait-hsa <hait-hsa@student.42.fr>          +#+  +:+       +#+        */
+/*   By: gothmane <gothmane@student.1337.ma>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2022/09/29 18:06:29 by hait-hsa          #+#    #+#             */
-/*   Updated: 2022/10/14 23:18:59 by hait-hsa         ###   ########.fr       */
+/*   Created: 2022/09/28 12:43:17 by gothmane          #+#    #+#             */
+/*   Updated: 2022/09/28 15:42:12 by gothmane         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,5 +14,7 @@
 
 int	ft_isdigit(int c)
 {
-	return (c >= 48 && c <= 57);
+	if (c >= 48 && c <= 57)
+		return (1);
+	return (0);
 }

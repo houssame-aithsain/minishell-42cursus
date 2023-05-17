@@ -3,61 +3,67 @@
 /*                                                        :::      ::::::::   */
 /*   ft_itoa.c                                          :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: hait-hsa <hait-hsa@student.42.fr>          +#+  +:+       +#+        */
+/*   By: gothmane <gothmane@student.1337.ma>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2022/10/09 12:13:54 by hait-hsa          #+#    #+#             */
-/*   Updated: 2022/10/20 22:07:31 by hait-hsa         ###   ########.fr       */
+/*   Created: 2022/10/08 11:37:40 by gothmane          #+#    #+#             */
+/*   Updated: 2022/10/21 10:05:28 by gothmane         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "libft.h"
 
-int	ft_check_numb(long int n)
-{
-	int	i;
+int	ft_counter(long n)
+{	
+	int		i;
 
 	i = 1;
-	while (1)
+	if (n < 0)
 	{
-		if (n < 0)
-		{
-			i++;
-			n *= -1;
-		}
-		n = n / 10;
-		if (n)
-			i++;
-		else
-			break ;
+		i++;
+		n *= -1;
+	}
+	while (n / 10 > 0)
+	{
+		n /= 10;
+		i++;
 	}
 	return (i);
 }
 
+void	ft_fillin(char *ms, int counter, long n)
+{
+	int	s;
+
+	s = 0;
+	if (n < 0)
+	{
+		n *= -1;
+		ms[0] = '-';
+		s = 1;
+	}
+	counter--;
+	while (counter >= s)
+	{
+		ms[counter] = (n % 10) + 48;
+		n = n / 10;
+		counter--;
+	}
+}
+
 char	*ft_itoa(int n)
 {
-	int			i;
-	int			x;
-	long int	cast;
-	char		*arr;
+	int		i;
+	char	*ms;
+	int		sign;
+	long	ln;
 
-	cast = (long int)n;
-	x = 0;
-	i = ft_check_numb(cast);
-	arr = malloc(((sizeof(char) * i) + 1));
-	if (!arr)
-		return (NULL);
-	if (cast < 0)
-	{
-		arr[0] = '-';
-		cast *= -1;
-		x = 1;
-	}
-	arr[i] = 0;
-	i--;
-	while (i >= x)
-	{
-		arr[i--] = (cast % 10) + 48;
-		cast = cast / 10;
-	}
-	return (arr);
+	sign = 0;
+	ln = n;
+	i = ft_counter(ln);
+	ms = malloc(i + 1);
+	if (!ms)
+		return (0);
+	ms[i] = '\0';
+	ft_fillin(ms, i, ln);
+	return (ms);
 }

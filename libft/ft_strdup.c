@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   ft_strdup.c                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: hait-hsa <hait-hsa@student.42.fr>          +#+  +:+       +#+        */
+/*   By: gothmane <gothmane@student.1337.ma>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2022/10/05 12:06:30 by hait-hsa          #+#    #+#             */
-/*   Updated: 2022/10/19 20:21:41 by hait-hsa         ###   ########.fr       */
+/*   Created: 2022/10/03 15:33:38 by gothmane          #+#    #+#             */
+/*   Updated: 2022/10/17 14:52:10 by gothmane         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,16 +14,20 @@
 
 char	*ft_strdup(const char *s1)
 {
+	int		sizes1;
+	char	*clone;
 	int		i;
-	char	*s_malloc;
-	char	*f_str;
 
-	f_str = (char *)s1;
-	i = (int)ft_strlen(f_str);
-	s_malloc = (char *)malloc(sizeof(char) * i + 1);
-	if (! s_malloc)
-		return (NULL);
-	s_malloc = ft_memcpy(s_malloc, s1, i);
-	s_malloc[i] = 0;
-	return (s_malloc);
+	i = 0;
+	sizes1 = ft_strlen(s1);
+	clone = malloc(sizes1 * sizeof(char) + 1);
+	if (!clone)
+		return (0);
+	while (s1[i])
+	{
+		clone[i] = s1[i];
+		i++;
+	}
+	clone[i] = '\0';
+	return (clone);
 }

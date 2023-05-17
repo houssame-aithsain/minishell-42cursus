@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   ft_strmapi.c                                       :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: hait-hsa <hait-hsa@student.42.fr>          +#+  +:+       +#+        */
+/*   By: gothmane <gothmane@student.1337.ma>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2022/10/16 18:45:17 by hait-hsa          #+#    #+#             */
-/*   Updated: 2022/10/20 22:09:52 by hait-hsa         ###   ########.fr       */
+/*   Created: 2022/10/07 14:43:56 by gothmane          #+#    #+#             */
+/*   Updated: 2022/10/21 11:06:38 by gothmane         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -15,17 +15,19 @@
 char	*ft_strmapi(char const *s, char (*f)(unsigned int, char))
 {
 	unsigned int	i;
-	char			*arr;
+	char			*mas;
 
-	arr = malloc(ft_strlen(s) + 1);
-	if (!arr)
-		return (NULL);
+	if (!s)
+		return (0);
+	mas = malloc(ft_strlen(s) + 1);
+	if (!mas)
+		return (0);
 	i = 0;
-	while (i < (unsigned int)ft_strlen(s))
+	while (s[i])
 	{
-		arr[i] = f(i, s[i]);
+		mas[i] = f(i, s[i]);
 		i++;
 	}
-	arr[i] = 0;
-	return (arr);
+	mas[i] = '\0';
+	return (mas);
 }

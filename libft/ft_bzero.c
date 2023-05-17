@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   ft_bzero.c                                         :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: hait-hsa <hait-hsa@student.42.fr>          +#+  +:+       +#+        */
+/*   By: gothmane <gothmane@student.1337.ma>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2022/10/04 18:51:47 by hait-hsa          #+#    #+#             */
-/*   Updated: 2022/10/14 23:10:27 by hait-hsa         ###   ########.fr       */
+/*   Created: 2022/09/30 14:01:10 by gothmane          #+#    #+#             */
+/*   Updated: 2022/10/01 16:55:11 by gothmane         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,14 +14,6 @@
 
 void	ft_bzero(void *s, size_t n)
 {
-	size_t	i;
-	char	*s_const;
-
-	s_const = (char *)s;
-	i = 0;
-	while (i < n)
-	{
-		s_const[i] = 0;
-		i++;
-	}
+	if (n != 0)
+		ft_memset(s, 0, n);
 }

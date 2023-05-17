@@ -3,16 +3,16 @@
 /*                                                        :::      ::::::::   */
 /*   minishell.c                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: hait-hsa <hait-hsa@student.42.fr>          +#+  +:+       +#+        */
+/*   By: gothmane <gothmane@student.1337.ma>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/04/01 19:42:55 by hait-hsa          #+#    #+#             */
-/*   Updated: 2023/04/15 21:43:14 by hait-hsa         ###   ########.fr       */
+/*   Updated: 2023/05/17 22:01:58 by gothmane         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
 
-int main(int argc, char **argv)
+int main(int argc, char **argv, char **env)
 {
-	readl_to_parse();
+	readl_to_parse(env);
 }

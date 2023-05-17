@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   readl_and_exec.c                                   :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: hait-hsa <hait-hsa@student.42.fr>          +#+  +:+       +#+        */
+/*   By: gothmane <gothmane@student.1337.ma>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/04/01 21:33:53 by hait-hsa          #+#    #+#             */
-/*   Updated: 2023/05/17 21:53:03 by hait-hsa         ###   ########.fr       */
+/*   Updated: 2023/05/17 22:01:39 by gothmane         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -465,7 +465,7 @@ void get_the_right_forma(char *ncoom, t_bash **ptr)
 	qoutes_remover(ptr);
 }
 
-void readl_to_parse()
+void readl_to_parse(char **env)
 {
 	t_bash *ptr;
 	t_var *var;

@@ -3,65 +3,64 @@
 /*                                                        :::      ::::::::   */
 /*   ft_split.c                                         :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: hait-hsa <hait-hsa@student.42.fr>          +#+  +:+       +#+        */
+/*   By: gothmane <gothmane@student.1337.ma>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2022/10/16 18:44:43 by hait-hsa          #+#    #+#             */
-/*   Updated: 2022/10/20 22:07:05 by hait-hsa         ###   ########.fr       */
+/*   Created: 2022/10/05 14:25:33 by gothmane          #+#    #+#             */
+/*   Updated: 2022/10/21 10:52:03 by gothmane         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "libft.h"
 
-size_t	ft_count_c(char *s, char c)
+int	ft_countersplit(char *s, char c)
 {
-	size_t	i;
+	int	i;
+	int	counter;
+
+	counter = 0;
+	i = 0;
+	while (s[i])
+	{
+		if (s[i] != c && (i == 0 || s[i - 1] == c))
+			counter++;
+		i++;
+	}
+	return (counter);
+}
+
+int	get_index(char *t, char c)
+{
+	int	i;
 
 	i = 0;
-	while (s[i] && s[i] != c)
+	while (t[i] && (t[i] != c))
 		i++;
 	return (i);
 }
 
-size_t	ft_countit(char const *s, char c)
-{
-	size_t	i;
-	size_t	j;
-
-	i = 0;
-	j = 0;
-	while (s[i])
-	{
-		if (s[i] != c && (s[i + 1] == c || s[i + 1] == 0))
-			j++;
-		i++;
-	}
-	return (j);
-}
-
 char	**ft_split(char const *s, char c)
 {
-	char	**arr;
-	size_t	i;
-	size_t	j;
-	size_t	len;
+	char	**strings;
+	int		count;
+	int		j;
 
-	i = 0;
-	j = ft_countit((char *)s, c);
-	arr = malloc(sizeof(char *) * (j + 1));
-	if (!arr)
+	j = 0;
+	if (!s)
 		return (0);
-	while (*(char *)s)
+	count = ft_countersplit((char *)s, c);
+	strings = (char **) malloc(sizeof(char *) * (count + 1));
+	if (!strings)
+		return (0);
+	while (*s)
 	{
-		if (*(char *)s != c)
-		{
-			len = ft_count_c((char *)s, c);
-			arr[i] = ft_substr((char *)s, 0, len);
-			s += len;
-			i++;
-		}
-		else
+		if (*s == c)
 			s++;
+		else
+		{
+			strings[j++] = ft_substr(s, 0, get_index((char *)s, c));
+			s += get_index((char *)s, c);
+		}
 	}
-	arr[i] = 0;
-	return (arr);
+	strings[j] = 0;
+	return (strings);
 }

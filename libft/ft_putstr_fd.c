@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   ft_putstr_fd.c                                     :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: hait-hsa <hait-hsa@student.42.fr>          +#+  +:+       +#+        */
+/*   By: gothmane <gothmane@student.1337.ma>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2022/10/16 18:44:39 by hait-hsa          #+#    #+#             */
-/*   Updated: 2022/10/19 20:17:46 by hait-hsa         ###   ########.fr       */
+/*   Created: 2022/10/07 12:51:39 by gothmane          #+#    #+#             */
+/*   Updated: 2022/10/21 11:16:44 by gothmane         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,9 +14,7 @@
 
 void	ft_putstr_fd(char *s, int fd)
 {
-	int	i;
-
-	i = 0;
-	while (s[i])
-		write (fd, &s[i++], 1);
+	if (s)
+		while (*s)
+			write(fd, s++, 1);
 }

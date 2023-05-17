@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   ft_striteri.c                                      :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: hait-hsa <hait-hsa@student.42.fr>          +#+  +:+       +#+        */
+/*   By: gothmane <gothmane@student.1337.ma>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2022/10/16 18:44:58 by hait-hsa          #+#    #+#             */
-/*   Updated: 2022/10/19 20:22:04 by hait-hsa         ###   ########.fr       */
+/*   Created: 2022/10/07 16:00:04 by gothmane          #+#    #+#             */
+/*   Updated: 2022/10/22 16:48:36 by gothmane         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,12 +14,15 @@
 
 void	ft_striteri(char *s, void (*f)(unsigned int, char *))
 {
-	unsigned int	i;
+	int	i;
 
 	i = 0;
-	while (s[i])
+	if (s)
 	{
-		f(i, &s[i]);
-		i++;
+		while (s[i])
+		{
+			f(i, &s[i]);
+			i++;
+		}
 	}
 }
