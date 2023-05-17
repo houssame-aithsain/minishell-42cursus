@@ -6,7 +6,7 @@
 /*   By: hait-hsa <hait-hsa@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/04/01 21:33:53 by hait-hsa          #+#    #+#             */
-/*   Updated: 2023/05/16 23:12:18 by hait-hsa         ###   ########.fr       */
+/*   Updated: 2023/05/17 19:53:19 by hait-hsa         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -53,9 +53,11 @@ char *if_operatore(char *ncoom)
 	int i;
 	char quote_type;
 	int quote_numb;
+	int skipe;
 
 	quote_numb = 0;
 	i = 0;
+	skipe = 0;
 	quote_type = 0;
 	while (ncoom && ncoom[i])
 	{
@@ -69,6 +71,8 @@ char *if_operatore(char *ncoom)
 			quote_type = 39;
 			break;
 		}
+		if (ncoom[i] == '>' || ncoom[i] == '<')
+			break;
 		i++;
 	}
 	i = 0;
@@ -87,12 +91,32 @@ char *if_operatore(char *ncoom)
 				}
 				while (ncoom[i] && ncoom[i] == ' ')
 					i++;
-				if ((ncoom[i] == '>' || ncoom[i] == '<') && quote_numb % 2)
+				if ((ncoom[i] == '>' || ncoom[i] == '<') && quote_numb % 2 && quote_numb)
 				{
-					return 0;
+					while(ncoom[i])
+					{
+						if (ncoom[i] == quote_type)
+							quote_numb++;
+						if (ncoom[i] == '>' || ncoom[i] == '<')
+						{
+							if (!(quote_numb % 2) && quote_numb)
+								skipe = 1;	
+						}
+						i++;
+					}
+					if (!skipe)
+						return 0;
+					else
+						break;
+				}
+				else if ((ncoom[i] == '>' || ncoom[i] == '<') && !(quote_numb % 2) && quote_numb)
+				{
+					skipe = 8;
 				}
 				i++;
 			}
+			if (skipe == 8)
+				break;
 		}
 		if (!ncoom[i])
 			break;

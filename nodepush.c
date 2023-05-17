@@ -6,12 +6,21 @@
 /*   By: hait-hsa <hait-hsa@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/01/19 18:49:57 by hait-hsa          #+#    #+#             */
-/*   Updated: 2023/05/16 23:12:18 by hait-hsa         ###   ########.fr       */
+/*   Updated: 2023/05/17 19:42:41 by hait-hsa         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
 
+int	ft_strln_operatore(char *str)
+{
+	int i;
+
+	i = 0;
+	while(str && str[i] && str[i] != '>' && str[i] != '>')
+		i++;
+	return i;	
+}
 int get_operatore(t_bash **dst, char *operatore, char *split, char *split_plus, int flag)
 {
 	int j;
@@ -21,6 +30,7 @@ int get_operatore(t_bash **dst, char *operatore, char *split, char *split_plus, 
 	j = 0;
 	if (flag)
 	{
+		printf("operatore===={%s}\n",operatore);
 		while (split && split[i] && operatore)
 		{
 			if (if_operatore(split + ft_strlen(split) - 1))
@@ -55,6 +65,7 @@ int get_operatore(t_bash **dst, char *operatore, char *split, char *split_plus, 
 	}
 	else
 	{
+		printf("operatore===={%s}\n",operatore);
 		while (split && split[i] && operatore)
 		{
 			if (!ft_memcmp(operatore, split + i, ft_strlen(operatore)))
@@ -156,7 +167,6 @@ void ft_strlcpy_shell(t_bash *dst, char *str)
 		space++;
 	}
 	dst->command[j] = 0;
-	check = 0;
 	check = get_operatore(&dst, if_operatore(dst->command), dst->command, split[i + 1], 0);
 	if (check >= 2)
 		i++;
