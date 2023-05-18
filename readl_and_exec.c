@@ -6,7 +6,7 @@
 /*   By: hait-hsa <hait-hsa@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/04/01 21:33:53 by hait-hsa          #+#    #+#             */
-/*   Updated: 2023/05/18 21:40:55 by hait-hsa         ###   ########.fr       */
+/*   Updated: 2023/05/18 21:45:28 by hait-hsa         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -171,6 +171,8 @@ void check_for_error(char *tmp, int *error)
 				i++;
 			while (tmp[i] == ' ')
 				i++;
+			if (tmp[i] == '|')
+				*error = PIPE;
 			if (tmp[i] == '>' || tmp[i] == '<')
 				*error = RD_ERROR;
 			if (!tmp[i])
