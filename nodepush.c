@@ -6,7 +6,7 @@
 /*   By: hait-hsa <hait-hsa@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/01/19 18:49:57 by hait-hsa          #+#    #+#             */
-/*   Updated: 2023/05/18 22:59:26 by hait-hsa         ###   ########.fr       */
+/*   Updated: 2023/05/19 00:22:55 by hait-hsa         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -187,127 +187,120 @@ int if_pipe(char *str)
 
 void ft_strlcpy_shell(t_bash *dst, char *str)
 {
-	int remove;
-	int red;
-	int check;
-	int space;
-	int j;
-	int i;
-	char **split;
-
-	i = 0;
-	j = 0;
-	red = 0;
-	check = 0;
-	space = 0;
+	t_cp var;
+	var.i = 0;
+	var.j = 0;
+	var.check = 0;
+	var.space = 0;
+	dst->red = 0;
 	dst->flex = 0;
 	dst->error = 0;
 	dst->operator= 0;
 	dst->redirection = NULL;
 	dst->file = NULL;
-	split = ft_split(str, ' ');
-	while (split[i])
-		i++;
-	dst->arg = malloc(sizeof(char *) * i);
-	i = 0;
-	while (split && split[i])
+	var.split = ft_split(str, ' ');
+	while (var.split[var.i])
+		var.i++;
+	dst->arg = malloc(sizeof(char *) * var.i);
+	var.i = 0;
+	while (var.split && var.split[var.i])
 	{
-		j = 0;
-		while (split[i][j])
+		var.j = 0;
+		while (var.split[var.i][var.j])
 		{
-			if (split[i][j] == '>' || split[i][j] == '<')
-				red++;
-			j++;
+			if (var.split[var.i][var.j] == '>' || var.split[var.i][var.j] == '<')
+				dst->red++;
+			var.j++;
 		}
-		i++;
+		var.i++;
 	}
-	j = 0;
-	dst->redirection = malloc(sizeof(char *) * red + 1);
-	dst->file = malloc(sizeof(char *) * red + 1);
-	i = 0;
-	while (split && split[i] && split[i][j])
+	var.j = 0;
+	dst->redirection = malloc(sizeof(char *) * dst->red + 1);
+	dst->file = malloc(sizeof(char *) * dst->red + 1);
+	var.i = 0;
+	while (var.split && var.split[var.i] && var.split[var.i][var.j])
 	{
-		dst->command[j] = split[i][j];
-		j++;
-		if (split[i][j] == '|')
+		dst->command[var.j] = var.split[var.i][var.j];
+		var.j++;
+		if (var.split[var.i][var.j] == '|')
 		{
-			dst->operator= split[i][j];
-			split[i][j] = 0;
+			dst->operator= var.split[var.i][var.j];
+			var.split[var.i][var.j] = 0;
 			break;
 		}
 	}
-	while (dst->command && dst->command[space])
+	while (dst->command && dst->command[var.space])
 	{
-		if (dst->command[space] == 11)
-			dst->command[space] = ' ';
-		space++;
+		if (dst->command[var.space] == 11)
+			dst->command[var.space] = ' ';
+		var.space++;
 	}
-	dst->command[j] = 0;
-	check = get_operatore(&dst, if_operatore(dst->command), dst->command, split[i + 1], 0);
-	if (check >= 2)
-		i++;
-	j = 0;
-	while (split && split[++i])
+	dst->command[var.j] = 0;
+	var.check = get_operatore(&dst, if_operatore(dst->command), dst->command, var.split[var.i + 1], 0);
+	if (var.check >= 2)
+		var.i++;
+	var.j = 0;
+	while (var.split && var.split[++var.i])
 	{
-		if (split[i][ft_strlen(split[i]) - 1] == '|')
+		if (var.split[var.i][ft_strlen(var.split[var.i]) - 1] == '|')
 		{
 			dst->operator= '|';
-			split[i][ft_strlen(split[i]) - 1] = 0;
+			var.split[var.i][ft_strlen(var.split[var.i]) - 1] = 0;
 		}
-		while (split && split[i] && if_operatore(split[i]))
+		while (var.split && var.split[var.i] && if_operatore(var.split[var.i]))
 		{
-			check = get_operatore(&dst, if_operatore(split[i]), split[i], split[i + 1], 1);
-			if (check == 2)
+			var.check = get_operatore(&dst, if_operatore(var.split[var.i]), var.split[var.i], var.split[var.i + 1], 1);
+			if (var.check == 2)
 			{
-				if (split[i] && split[i][0])
+				if (var.split[var.i] && var.split[var.i][0])
 				{
-					dst->arg[j] = malloc(sizeof(char) * ft_strlen(split[i]) + 1);
-					ft_strlcpy(dst->arg[j], split[i], ft_strlen(split[i]) + 1);
-					j++;
+					dst->arg[var.j] = malloc(sizeof(char) * ft_strlen(var.split[var.i]) + 1);
+					ft_strlcpy(dst->arg[var.j], var.split[var.i], ft_strlen(var.split[var.i]) + 1);
+					var.j++;
 				}
-				i++;
+				var.i++;
 			}
-			else if (check > 2)
+			else if (var.check > 2)
 			{
-				if (split[i] && split[i][0])
+				if (var.split[var.i] && var.split[var.i][0])
 				{
-					dst->arg[j] = malloc(sizeof(char) * ft_strlen(split[i]) + 1);
-					ft_strlcpy(dst->arg[j], split[i], ft_strlen(split[i]) + 1);
-					j++;
+					dst->arg[var.j] = malloc(sizeof(char) * ft_strlen(var.split[var.i]) + 1);
+					ft_strlcpy(dst->arg[var.j], var.split[var.i], ft_strlen(var.split[var.i]) + 1);
+					var.j++;
 				}
-				i += 2;
+				var.i += 2;
 			}
 			else
 				break;
-			if (!split[i])
+			if (!var.split[var.i])
 				break;
 		}
-		if (!split[i])
+		if (!var.split[var.i])
 			break;
-		if (split[i] && if_pipe(split[i]))
+		if (var.split[var.i] && if_pipe(var.split[var.i]))
 		{
-			space = 0;
-			dst->arg[j] = malloc(sizeof(char) * ft_strlen(split[i]) + 1);
-			ft_strlcpy(dst->arg[j], split[i], ft_strlen(split[i]) + 1);
-			if (dst->arg[j] && (dst->arg[j][ft_strlen(dst->arg[j]) - 1] == '|' || if_operatore(dst->arg[j])))
-				dst->arg[j][ft_strlen(dst->arg[j]) - 1] = 0;
-			while (dst->arg[j] && dst->arg[j][space])
+			var.space = 0;
+			dst->arg[var.j] = malloc(sizeof(char) * ft_strlen(var.split[var.i]) + 1);
+			ft_strlcpy(dst->arg[var.j], var.split[var.i], ft_strlen(var.split[var.i]) + 1);
+			if (dst->arg[var.j] && (dst->arg[var.j][ft_strlen(dst->arg[var.j]) - 1] == '|' || if_operatore(dst->arg[var.j])))
+				dst->arg[var.j][ft_strlen(dst->arg[var.j]) - 1] = 0;
+			while (dst->arg[var.j] && dst->arg[var.j][var.space])
 			{
-				if (dst->arg[j][space] == 11)
-					dst->arg[j][space] = ' ';
-				space++;
+				if (dst->arg[var.j][var.space] == 11)
+					dst->arg[var.j][var.space] = ' ';
+				var.space++;
 			}
-			j++;
+			var.j++;
 		}
-		if (split[i][ft_strlen(split[i]) - 1] == '|')
+		if (var.split[var.i][ft_strlen(var.split[var.i]) - 1] == '|')
 		{
 			dst->operator= '|';
-			split[i][ft_strlen(split[i]) - 1] = 0;
+			var.split[var.i][ft_strlen(var.split[var.i]) - 1] = 0;
 		}
 	}
 	dst->redirection[dst->flex] = NULL;
 	dst->file[dst->flex] = NULL;
-	dst->arg[j] = NULL;
+	dst->arg[var.j] = NULL;
 }
 
 t_bash *get_last(t_bash *ptr)

@@ -20,6 +20,7 @@
 #define NSFOD		9
 // str open
 typedef struct s_node{
+	int		red;
 	int		flex;
 	char	**file;
 	char	**redirection;
@@ -53,6 +54,15 @@ typedef struct rquotes{
 	char *file;
 	char qoute_type;
 } t_rquotes;
+
+typedef struct cp{
+	int remove;
+	int check;
+	int space;
+	int j;
+	int i;
+	char **split;
+} t_cp;
 
 // str close
 typedef struct var
