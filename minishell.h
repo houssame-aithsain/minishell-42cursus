@@ -16,6 +16,7 @@
 #define SEMICOLON	5
 #define S_ERROR		6
 #define RD_ERROR	7
+#define S_RD_ERROR	8
 #define NSFOD		9
 
 typedef struct s_node{

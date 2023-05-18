@@ -6,48 +6,12 @@
 /*   By: hait-hsa <hait-hsa@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/04/01 21:33:53 by hait-hsa          #+#    #+#             */
-/*   Updated: 2023/05/18 20:29:10 by hait-hsa         ###   ########.fr       */
+/*   Updated: 2023/05/18 21:15:26 by hait-hsa         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
 
-int check_if_valide(char *ncoom, int i)
-{
-	char quote_type;
-	int quote_numb;
-
-	quote_numb = 0;
-	quote_type = 0;
-	while (ncoom && ncoom[i])
-	{
-		if (ncoom[i] == '"')
-		{
-			quote_type = '"';
-			quote_numb++;
-			break;
-		}
-		if (ncoom[i] == 39)
-		{
-			quote_type = 39;
-			quote_numb++;
-			break;
-		}
-		i++;
-	}
-	if (!quote_type)
-		return (0);
-	i = 0;
-	while (ncoom && ncoom[i])
-	{
-		if (ncoom[i] == quote_type)
-			quote_numb++;
-		i++;
-	}
-	if (!(quote_numb % 2) && quote_numb)
-		return 0;
-	return 1;
-}
 char *if_operatore(char *ncoom)
 {
 	int i;
@@ -126,33 +90,13 @@ char *if_operatore(char *ncoom)
 	while (ncoom && ncoom[i])
 	{
 		if (!ft_memcmp(ncoom + i, ">>", 2))
-		{
-			// if (check_if_valide(ncoom, i))
-			// 	return 0;
-			// else
 			return ">>\0";
-		}
 		else if (!ft_memcmp(ncoom + i, "<<", 2))
-		{
-			// if (check_if_valide(ncoom, i))
-			// 	return 0;
-			// else
 			return "<<\0";
-		}
 		else if (ncoom[i] == '>')
-		{
-			// if (check_if_valide(ncoom, i))
-			// 	return 0;
-			// else
 			return ">\0";
-		}
 		else if (ncoom[i] == '<')
-		{
-			// if (check_if_valide(ncoom, i))
-			// 	return 0;
-			// else
 			return "<\0";
-		}
 		i++;
 	}
 	return 0;
@@ -216,6 +160,10 @@ void check_for_error(char *tmp, int *error)
 				i++;
 			while (tmp[i] == ' ')
 				i++;
+			if (tmp[i] == '>' || tmp[i] == '<')
+				*error = RD_ERROR;
+			if (!tmp[i])
+				*error = S_RD_ERROR;
 			if (tmp[i] == '"' || tmp[i] == 39)
 			{
 				i++;
@@ -385,7 +333,6 @@ char *leave_it_for_me(char *str)
 				i++;
 			}
 		}
-		// printf("holder====={%s\n}",holder);
 		else if (str[i] == 39)
 		{
 			i++;
@@ -431,7 +378,6 @@ void get_the_right_forma(char *ncoom, t_bash **ptr)
 				while (ncoom[i] && ncoom[i] != '"')
 					holder[j++] = ncoom[i++];
 			}
-			// printf("holder====={%s\n}",holder);
 			else if (ncoom[i] == 39)
 			{
 				holder[j++] = ncoom[i++];
@@ -441,10 +387,7 @@ void get_the_right_forma(char *ncoom, t_bash **ptr)
 			if (ncoom[i])
 			{
 				if (ncoom[i] == '|')
-				{
-					// check_for_error(ncoom , &error, 0, i + 1, 0, 0);
 					break;
-				}
 				else
 					holder[j++] = ncoom[i++];
 			}
@@ -454,7 +397,6 @@ void get_the_right_forma(char *ncoom, t_bash **ptr)
 			holder[j++] = '|';
 			i++;
 		}
-		// printf("==%s==\n", holder);
 		holder[j] = 0;
 		holder = leave_it_for_me(holder);
 		// printf("before[%s]\n", holder);
