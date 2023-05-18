@@ -6,7 +6,7 @@
 /*   By: hait-hsa <hait-hsa@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/04/01 21:33:53 by hait-hsa          #+#    #+#             */
-/*   Updated: 2023/05/18 21:45:28 by hait-hsa         ###   ########.fr       */
+/*   Updated: 2023/05/18 22:58:24 by hait-hsa         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -200,22 +200,36 @@ void check_for_error(char *tmp, int *error)
 	}
 }
 
-void ft_copy(char *dst, char qoute_type, int *v, int *j, char *command)
+void ft_copy(char *dst, t_rquotes *var, int flag)
 {
 	int quote_numb;
-
+	int *v;
+	int *j;
+	char *command;
+	if (!flag)
+	{
+		v = &var->v;
+		j = &var->j;
+		command = var->command;
+	}
+	else
+	{
+		v = &var->j;
+		j = &var->arg_count;
+		command = var->arg[var->i];
+	}
 	quote_numb = 1;
 	(*v)++;
 	while (dst[*v])
 	{
 		if (dst[*v] == '"' || dst[*v] == 39)
 		{
-			if (dst[*v] == qoute_type)
+			if (dst[*v] == var->qoute_type)
 				quote_numb++;
-			if (dst[*v] != qoute_type && !(quote_numb % 2))
+			if (dst[*v] != var->qoute_type && !(quote_numb % 2))
 				break;
 		}
-		if (dst[*v] != qoute_type)
+		if (dst[*v] != var->qoute_type)
 			command[(*j)++] = dst[*v];
 		(*v)++;
 	}
@@ -236,84 +250,75 @@ void qoutes_remover(t_bash **ptr)
 {
 	t_bash *tmp;
 	t_bash *head;
-	int v;
-	int j;
-	int i;
-	int arg_count;
-	int s_qoute;
-	int d_qoute;
-	char *command;
-	char **arg;
-	char *file;
-	char qoute_type;
+	t_rquotes var;
 
-	i = 0;
-	v = 0;
-	s_qoute = 0;
-	d_qoute = 0;
+	var.i = 0;
+	var.v = 0;
+	var.s_qoute = 0;
+	var.d_qoute = 0;
 	tmp = *ptr;
 	head = *ptr;
 	if (!ptr || !*ptr)
 		return;
-	while ((*ptr)->command && (*ptr)->command[i])
+	while ((*ptr)->command && (*ptr)->command[var.i])
 	{
-		if ((*ptr)->command[i] == 39)
-			s_qoute++;
-		if ((*ptr)->command[i] == '"')
-			d_qoute++;
-		i++;
+		if ((*ptr)->command[var.i] == 39)
+			var.s_qoute++;
+		if ((*ptr)->command[var.i] == '"')
+			var.d_qoute++;
+		var.i++;
 	}
-	arg = tmp->arg;
+	var.arg = tmp->arg;
 	while (tmp)
 	{
-		i = 0;
-		j = 0;
-		v = 0;
-		command = malloc(sizeof(char) * ft_strlen(tmp->command) + 100);
-		arg = malloc(sizeof(char *) * arg_lent(tmp->arg) + 1);
-		while (tmp->command[v])
+		var.i = 0;
+		var.j = 0;
+		var.v = 0;
+		var.command = malloc(sizeof(char) * ft_strlen(tmp->command) + 100);
+		var.arg = malloc(sizeof(char *) * arg_lent(tmp->arg) + 1);
+		while (tmp->command[var.v])
 		{
-			if (tmp->command[v] == 39)
+			if (tmp->command[var.v] == 39)
 			{
-				qoute_type = 39;
-				ft_copy(tmp->command, qoute_type, &v, &j, command);
+				var.qoute_type = 39;
+				ft_copy(tmp->command, &var, 0);
 			}
-			else if (tmp->command[v] == '"')
+			else if (tmp->command[var.v] == '"')
 			{
-				qoute_type = '"';
-				ft_copy(tmp->command, qoute_type, &v, &j, command);
+				var.qoute_type = '"';
+				ft_copy(tmp->command, &var, 0);
 			}
 			else
-				command[j++] = tmp->command[v++];
+				var.command[var.j++] = tmp->command[var.v++];
 		}
-		command[j] = 0;
-		while (tmp->arg[i])
+		var.command[var.j] = 0;
+		while (tmp->arg[var.i])
 		{
-			j = 0;
-			arg_count = 0;
-			arg[i] = malloc(sizeof(char) * ft_strlen(tmp->arg[i]));
-			qoutes_counter(tmp->arg[i], &s_qoute, &d_qoute);
-			while (tmp->arg[i] && tmp->arg[i][j])
+			var.j = 0;
+			var.arg_count = 0;
+			var.arg[var.i] = malloc(sizeof(char) * ft_strlen(tmp->arg[var.i]));
+			qoutes_counter(tmp->arg[var.i], &var.s_qoute, &var.d_qoute);
+			while (tmp->arg[var.i] && tmp->arg[var.i][var.j])
 			{
-				if (tmp->arg[i][j] == 39)
+				if (tmp->arg[var.i][var.j] == 39)
 				{
-					qoute_type = 39;
-					ft_copy(tmp->arg[i], qoute_type, &j, &arg_count, arg[i]);
+					var.qoute_type = 39;
+					ft_copy(tmp->arg[var.i], &var, 1);
 				}
-				else if (tmp->arg[i][j] == '"')
+				else if (tmp->arg[var.i][var.j] == '"')
 				{
-					qoute_type = '"';
-					ft_copy(tmp->arg[i], qoute_type, &j, &arg_count, arg[i]);
+					var.qoute_type = '"';
+					ft_copy(tmp->arg[var.i], &var, 1);
 				}
 				else
-					arg[i][arg_count++] = tmp->arg[i][j++];
+					var.arg[var.i][var.arg_count++] = tmp->arg[var.i][var.j++];
 			}
-			arg[i][arg_count] = 0;
-			i++;
+			var.arg[var.i][var.arg_count] = 0;
+			var.i++;
 		}
-		arg[i] = NULL;
-		tmp->command = command;
-		tmp->arg = arg;
+		var.arg[var.i] = NULL;
+		tmp->command = var.command;
+		tmp->arg = var.arg;
 		tmp = tmp->link;
 	}
 	ptr = &head;
@@ -331,10 +336,10 @@ int pipe_checker(char *ncoom)
 	return 0;
 }
 
-char *leave_it_for_me(char *str)
+char *replace_spaces_in_quotes(char *str)
 {
-	char qoute_type;
 	int i;
+	char qoute_type;
 	int single_qoute;
 	int doble_qoute;
 
@@ -350,7 +355,7 @@ char *leave_it_for_me(char *str)
 			while (str[i] && str[i] != '"')
 			{
 				if (str[i] == ' ')
-					str[i] = '~';
+					str[i] = 11;
 				i++;
 			}
 		}
@@ -360,7 +365,7 @@ char *leave_it_for_me(char *str)
 			while (str[i] && str[i] != 39)
 			{
 				if (str[i] == ' ')
-					str[i] = '~';
+					str[i] = 11;
 				i++;
 			}
 		}
@@ -373,57 +378,50 @@ char *leave_it_for_me(char *str)
 
 void get_the_right_forma(char *ncoom, t_bash **ptr)
 {
-	char *tmp;
-	char *holder;
-	int error;
-	int qoute_numb;
-	int dqoute_numb;
-	int o_count;
-	int i;
-	int j;
+	t_format var;
 
-	i = 0;
-	error = 0;
-	check_for_error(ncoom, &error);
-	holder = malloc(sizeof(char) * ft_strlen(ncoom));
+	var.i = 0;
+	var.error = 0;
+	check_for_error(ncoom, &var.error);
+	var.holder = malloc(sizeof(char) * ft_strlen(ncoom));
 	*ptr = NULL;
-	while (ncoom && ncoom[i])
+	while (ncoom && ncoom[var.i])
 	{
-		j = 0;
-		qoute_numb = 0;
-		dqoute_numb = 0;
-		while (ncoom[i])
+		var.j = 0;
+		var.qoute_numb = 0;
+		var.dqoute_numb = 0;
+		while (ncoom[var.i])
 		{
-			if (ncoom[i] == '"')
+			if (ncoom[var.i] == '"')
 			{
-				holder[j++] = ncoom[i++];
-				while (ncoom[i] && ncoom[i] != '"')
-					holder[j++] = ncoom[i++];
+				var.holder[var.j++] = ncoom[var.i++];
+				while (ncoom[var.i] && ncoom[var.i] != '"')
+					var.holder[var.j++] = ncoom[var.i++];
 			}
-			else if (ncoom[i] == 39)
+			else if (ncoom[var.i] == 39)
 			{
-				holder[j++] = ncoom[i++];
-				while (ncoom[i] && ncoom[i] != 39)
-					holder[j++] = ncoom[i++];
+				var.holder[var.j++] = ncoom[var.i++];
+				while (ncoom[var.i] && ncoom[var.i] != 39)
+					var.holder[var.j++] = ncoom[var.i++];
 			}
-			if (ncoom[i])
+			if (ncoom[var.i])
 			{
-				if (ncoom[i] == '|')
+				if (ncoom[var.i] == '|')
 					break;
 				else
-					holder[j++] = ncoom[i++];
+					var.holder[var.j++] = ncoom[var.i++];
 			}
 		}
-		if (ncoom[i] == '|')
+		if (ncoom[var.i] == '|')
 		{
-			holder[j++] = '|';
-			i++;
+			var.holder[var.j++] = '|';
+			var.i++;
 		}
-		holder[j] = 0;
-		holder = leave_it_for_me(holder);
-		// printf("before[%s]\n", holder);
-		nodepush(ptr, holder, 1);
-		(*ptr)->error = error;
+		var.holder[var.j] = 0;
+		var.holder = replace_spaces_in_quotes(var.holder);
+		// printf("before[%s]\n", var.holder);
+		nodepush(ptr, var.holder, 1);
+		(*ptr)->error = var.error;
 	}
 	qoutes_remover(ptr);
 }
@@ -431,13 +429,9 @@ void get_the_right_forma(char *ncoom, t_bash **ptr)
 void readl_to_parse(char **env)
 {
 	t_bash *ptr;
-	t_var *var;
 	int i;
 	char *line;
-	char *ncoom;
 
-	ncoom = NULL;
-	var = malloc(sizeof(t_var));
 	ptr = malloc(sizeof(t_bash));
 	while (TRUE)
 	{

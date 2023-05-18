@@ -18,7 +18,7 @@
 #define RD_ERROR	7
 #define S_RD_ERROR	8
 #define NSFOD		9
-
+// str open
 typedef struct s_node{
 	int		flex;
 	char	**file;
@@ -30,6 +30,31 @@ typedef struct s_node{
 	struct s_node *link;
 } t_bash;
 
+typedef struct format{
+	char *tmp;
+	char *holder;
+	int error;
+	int qoute_numb;
+	int dqoute_numb;
+	int o_count;
+	int i;
+	int j;
+} t_format;
+
+typedef struct rquotes{
+	int v;
+	int j;
+	int i;
+	int arg_count;
+	int s_qoute;
+	int d_qoute;
+	char *command;
+	char **arg;
+	char *file;
+	char qoute_type;
+} t_rquotes;
+
+// str close
 typedef struct var
 {
 	int		j;

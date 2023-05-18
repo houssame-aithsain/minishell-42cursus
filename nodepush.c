@@ -6,7 +6,7 @@
 /*   By: hait-hsa <hait-hsa@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/01/19 18:49:57 by hait-hsa          #+#    #+#             */
-/*   Updated: 2023/05/18 21:03:09 by hait-hsa         ###   ########.fr       */
+/*   Updated: 2023/05/18 22:59:26 by hait-hsa         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -54,7 +54,7 @@ void n_remove(char *file)
 	space = 0;
 	while (file && file[space])
 	{
-		if (file[space] == '~')
+		if (file[space] == 11)
 			file[space] = ' ';
 		space++;
 	}
@@ -238,7 +238,7 @@ void ft_strlcpy_shell(t_bash *dst, char *str)
 	}
 	while (dst->command && dst->command[space])
 	{
-		if (dst->command[space] == '~')
+		if (dst->command[space] == 11)
 			dst->command[space] = ' ';
 		space++;
 	}
@@ -293,7 +293,7 @@ void ft_strlcpy_shell(t_bash *dst, char *str)
 				dst->arg[j][ft_strlen(dst->arg[j]) - 1] = 0;
 			while (dst->arg[j] && dst->arg[j][space])
 			{
-				if (dst->arg[j][space] == '~')
+				if (dst->arg[j][space] == 11)
 					dst->arg[j][space] = ' ';
 				space++;
 			}
