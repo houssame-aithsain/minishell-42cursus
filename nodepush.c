@@ -6,7 +6,7 @@
 /*   By: hait-hsa <hait-hsa@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/01/19 18:49:57 by hait-hsa          #+#    #+#             */
-/*   Updated: 2023/05/17 23:50:20 by hait-hsa         ###   ########.fr       */
+/*   Updated: 2023/05/18 20:13:53 by hait-hsa         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -53,7 +53,6 @@ int get_operatore(t_bash **dst, char *operatore, char *split, char *split_plus, 
 	int j;
 	int i;
 
-	// printf("entre===={%s}\n",split);
 	i = 0;
 	j = 0;
 	d_quote = 0;
@@ -85,19 +84,21 @@ int get_operatore(t_bash **dst, char *operatore, char *split, char *split_plus, 
 				{
 					(*dst)->file[(*dst)->flex] = malloc(sizeof(char) * ft_strlen(split + i));
 					ft_strlcpy((*dst)->file[(*dst)->flex], split + i, ft_strlen_operatore(split + i) + 1);
-					// printf("flex==={%s}\n",(*dst)->file[(*dst)->flex]);
 					(*dst)->flex++;
-					// printf("strlen======{%d}\n",ft_strlen(split  +i));
-					// printf("split[i]======{%s}\n",split + ft_strlen_operatore(split + i) + 1);
-					if (if_operatore(split + i))
-						get_operatore(dst, if_operatore(split + ft_strlen_operatore(split + i) + 1), split + ft_strlen_operatore(split + i) + 1,split_plus, flag);
+					split = split + i + ft_strlen_operatore(split + i);
+					if (if_operatore(split))
+						get_operatore(dst, if_operatore(split), split,split_plus, flag);
 					return 1;
 				}
 				else if (split_plus)
 				{
 					(*dst)->file[(*dst)->flex] = malloc(sizeof(char) * ft_strlen(split_plus));
 					ft_strlcpy((*dst)->file[(*dst)->flex], split_plus, ft_strlen_operatore(split_plus) + 1);
+					split_plus[0] = 0;
 					(*dst)->flex++;
+					split_plus = split_plus + i + ft_strlen_operatore(split_plus + i);
+					if (if_operatore(split_plus))
+						get_operatore(dst, if_operatore(split_plus), split_plus,split_plus, flag);
 					return (j + 2);
 				}
 				(*dst)->flex++;
@@ -127,15 +128,21 @@ int get_operatore(t_bash **dst, char *operatore, char *split, char *split_plus, 
 				if (split[i])
 				{
 					(*dst)->file[(*dst)->flex] = malloc(sizeof(char) * ft_strlen(split + i));
-					ft_strlcpy((*dst)->file[(*dst)->flex], split + i, ft_strlen(split + i) + 1);
+					ft_strlcpy((*dst)->file[(*dst)->flex], split + i, ft_strlen_operatore(split + i) + 1);
 					(*dst)->flex++;
+					split = split + i + ft_strlen_operatore(split + i);
+					if (if_operatore(split))
+						get_operatore(dst, if_operatore(split), split,split_plus, flag);
 					return 1;
 				}
 				else if (split_plus)
 				{
 					(*dst)->file[(*dst)->flex] = malloc(sizeof(char) * ft_strlen(split_plus));
-					ft_strlcpy((*dst)->file[(*dst)->flex], split_plus, ft_strlen(split_plus) + 1);
+					ft_strlcpy((*dst)->file[(*dst)->flex], split_plus, ft_strlen_operatore(split_plus) + 1);
 					(*dst)->flex++;
+					split_plus = split_plus + i + ft_strlen_operatore(split_plus + i);
+					if (if_operatore(split_plus))
+						get_operatore(dst, if_operatore(split_plus), split_plus,NULL, flag);
 					return (j + 2);
 				}
 				(*dst)->flex++;
@@ -170,7 +177,6 @@ void ft_strlcpy_shell(t_bash *dst, char *str)
 	int i;
 	char **split;
 
-	// printf("\n\n%s\n\n",str);
 	i = 0;
 	j = 0;
 	red = 0;
@@ -192,14 +198,13 @@ void ft_strlcpy_shell(t_bash *dst, char *str)
 		j = 0;
 		while(split[i][j])
 		{
-			if (if_operatore(split[i] + j))
+			if (split[i][j] == '>' || split[i][j] == '<')
 			red++;
 			j++;
 		}
 		i++;
 	}
 	j = 0;
-	printf("-->%d<--\n",red);
 	dst->redirection = malloc(sizeof(char *) * red + 1);
 	dst->file = malloc(sizeof(char *) * red + 1);
 	i = 0;
@@ -227,7 +232,6 @@ void ft_strlcpy_shell(t_bash *dst, char *str)
 	j = 0;
 	while (split && split[++i])
 	{
-		// printf("split[%s]\n",split[i]);
 		if (split[i][ft_strlen(split[i]) - 1] == '|')
 		{
 			dst->operator= '|';
@@ -264,12 +268,13 @@ void ft_strlcpy_shell(t_bash *dst, char *str)
 		if (!split[i])
 			break;
 		space = 0;
-		// while (dst->file && dst->file[remove] && dst->file[remove][space])
-		// {
-		// 	if (dst->file[remove][space] == '~')
-		// 		dst->file[remove][space] = ' ';
-		// 	space++;
-		// }
+		while (dst->file && dst->file[remove] && dst->file[remove][space])
+		{
+			
+			if (dst->file[remove][space] == '~')
+				dst->file[remove][space] = ' ';
+			space++;
+		}
 		remove++;
 		if (split[i] && if_pipe(split[i]))
 		{
