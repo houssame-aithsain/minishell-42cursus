@@ -15,6 +15,7 @@
 #define BACK_SLASH	4
 #define SEMICOLON	5
 #define S_ERROR		6
+#define RD_ERROR	7
 #define NSFOD		9
 
 typedef struct s_node{
