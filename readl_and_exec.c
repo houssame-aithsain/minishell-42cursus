@@ -6,11 +6,37 @@
 /*   By: hait-hsa <hait-hsa@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/04/01 21:33:53 by hait-hsa          #+#    #+#             */
-/*   Updated: 2023/05/18 21:15:26 by hait-hsa         ###   ########.fr       */
+/*   Updated: 2023/05/18 21:40:55 by hait-hsa         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
+
+char quote_typ(char *ncoom, char f_type, char s_type)
+{
+	char quote_type;
+	int i;
+
+	i = 0;
+	quote_type = 0;
+	while (ncoom && ncoom[i])
+	{
+		if (ncoom[i] == f_type)
+		{
+			quote_type = f_type;
+			break;
+		}
+		if (ncoom[i] == s_type)
+		{
+			quote_type = s_type;
+			break;
+		}
+		if (ncoom[i] == '>' || ncoom[i] == '<')
+			break;
+		i++;
+	}
+	return quote_type;
+}
 
 char *if_operatore(char *ncoom)
 {
@@ -22,24 +48,7 @@ char *if_operatore(char *ncoom)
 	quote_numb = 0;
 	i = 0;
 	skipe = 0;
-	quote_type = 0;
-	while (ncoom && ncoom[i])
-	{
-		if (ncoom[i] == '"')
-		{
-			quote_type = '"';
-			break;
-		}
-		if (ncoom[i] == 39)
-		{
-			quote_type = 39;
-			break;
-		}
-		if (ncoom[i] == '>' || ncoom[i] == '<')
-			break;
-		i++;
-	}
-	i = 0;
+	quote_type = quote_typ(ncoom, '"', 39);
 	while (ncoom && ncoom[i] && quote_type)
 	{
 		if (ncoom[i] == quote_type)
@@ -57,14 +66,14 @@ char *if_operatore(char *ncoom)
 					i++;
 				if ((ncoom[i] == '>' || ncoom[i] == '<') && quote_numb % 2 && quote_numb)
 				{
-					while(ncoom[i])
+					while (ncoom[i])
 					{
 						if (ncoom[i] == quote_type)
 							quote_numb++;
 						if (ncoom[i] == '>' || ncoom[i] == '<')
 						{
 							if (!(quote_numb % 2) && quote_numb)
-								skipe = 1;	
+								skipe = 1;
 						}
 						i++;
 					}
@@ -122,6 +131,7 @@ void qoutes_counter(char *arg, int *s_qoute, int *d_qoute)
 void check_for_error(char *tmp, int *error)
 {
 	int i;
+	char quote_type;
 
 	i = 0;
 	while (tmp && tmp[i])
@@ -156,7 +166,8 @@ void check_for_error(char *tmp, int *error)
 		if (tmp[i] == '>' || tmp[i] == '<')
 		{
 			i++;
-			if (tmp[i] == '>' || tmp[i] == '<')
+			quote_type = quote_typ(tmp, '>', '<');
+			if (tmp[i] == quote_type)
 				i++;
 			while (tmp[i] == ' ')
 				i++;
@@ -174,6 +185,14 @@ void check_for_error(char *tmp, int *error)
 						*error = NSFOD;
 				}
 			}
+		}
+		if (tmp[i] == '|')
+		{
+			i++;
+			while (tmp[i] == ' ')
+				i++;
+			if (!tmp[i])
+				*error = PIPE;
 		}
 		i++;
 	}
@@ -363,6 +382,7 @@ void get_the_right_forma(char *ncoom, t_bash **ptr)
 
 	i = 0;
 	error = 0;
+	check_for_error(ncoom, &error);
 	holder = malloc(sizeof(char) * ft_strlen(ncoom));
 	*ptr = NULL;
 	while (ncoom && ncoom[i])
@@ -400,7 +420,6 @@ void get_the_right_forma(char *ncoom, t_bash **ptr)
 		holder[j] = 0;
 		holder = leave_it_for_me(holder);
 		// printf("before[%s]\n", holder);
-		check_for_error(holder, &error);
 		nodepush(ptr, holder, 1);
 		(*ptr)->error = error;
 	}
@@ -443,9 +462,9 @@ void readl_to_parse(char **env)
 			printf("command=[%s]\n", ptr->command);
 			while (ptr->arg[x])
 				printf("arg=[%s]\n", ptr->arg[x++]);
-			while(ptr->redirection[h])
+			while (ptr->redirection[h])
 				printf("redirection=[%s]\n", ptr->redirection[h++]);
-			while(ptr->file[f])
+			while (ptr->file[f])
 				printf("file=[%s]\n", ptr->file[f++]);
 			printf("operator=[%c]\n", ptr->operator);
 			printf("error=[%d]\n", ptr->error);
