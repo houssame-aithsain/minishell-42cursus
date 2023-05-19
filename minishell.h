@@ -22,17 +22,20 @@
 typedef struct s_node{
 	int		red;
 	int		flex;
+	int		file_free;
+	int		red_free;
+	int		args_malloc;
 	char	**file;
 	char	**redirection;
-	char	*command;
 	char	**arg;
+	char	*command;
+	char	*operatore;
 	char	operator;
 	int		error;
 	struct s_node *link;
 } t_bash;
 
 typedef struct format{
-	char *tmp;
 	char *holder;
 	int error;
 	int qoute_numb;
@@ -100,7 +103,7 @@ typedef struct s_list_env
 char			*ft_strnew_bb(size_t size);
 char			*ft_strjoin_bb(char *s1, char const *s2);
 char			*if_operatore(char *ncoom);
-void			readl_to_parse(char **env);
+void			readl_to_parse();
 int				if_grep(char *line, int i, int flag);
 char			*parse_input(char *line, t_var *var);
 int				ft_loop(char *line, t_var *var);
@@ -117,7 +120,6 @@ int 			ft_count_2d(char **two_dem);
 void			ft_unset(t_list_env **env, t_list_export **exp, char *var_to_unset);
 void    		ft_env(char **env);
 void    		ft_exit(void);
-void			readl_to_parse(char **env);
 void			ft_print_double_arr(char **var);
 void			ft_print_lst_env(t_list_env *ls);
 t_list_env		*put_env_to_ls(char **env);

@@ -6,7 +6,7 @@
 /*   By: hait-hsa <hait-hsa@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/04/01 21:33:53 by hait-hsa          #+#    #+#             */
-/*   Updated: 2023/05/18 22:58:24 by hait-hsa         ###   ########.fr       */
+/*   Updated: 2023/05/19 19:45:21 by hait-hsa         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -62,6 +62,8 @@ char *if_operatore(char *ncoom)
 					quote_numb++;
 					i++;
 				}
+				if (!ncoom[i])
+					break;
 				while (ncoom[i] && ncoom[i] == ' ')
 					i++;
 				if ((ncoom[i] == '>' || ncoom[i] == '<') && quote_numb % 2 && quote_numb)
@@ -193,7 +195,7 @@ void check_for_error(char *tmp, int *error)
 			i++;
 			while (tmp[i] == ' ')
 				i++;
-			if (!tmp[i])
+			if (!tmp[i] || tmp[i] == '|')
 				*error = PIPE;
 		}
 		i++;
@@ -274,8 +276,8 @@ void qoutes_remover(t_bash **ptr)
 		var.i = 0;
 		var.j = 0;
 		var.v = 0;
-		var.command = malloc(sizeof(char) * ft_strlen(tmp->command) + 100);
-		var.arg = malloc(sizeof(char *) * arg_lent(tmp->arg) + 1);
+		var.command = malloc(sizeof(char) * ft_strlen(tmp->command) + 1);
+		var.arg = malloc(sizeof(char *) * (arg_lent(tmp->arg) + 1));
 		while (tmp->command[var.v])
 		{
 			if (tmp->command[var.v] == 39)
@@ -296,7 +298,7 @@ void qoutes_remover(t_bash **ptr)
 		{
 			var.j = 0;
 			var.arg_count = 0;
-			var.arg[var.i] = malloc(sizeof(char) * ft_strlen(tmp->arg[var.i]));
+			var.arg[var.i] = malloc(sizeof(char) * ft_strlen(tmp->arg[var.i]) + 1);
 			qoutes_counter(tmp->arg[var.i], &var.s_qoute, &var.d_qoute);
 			while (tmp->arg[var.i] && tmp->arg[var.i][var.j])
 			{
@@ -317,6 +319,8 @@ void qoutes_remover(t_bash **ptr)
 			var.i++;
 		}
 		var.arg[var.i] = NULL;
+		free(tmp->command);
+		free(tmp->arg);
 		tmp->command = var.command;
 		tmp->arg = var.arg;
 		tmp = tmp->link;
@@ -383,7 +387,7 @@ void get_the_right_forma(char *ncoom, t_bash **ptr)
 	var.i = 0;
 	var.error = 0;
 	check_for_error(ncoom, &var.error);
-	var.holder = malloc(sizeof(char) * ft_strlen(ncoom));
+	var.holder = malloc(sizeof(char) * ft_strlen(ncoom) + 1);
 	*ptr = NULL;
 	while (ncoom && ncoom[var.i])
 	{
@@ -422,11 +426,12 @@ void get_the_right_forma(char *ncoom, t_bash **ptr)
 		// printf("before[%s]\n", var.holder);
 		nodepush(ptr, var.holder, 1);
 		(*ptr)->error = var.error;
+		// free(var.holder);
 	}
 	qoutes_remover(ptr);
 }
 
-void readl_to_parse(char **env)
+void readl_to_parse()
 {
 	t_bash *ptr;
 	int i;
@@ -440,7 +445,7 @@ void readl_to_parse(char **env)
 		line = readline("minishell$> ");
 		add_history(line);
 		get_the_right_forma(line, &ptr);
-
+		// free(line);
 		//=========================>ptr is the head bitch!<===========================//
 
 		// printf("(%s)\n",ncoom);
@@ -455,15 +460,34 @@ void readl_to_parse(char **env)
 			h = 0;
 			f = 0;
 			printf("-------------------\n");
-			printf("command=[%s]\n", ptr->command);
+			if (ptr->command)
+				printf("command=[%s]\n", ptr->command);
 			while (ptr->arg[x])
 				printf("arg=[%s]\n", ptr->arg[x++]);
-			while (ptr->redirection[h])
+			while (ptr->redirection && ptr->redirection[h])
 				printf("redirection=[%s]\n", ptr->redirection[h++]);
-			while (ptr->file[f])
+			while (ptr->file && ptr->file[f])
 				printf("file=[%s]\n", ptr->file[f++]);
 			printf("operator=[%c]\n", ptr->operator);
 			printf("error=[%d]\n", ptr->error);
+			// free
+			// x = 0;
+			// while(x < ptr->red)
+			// {
+			// 	free(ptr->file[x]);
+			// 	free(ptr->redirection[x]);
+			// 	x++;
+			// }
+			// free(ptr->file);
+			// free(ptr->redirection);
+			// x = 0;
+			// printf("args==={%d}", ptr->args_malloc);
+			// while(x < ptr->args_malloc)
+			// 	free(ptr->arg[x++]);
+			// free(ptr->arg);
+			// free(ptr->command);
+			// free(ptr);
+			// end free
 			ptr = ptr->link;
 		}
 	}
