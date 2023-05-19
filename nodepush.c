@@ -6,7 +6,7 @@
 /*   By: hait-hsa <hait-hsa@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/01/19 18:49:57 by hait-hsa          #+#    #+#             */
-/*   Updated: 2023/05/19 19:57:42 by hait-hsa         ###   ########.fr       */
+/*   Updated: 2023/05/19 20:27:25 by hait-hsa         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -220,7 +220,7 @@ void ft_strlcpy_shell(t_bash *dst, char *str)
 	var.split = ft_split(str, ' ');
 	while (var.split[var.i])
 		var.i++;
-	dst->arg = malloc(sizeof(char *) * var.i + 1);
+	dst->arg = malloc(sizeof(char *) * (var.i + 1));
 	dst->args_malloc = var.i;
 	var.i = 0;
 	while (var.split && var.split[var.i])
@@ -236,7 +236,7 @@ void ft_strlcpy_shell(t_bash *dst, char *str)
 	}
 	var.j = 0;
 	dst->red++;
-	dst->command = malloc(sizeof(char) * ft_strlen(var.split[0]) + 1);
+	dst->command = malloc(sizeof(char) * (ft_strlen(var.split[0]) + 1));
 	dst->redirection = malloc(sizeof(char *) * dst->red);
 	dst->file = malloc(sizeof(char *) * dst->red);
 	var.i = 0;

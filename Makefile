@@ -12,7 +12,7 @@ make :
 	make -C ${LIBFT}
 
 all : ${OBJCTS}
-	gcc -fsanitize=address -lreadline ${SRC} ${LIB} -o ${NAME}
+	gcc  -lreadline ${SRC} ${LIB} -o ${NAME}
 
 re : fclean all
 

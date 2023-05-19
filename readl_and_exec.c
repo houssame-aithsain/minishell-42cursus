@@ -6,7 +6,7 @@
 /*   By: hait-hsa <hait-hsa@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/04/01 21:33:53 by hait-hsa          #+#    #+#             */
-/*   Updated: 2023/05/19 19:45:21 by hait-hsa         ###   ########.fr       */
+/*   Updated: 2023/05/19 21:05:47 by hait-hsa         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -319,8 +319,12 @@ void qoutes_remover(t_bash **ptr)
 			var.i++;
 		}
 		var.arg[var.i] = NULL;
-		free(tmp->command);
+		var.i = 0;
+		int x = (arg_lent(tmp->arg) + 1);
+		while(var.i < x)
+			free(tmp->arg[var.i++]);
 		free(tmp->arg);
+		free(tmp->command);
 		tmp->command = var.command;
 		tmp->arg = var.arg;
 		tmp = tmp->link;
@@ -426,8 +430,8 @@ void get_the_right_forma(char *ncoom, t_bash **ptr)
 		// printf("before[%s]\n", var.holder);
 		nodepush(ptr, var.holder, 1);
 		(*ptr)->error = var.error;
-		// free(var.holder);
 	}
+	free(var.holder);
 	qoutes_remover(ptr);
 }
 
@@ -445,7 +449,7 @@ void readl_to_parse()
 		line = readline("minishell$> ");
 		add_history(line);
 		get_the_right_forma(line, &ptr);
-		// free(line);
+		free(line);
 		//=========================>ptr is the head bitch!<===========================//
 
 		// printf("(%s)\n",ncoom);
@@ -460,8 +464,7 @@ void readl_to_parse()
 			h = 0;
 			f = 0;
 			printf("-------------------\n");
-			if (ptr->command)
-				printf("command=[%s]\n", ptr->command);
+			printf("command=[%s]\n", ptr->command);
 			while (ptr->arg[x])
 				printf("arg=[%s]\n", ptr->arg[x++]);
 			while (ptr->redirection && ptr->redirection[h])
@@ -471,22 +474,25 @@ void readl_to_parse()
 			printf("operator=[%c]\n", ptr->operator);
 			printf("error=[%d]\n", ptr->error);
 			// free
-			// x = 0;
-			// while(x < ptr->red)
-			// {
-			// 	free(ptr->file[x]);
-			// 	free(ptr->redirection[x]);
-			// 	x++;
-			// }
-			// free(ptr->file);
-			// free(ptr->redirection);
-			// x = 0;
-			// printf("args==={%d}", ptr->args_malloc);
-			// while(x < ptr->args_malloc)
-			// 	free(ptr->arg[x++]);
-			// free(ptr->arg);
-			// free(ptr->command);
-			// free(ptr);
+			x = 0;
+			while(x < ptr->red)
+			{
+				free(ptr->file[x]);
+				free(ptr->redirection[x]);
+				x++;
+			}
+			free(ptr->file);
+			free(ptr->redirection);
+			x = 0;
+			// printf("agrs_malloc=={%d}\n", ptr->args_malloc);
+			while(ptr->arg[x])
+				free(ptr->arg[x++]);
+				free(ptr->arg[x++]);
+			free(ptr->arg);
+			free(ptr->command);
+			free(ptr);
+
+			
 			// end free
 			ptr = ptr->link;
 		}
