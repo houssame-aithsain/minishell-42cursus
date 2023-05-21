@@ -6,11 +6,48 @@
 /*   By: hait-hsa <hait-hsa@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/04/01 21:33:53 by hait-hsa          #+#    #+#             */
-/*   Updated: 2023/05/19 21:05:47 by hait-hsa         ###   ########.fr       */
+/*   Updated: 2023/05/21 22:53:34 by hait-hsa         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
+//gothmane functions
+
+// char    *get_val_for_a_specific_key(t_list_export *exp, char *key)
+// {
+//     t_list_export *e;
+
+//     e = exp;
+//     while (e)
+//     {
+//         if (ft_strcmp(e->key, key) == 0)
+//             return (e->value);
+//         e = e->next;
+//     }
+//     return (NULL);
+// }
+
+// int    checker_export(char *str)
+// {
+//    int    i;
+
+//    i = 0;
+//    while (str[i])
+//    {
+//         if (i == 0 && (!ft_isalpha(str[i]) && str[i] != '_'))
+//             return (0);
+//         else if ((ft_isdigit(str[i]) || ft_isalpha(str[i]) || str[i] == '_') 
+//             || (str[i] == '+' && str[i + 1] == '='))
+//             i++;
+//         else
+//             return (0);
+//         if (str[i] == '=')
+//             break;
+//    }
+//    return (1);
+// }
+
+//END gothmane functions
 
 char quote_typ(char *ncoom, char f_type, char s_type)
 {
@@ -390,9 +427,9 @@ void get_the_right_forma(char *ncoom, t_bash **ptr)
 
 	var.i = 0;
 	var.error = 0;
+	*ptr = NULL;
 	check_for_error(ncoom, &var.error);
 	var.holder = malloc(sizeof(char) * ft_strlen(ncoom) + 1);
-	*ptr = NULL;
 	while (ncoom && ncoom[var.i])
 	{
 		var.j = 0;
@@ -405,12 +442,14 @@ void get_the_right_forma(char *ncoom, t_bash **ptr)
 				var.holder[var.j++] = ncoom[var.i++];
 				while (ncoom[var.i] && ncoom[var.i] != '"')
 					var.holder[var.j++] = ncoom[var.i++];
+				var.holder[var.j++] = ncoom[var.i++];
 			}
 			else if (ncoom[var.i] == 39)
 			{
 				var.holder[var.j++] = ncoom[var.i++];
 				while (ncoom[var.i] && ncoom[var.i] != 39)
 					var.holder[var.j++] = ncoom[var.i++];
+				var.holder[var.j++] = ncoom[var.i++];
 			}
 			if (ncoom[var.i])
 			{
@@ -431,17 +470,24 @@ void get_the_right_forma(char *ncoom, t_bash **ptr)
 		nodepush(ptr, var.holder, 1);
 		(*ptr)->error = var.error;
 	}
+	// printf("var.holder=========={%p}\n", var.holder);
 	free(var.holder);
 	qoutes_remover(ptr);
 }
 
-void readl_to_parse()
+void readl_to_parse(char **env)
 {
 	t_bash *ptr;
 	int i;
+	int get;
 	char *line;
-
+	t_list_export *exp_list;
+	t_list_env	*env_list;
+	
+	get = 0;
 	ptr = malloc(sizeof(t_bash));
+	env_list = put_env_to_ls(env);
+	exp_list = ft_create_export_lst(env);
 	while (TRUE)
 	{
 		i = 0;
@@ -450,6 +496,16 @@ void readl_to_parse()
 		add_history(line);
 		get_the_right_forma(line, &ptr);
 		free(line);
+		if (ptr)
+		{
+			if (!ft_strcmp("export", ptr->command))
+			{
+				ft_export(&exp_list, ptr->arg, &env_list);
+				if (!ptr->arg[0])
+					ft_print_lst(exp_list);
+			}
+			get_value_from_variable(exp_list, &ptr);
+		}
 		//=========================>ptr is the head bitch!<===========================//
 
 		// printf("(%s)\n",ncoom);
@@ -460,6 +516,8 @@ void readl_to_parse()
 		int f = 0;
 		while (ptr)
 		{
+
+			
 			x = 0;
 			h = 0;
 			f = 0;
@@ -474,23 +532,23 @@ void readl_to_parse()
 			printf("operator=[%c]\n", ptr->operator);
 			printf("error=[%d]\n", ptr->error);
 			// free
-			x = 0;
-			while(x < ptr->red)
-			{
-				free(ptr->file[x]);
-				free(ptr->redirection[x]);
-				x++;
-			}
-			free(ptr->file);
-			free(ptr->redirection);
-			x = 0;
+			// x = 0;
+			// while(x < ptr->red)
+			// {
+			// 	free(ptr->file[x]);
+			// 	free(ptr->redirection[x]);
+			// 	x++;
+			// }
+			// free(ptr->file);
+			// free(ptr->redirection);
+			// x = 0;
 			// printf("agrs_malloc=={%d}\n", ptr->args_malloc);
-			while(ptr->arg[x])
-				free(ptr->arg[x++]);
-				free(ptr->arg[x++]);
-			free(ptr->arg);
-			free(ptr->command);
-			free(ptr);
+			// while(ptr->arg[x])
+			// 	free(ptr->arg[x++]);
+			// 	free(ptr->arg[x++]);
+			// free(ptr->arg);
+			// free(ptr->command);
+			// free(ptr);
 
 			
 			// end free
@@ -498,3 +556,5 @@ void readl_to_parse()
 		}
 	}
 }
+
+

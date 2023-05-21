@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   ft_export.c                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: gothmane <gothmane@student.1337.ma>        +#+  +:+       +#+        */
+/*   By: hait-hsa <hait-hsa@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/05/07 17:34:31 by gothmane          #+#    #+#             */
-/*   Updated: 2023/05/13 19:46:54 by gothmane         ###   ########.fr       */
+/*   Updated: 2023/05/21 17:58:02 by hait-hsa         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -335,6 +335,7 @@ void ft_print_lst(t_list_export *ls)
 	while (la)
 	{
 		printf("%s\n", la->content);
+		printf(">>>>>>>>>>>>>>> Key = %s || Value = %s <<<<<<<<<<<<<<<<<<<\n", la->key, la->value );
 		la = la->next;
 	}
 }

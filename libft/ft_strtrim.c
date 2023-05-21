@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   ft_strtrim.c                                       :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: gothmane <gothmane@student.1337.ma>        +#+  +:+       +#+        */
+/*   By: hait-hsa <hait-hsa@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/10/04 12:33:05 by gothmane          #+#    #+#             */
-/*   Updated: 2022/10/21 10:46:34 by gothmane         ###   ########.fr       */
+/*   Updated: 2023/05/21 18:29:05 by hait-hsa         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -26,34 +26,6 @@ int	ft_exist(const char *s1, char c)
 	return (0);
 }
 
-int	getlindex(const char *s1, const char *set)
-{
-	int	i;
-
-	i = 0;
-	while (s1[i])
-	{
-		if (!ft_exist(set, s1[i]))
-			return (i);
-		i++;
-	}
-	return (-1);
-}
-
-int	getrindex(const char *s1, const char *set)
-{
-	int	lengths1;
-
-	lengths1 = ft_strlen(s1);
-	while (lengths1 > 0)
-	{
-		if (!ft_exist(set, s1[lengths1 - 1]))
-			return (lengths1);
-		lengths1--;
-	}
-	return (-1);
-}
-
 char	*ft_strtrim(char const *s1, char const *set)
 {
 	char	*trimmed;
@@ -64,8 +36,8 @@ char	*ft_strtrim(char const *s1, char const *set)
 	i = 0;
 	if (!s1 || !set)
 		return (0);
-	lcounter = getlindex(s1, set);
-	rcounter = getrindex(s1, set);
+	lcounter = 1;
+	rcounter = ft_strlen(s1) - 1;
 	trimmed = (char *) malloc(sizeof(char) * (rcounter - lcounter + 1));
 	if (!trimmed)
 		return (NULL);

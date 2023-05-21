@@ -59,6 +59,8 @@ typedef struct rquotes{
 } t_rquotes;
 
 typedef struct cp{
+	char quote_type;
+	int	 quote_numb;
 	int remove;
 	int check;
 	int space;
@@ -99,11 +101,13 @@ typedef struct s_list_env
 	struct s_list_env		*next;
 }			t_list_env;
 
-
+char			quote_typ(char *ncoom, char f_type, char s_type);
+char			*get_val_for_a_specific_key(t_list_export *exp, char *key);
+void			get_value_from_variable(t_list_export *exp_list, t_bash **ptr);
 char			*ft_strnew_bb(size_t size);
 char			*ft_strjoin_bb(char *s1, char const *s2);
 char			*if_operatore(char *ncoom);
-void			readl_to_parse();
+void			readl_to_parse(char **env);
 int				if_grep(char *line, int i, int flag);
 char			*parse_input(char *line, t_var *var);
 int				ft_loop(char *line, t_var *var);

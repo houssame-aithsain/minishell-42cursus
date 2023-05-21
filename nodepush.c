@@ -6,7 +6,7 @@
 /*   By: hait-hsa <hait-hsa@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/01/19 18:49:57 by hait-hsa          #+#    #+#             */
-/*   Updated: 2023/05/19 20:27:25 by hait-hsa         ###   ########.fr       */
+/*   Updated: 2023/05/21 22:28:49 by hait-hsa         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -205,6 +205,8 @@ int if_pipe(char *str, int flag)
 void ft_strlcpy_shell(t_bash *dst, char *str)
 {
 	t_cp var;
+	var.quote_numb = 0;
+	var.quote_numb = 0;
 	var.i = 0;
 	var.j = 0;
 	var.check = 0;
@@ -221,6 +223,7 @@ void ft_strlcpy_shell(t_bash *dst, char *str)
 	while (var.split[var.i])
 		var.i++;
 	dst->arg = malloc(sizeof(char *) * (var.i + 1));
+	// printf("dst->arg============{%p}\n", dst->arg);
 	dst->args_malloc = var.i;
 	var.i = 0;
 	while (var.split && var.split[var.i])
@@ -239,17 +242,23 @@ void ft_strlcpy_shell(t_bash *dst, char *str)
 	dst->command = malloc(sizeof(char) * (ft_strlen(var.split[0]) + 1));
 	dst->redirection = malloc(sizeof(char *) * dst->red);
 	dst->file = malloc(sizeof(char *) * dst->red);
+	// printf("dst->command========{%p}\n", dst->command);
+	// printf("dst->redirection===={%p}\n", dst->redirection);
+	// printf("dst->file==========={%p}\n", dst->file);
 	var.i = 0;
+	var.quote_type = quote_typ(var.split[var.i], '"', 39);
 	while (var.split && var.split[var.i] && var.split[var.i][var.j])
 	{
-		dst->command[var.j] = var.split[var.i][var.j];
-		var.j++;
-		if (var.split[var.i][var.j] == '|')
+		if (var.split[var.i][var.j] == var.quote_type)
+			var.quote_numb++;
+		if (var.split[var.i][var.j] == '|' && !(var.quote_numb % 2))
 		{
 			dst->operator= var.split[var.i][var.j];
 			var.split[var.i][var.j] = 0;
 			break;
 		}
+		dst->command[var.j] = var.split[var.i][var.j];
+		var.j++;
 	}
 	dst->command[var.j] = 0;
 	while (dst->command && dst->command[var.space])
@@ -320,6 +329,11 @@ void ft_strlcpy_shell(t_bash *dst, char *str)
 			var.split[var.i][ft_strlen(var.split[var.i]) - 1] = 0;
 		}
 	}
+	var.i = 0;
+	while(var.split[var.i])
+		free(var.split[var.i++]);
+	free(var.split[var.i++]);
+	free(var.split);
 	dst->redirection[dst->red_free] = NULL;
 	dst->file[dst->file_free] = NULL;
 	dst->arg[var.j] = NULL;
