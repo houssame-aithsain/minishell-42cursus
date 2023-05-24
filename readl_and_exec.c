@@ -6,56 +6,37 @@
 /*   By: hait-hsa <hait-hsa@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/04/01 21:33:53 by hait-hsa          #+#    #+#             */
-/*   Updated: 2023/05/21 22:53:34 by hait-hsa         ###   ########.fr       */
+/*   Updated: 2023/05/24 23:51:23 by hait-hsa         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
-//gothmane functions
 
-// char    *get_val_for_a_specific_key(t_list_export *exp, char *key)
-// {
-//     t_list_export *e;
-
-//     e = exp;
-//     while (e)
-//     {
-//         if (ft_strcmp(e->key, key) == 0)
-//             return (e->value);
-//         e = e->next;
-//     }
-//     return (NULL);
-// }
-
-// int    checker_export(char *str)
-// {
-//    int    i;
-
-//    i = 0;
-//    while (str[i])
-//    {
-//         if (i == 0 && (!ft_isalpha(str[i]) && str[i] != '_'))
-//             return (0);
-//         else if ((ft_isdigit(str[i]) || ft_isalpha(str[i]) || str[i] == '_') 
-//             || (str[i] == '+' && str[i + 1] == '='))
-//             i++;
-//         else
-//             return (0);
-//         if (str[i] == '=')
-//             break;
-//    }
-//    return (1);
-// }
-
-//END gothmane functions
-
-char quote_typ(char *ncoom, char f_type, char s_type)
+char quote_typ(char *ncoom, char f_type, char s_type, int flag)
 {
 	char quote_type;
 	int i;
 
 	i = 0;
 	quote_type = 0;
+	if (flag)
+	{
+		while (ncoom && ncoom[i] && ncoom[i] != '$')
+		{
+			if (ncoom[i] == f_type)
+			{
+				quote_type = f_type;
+				break;
+			}
+			if (ncoom[i] == s_type)
+			{
+				quote_type = s_type;
+				break;
+			}
+			i++;
+		}
+		return quote_type;
+	}
 	while (ncoom && ncoom[i])
 	{
 		if (ncoom[i] == f_type)
@@ -85,7 +66,7 @@ char *if_operatore(char *ncoom)
 	quote_numb = 0;
 	i = 0;
 	skipe = 0;
-	quote_type = quote_typ(ncoom, '"', 39);
+	quote_type = quote_typ(ncoom, '"', 39, 0);
 	while (ncoom && ncoom[i] && quote_type)
 	{
 		if (ncoom[i] == quote_type)
@@ -205,7 +186,7 @@ void check_for_error(char *tmp, int *error)
 		if (tmp[i] == '>' || tmp[i] == '<')
 		{
 			i++;
-			quote_type = quote_typ(tmp, '>', '<');
+			quote_type = quote_typ(tmp, '>', '<', 0);
 			if (tmp[i] == quote_type)
 				i++;
 			while (tmp[i] == ' ')
@@ -239,12 +220,13 @@ void check_for_error(char *tmp, int *error)
 	}
 }
 
-void ft_copy(char *dst, t_rquotes *var, int flag)
+void ft_copy(char *dst, t_rquotes *var, int flag, t_bash **ptr)
 {
 	int quote_numb;
 	int *v;
 	int *j;
 	char *command;
+
 	if (!flag)
 	{
 		v = &var->v;
@@ -261,6 +243,12 @@ void ft_copy(char *dst, t_rquotes *var, int flag)
 	(*v)++;
 	while (dst[*v])
 	{
+		if (var->qoute_type == '"' && dst[*v] == '$')
+		{
+			(*v)++;
+			while (dst && dst[*v] && dst[*v] != 39 && dst[*v] != ' ' && dst[*v] != '"' && dst[*v] != '$' && dst[*v] != '*' && dst[*v] != '_' && (ft_isdigit(dst[*v]) || ft_isalpha(dst[*v])))
+				(*v)++;
+		}
 		if (dst[*v] == '"' || dst[*v] == 39)
 		{
 			if (dst[*v] == var->qoute_type)
@@ -320,12 +308,18 @@ void qoutes_remover(t_bash **ptr)
 			if (tmp->command[var.v] == 39)
 			{
 				var.qoute_type = 39;
-				ft_copy(tmp->command, &var, 0);
+				ft_copy(tmp->command, &var, 0, ptr);
 			}
 			else if (tmp->command[var.v] == '"')
 			{
 				var.qoute_type = '"';
-				ft_copy(tmp->command, &var, 0);
+				ft_copy(tmp->command, &var, 0, ptr);
+			}
+			else if (tmp->command[var.v] == '$')
+			{
+				var.v++;
+				while (tmp->command && tmp->command[var.v] && tmp->command[var.v] != 39 && tmp->command[var.v] != ' ' && tmp->command[var.v] != '"' && tmp->command[var.v] != '$' && tmp->command[var.v] != '*' && tmp->command[var.v] != '_' && (ft_isdigit(tmp->command[var.v]) || ft_isalpha(tmp->command[var.v])))
+					var.v++;
 			}
 			else
 				var.command[var.j++] = tmp->command[var.v++];
@@ -342,15 +336,17 @@ void qoutes_remover(t_bash **ptr)
 				if (tmp->arg[var.i][var.j] == 39)
 				{
 					var.qoute_type = 39;
-					ft_copy(tmp->arg[var.i], &var, 1);
+					ft_copy(tmp->arg[var.i], &var, 1, ptr);
 				}
 				else if (tmp->arg[var.i][var.j] == '"')
 				{
 					var.qoute_type = '"';
-					ft_copy(tmp->arg[var.i], &var, 1);
+					ft_copy(tmp->arg[var.i], &var, 1, ptr);
 				}
 				else
+				{
 					var.arg[var.i][var.arg_count++] = tmp->arg[var.i][var.j++];
+				}
 			}
 			var.arg[var.i][var.arg_count] = 0;
 			var.i++;
@@ -358,7 +354,7 @@ void qoutes_remover(t_bash **ptr)
 		var.arg[var.i] = NULL;
 		var.i = 0;
 		int x = (arg_lent(tmp->arg) + 1);
-		while(var.i < x)
+		while (var.i < x)
 			free(tmp->arg[var.i++]);
 		free(tmp->arg);
 		free(tmp->command);
@@ -421,7 +417,7 @@ char *replace_spaces_in_quotes(char *str)
 	return str;
 }
 
-void get_the_right_forma(char *ncoom, t_bash **ptr)
+void get_the_right_forma(char *ncoom, t_bash **ptr, t_list_env **env_list, t_list_export **exp_list)
 {
 	t_format var;
 
@@ -429,6 +425,8 @@ void get_the_right_forma(char *ncoom, t_bash **ptr)
 	var.error = 0;
 	*ptr = NULL;
 	check_for_error(ncoom, &var.error);
+	if (ncoom)
+		ncoom = get_value_from_variable(*exp_list, ncoom);
 	var.holder = malloc(sizeof(char) * ft_strlen(ncoom) + 1);
 	while (ncoom && ncoom[var.i])
 	{
@@ -482,8 +480,8 @@ void readl_to_parse(char **env)
 	int get;
 	char *line;
 	t_list_export *exp_list;
-	t_list_env	*env_list;
-	
+	t_list_env *env_list;
+
 	get = 0;
 	ptr = malloc(sizeof(t_bash));
 	env_list = put_env_to_ls(env);
@@ -494,17 +492,16 @@ void readl_to_parse(char **env)
 		line = NULL;
 		line = readline("minishell$> ");
 		add_history(line);
-		get_the_right_forma(line, &ptr);
+		get_the_right_forma(line, &ptr, &env_list, &exp_list);
 		free(line);
 		if (ptr)
 		{
-			if (!ft_strcmp("export", ptr->command))
+			if (!ft_strcmp("export", (ptr)->command))
 			{
-				ft_export(&exp_list, ptr->arg, &env_list);
-				if (!ptr->arg[0])
+				ft_export(&exp_list, (ptr)->arg, &env_list);
+				if (!(ptr)->arg[0])
 					ft_print_lst(exp_list);
 			}
-			get_value_from_variable(exp_list, &ptr);
 		}
 		//=========================>ptr is the head bitch!<===========================//
 
@@ -517,7 +514,6 @@ void readl_to_parse(char **env)
 		while (ptr)
 		{
 
-			
 			x = 0;
 			h = 0;
 			f = 0;
@@ -550,11 +546,8 @@ void readl_to_parse(char **env)
 			// free(ptr->command);
 			// free(ptr);
 
-			
 			// end free
 			ptr = ptr->link;
 		}
 	}
 }
-
-

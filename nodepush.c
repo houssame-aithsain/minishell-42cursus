@@ -6,7 +6,7 @@
 /*   By: hait-hsa <hait-hsa@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/01/19 18:49:57 by hait-hsa          #+#    #+#             */
-/*   Updated: 2023/05/21 22:28:49 by hait-hsa         ###   ########.fr       */
+/*   Updated: 2023/05/23 20:18:22 by hait-hsa         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -246,7 +246,7 @@ void ft_strlcpy_shell(t_bash *dst, char *str)
 	// printf("dst->redirection===={%p}\n", dst->redirection);
 	// printf("dst->file==========={%p}\n", dst->file);
 	var.i = 0;
-	var.quote_type = quote_typ(var.split[var.i], '"', 39);
+	var.quote_type = quote_typ(var.split[var.i], '"', 39, 0);
 	while (var.split && var.split[var.i] && var.split[var.i][var.j])
 	{
 		if (var.split[var.i][var.j] == var.quote_type)

@@ -6,180 +6,250 @@
 /*   By: hait-hsa <hait-hsa@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/05/20 18:56:47 by hait-hsa          #+#    #+#             */
-/*   Updated: 2023/05/21 23:06:09 by hait-hsa         ###   ########.fr       */
+/*   Updated: 2023/05/24 23:38:09 by hait-hsa         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
 
-char *ft_replace_var_by_value(char *arg, char *value)
+char *ft_rewrite(char *holder)
 {
-	int stope;
-	int l;
+	int i;
+
+	i = 0;
+	while(holder && holder[i])
+	{
+		if (holder[i] == 10)
+			holder[i] = '$';
+		i++;
+	}
+	return holder;
+}
+
+char *ft_get_value(char *arg, char **key, char quote_type, t_list_export *exp_list, int len)
+{
+	int k;
+	int i;
+
+	i = 0;
+	// printf("ft_get_value*********>%s\n", arg);
+	while (arg && arg[i] && arg[i] != quote_type)
+	{
+		k = -1;
+		// printf("ALX!\n");
+		while (++k < len)
+		{
+			// printf("ALX key! %s\n",key[k]);
+			if (key[k])
+			{
+				if (!ft_strncmp(arg + i, key[k], ft_strlen(key[k])))
+				{
+					// printf("chack key===={%s}\n",key[k]);
+					if (get_val_for_a_specific_key(exp_list, key[k]))
+						return key[k];
+					else
+						return NULL;
+				}
+			}
+		}
+		i++;
+	}
+	// printf("ft_get_value not valid[%c]\n",arg[i]);'
+	// printf("out!\n");
+	return NULL;
+}
+int check_if_var(char *str, char quote_type)
+{
+	int i;
+
+	i = 0;
+	// printf("chack str===={%s}\n",str);
+	if (quote_type == 39)
+		return 0;
+	if (str[i] == quote_type && quote_type)
+		i++;
+	if (str[i] && (str[i] != quote_type || !quote_type))
+	{
+		while (str && str[i] && str[i] != quote_type)
+		{
+			if (str[i] == '$')
+			{
+				if (str[i - 1] == '$')
+					return 0;
+				if ((ft_isdigit(str[i + 1]) || ft_isalpha(str[i + 1])))
+					return 1;
+				else
+					return 0;
+			}
+			i++;
+		}
+	}
+	return 0;
+}
+
+char *ft_replace_var_by_value(char *arg, char **key, t_list_export *exp_list, int l, char *rt_value, int len)
+{
+	// printf("rec!==========================:%s:\n", arg);
+	char *value;
+	char *s_key;
+	int quote_numb;
+	int str_lent;
+	char quote_type;
 	int j;
 	int i;
-	char *rt_value;
 
 	i = 0;
 	j = 0;
-	l = 0;
-	stope = 1;
-	rt_value = malloc(sizeof(char) * (ft_strlen(arg) + ft_strlen(value)) + 100000);
+	quote_numb = 0;
+	quote_type = 0;
+	str_lent = 0;
+	if (!l)
+		rt_value = malloc(sizeof(char) * ft_strlen(arg) + 100000);
 	while (arg && arg[i])
 	{
-		if (arg[i] == '$' && stope)
+
+		quote_type = quote_typ(arg + i, '"', 39, 1);
+		// printf("quote_type==={%c}!\n",quote_type);
+		if (ft_get_value(arg + i + 1, key, quote_type, exp_list, len) && check_if_var(arg + i, quote_type))
 		{
-			stope = 0;
 			j = 0;
-			while (value[j])
+			s_key = ft_get_value(arg + i + 1, key, quote_type, exp_list, len);
+			if (checker_export(s_key))
+			{
+				value = get_val_for_a_specific_key(exp_list, s_key);
+				value = ft_strtrim(value, "\1");
+			}
+			while (arg[i] && arg[i] != '$')
+				rt_value[l++] = arg[i++];
+			while (value && value[j])
 				rt_value[l++] = value[j++];
-			i++;
-			while (arg && arg[i] && arg[i] != ' ' && arg[i] != '$' && arg[i] != '*' && arg[i] != '_' && (ft_isdigit(arg[i]) && ft_isalpha(arg[i])))
+			if (arg[i] == '$')
 				i++;
+			while (arg && arg[i] && arg[i] != 39 && arg[i] != ' ' && arg[i] != '"' && arg[i] != '$' && arg[i] != '*' && arg[i] != '_' && (ft_isdigit(arg[i]) || ft_isalpha(arg[i])))
+				i++;
+			// printf("after exex------------->%s!\n", rt_value);
+			if (arg[i])
+				ft_replace_var_by_value(arg + i, key, exp_list, l, rt_value, len);
+		}
+		else if (arg[i])
+		{
+			// printf("after saved value======>%s<=======\n", rt_value);
+			if (arg[i] == quote_type)
+			{
+				rt_value[l++] = arg[i++];
+				while (arg[i] && arg[i] != quote_type)
+				{
+					if (arg[i] == '$')
+					{
+						rt_value[l++] = 10;
+						i++;
+					}
+					else
+						rt_value[l++] = arg[i++];
+				}
+				if (arg[i] == quote_type)
+					rt_value[l++] = arg[i++];
+			}
+			else if (arg[i] == '$' && quote_type)
+			{
+				rt_value[l++] = 10;
+				i++;
+			}
+			else if (arg[i])
+				rt_value[l++] = arg[i++];
+			// printf("saved value======>%s<=======\n", rt_value);
 		}
 		else
-			rt_value[l++] = arg[i];
-		if (!arg[i])
-			break;
-		i++;
+		{
+			if (!arg[i])
+				break;
+			i++;
+		}
 	}
-	free(arg);
 	rt_value[l] = 0;
 	return rt_value;
 }
 
-char *ft_get_str(char *str)
+char *ft_get_arg(char *str)
 {
 	int i;
 	char *value;
 
 	i = 0;
 	value = malloc(sizeof(char) * ft_strlen(str) + 1);
-	while (str && str[i] && str[i] != ' ' && str[i] != '$' && str[i] != '*' && (!ft_isdigit(str[i]) || !ft_isalpha(str[i]) || str[i] == '_'))
+	while (str && str[i] && str[i] != ' ' && str[i] != '"' && str[i] != 39 && str[i] != '$' && str[i] != '*' && (!ft_isdigit(str[i]) || !ft_isalpha(str[i]) || str[i] == '_'))
 	{
 		value[i] = str[i];
 		i++;
+	}
+	if (!i)
+	{
+		free(value);
+		return (NULL);
 	}
 	value[i] = 0;
 	return value;
 }
 
-char *get_key(char *arg)
+int get_key(char *arg, char **str)
 {
 	int i;
-	char *str;
 
 	i = 0;
 	while (arg && arg[i])
 	{
 		if (arg[i] == '$')
 		{
-			str = ft_get_str(arg + i + 1);
-			return str;
+			*str = ft_get_arg(arg + i + 1);
+			return i;
 		}
 		i++;
 	}
 	str = NULL;
-	return str;
+	return i;
 }
 
-void get_value_from_variable(t_list_export *exp_list, t_bash **ptr)
+char *get_value_from_variable(t_list_export *exp_list, char *holder)
 {
+	char *rt_value;
 	size_t cmd_lent;
 	int j;
 	int i;
 	int mlc;
-	char **key_cmd;
+	char **key;
 	char **key_arg;
 	char *tmp_value;
-	t_bash *tmp;
-	t_bash *head;
 
-	tmp = *ptr;
-	head = tmp;
-	while (tmp)
+	i = 0;
+	j = 0;
+	mlc = 0;
+	cmd_lent = 0;
+	while (holder[i])
 	{
-		i = 0;
-		j = 0;
-		mlc = 0;
-		cmd_lent = 0;
-		while (tmp->command[i])
-		{
-			if (tmp->command[i] == '$')
-				mlc++;
-			i++;
-		}
-		key_cmd = malloc(sizeof(char *) * (mlc + 1));
-		i = -1;
-		while (++i < mlc)
-		{
-			key_cmd[j] = get_key(tmp->command + cmd_lent);
-			if (key_cmd[j])
-				cmd_lent += ft_strlen(key_cmd[j]);
-			j++;
-		}
-		key_cmd[j] = NULL;
-		i = 0;
-		while (i < j)
-		{
-			if (key_cmd[i])
-			{
-				if (checker_export(key_cmd[i]))
-				{
-					if (key_cmd[i])
-					{
-						tmp_value = get_val_for_a_specific_key(exp_list, key_cmd[i]);
-						tmp_value = ft_strtrim(tmp_value, "\1");
-						if (tmp_value)
-							tmp->command = ft_replace_var_by_value(tmp->command, tmp_value);
-					}
-				}
-			}
-			i++;
-		}
-		mlc = 0;
-		while (tmp->arg[mlc])
-		{
-			i = -1;
-			j = 0;
-			cmd_lent = 0;
-			while (tmp->arg[mlc][++i])
-			{
-				if (tmp->arg[mlc][i] == '$')
-					j++;
-			}
-			if (!j)
-				return;
-			key_arg = malloc(sizeof(char *) * (j + 1));
-			i = 0;
-			while (i < j)
-			{
-				key_arg[i] = get_key(tmp->arg[mlc] + cmd_lent);
-				if (key_arg[i])
-					cmd_lent += ft_strlen(key_arg[i]);
-				i++;
-			}
-			key_arg[i] = NULL;
-			i = -1;
-			while (++i < j)
-			{
-				if (key_arg[i])
-				{
-					if (checker_export(key_arg[i]))
-					{
-						if (key_arg[i])
-						{
-							tmp_value = get_val_for_a_specific_key(exp_list, key_arg[i]);
-							tmp_value = ft_strtrim(tmp_value, "\1");
-							if (tmp_value)
-								tmp->arg[mlc] = ft_replace_var_by_value(tmp->arg[mlc], tmp_value);
-						}
-					}
-				}
-			}
+		if (holder[i] == '$')
 			mlc++;
-		}
-		tmp = tmp->link;
+		i++;
 	}
-	ptr = &head;
+	// printf("MLC %d\n", mlc);
+	key = malloc(sizeof(char *) * (mlc + 1));
+	i = -1;
+	while (++i < mlc)
+	{
+		cmd_lent = get_key(holder + cmd_lent, &key[j]);
+		if (key[j])
+		{
+			// printf("it is \n");
+			cmd_lent += ft_strlen(key[j]);
+		}
+		else
+			cmd_lent += 1;
+		j++;
+	}
+	key[j] = NULL;
+	i = 0;
+	// printf("check key----------->%s<-----------\n", key[0]);
+	// printf("check key----------->%s<-----------\n", key[1]);
+	holder = ft_replace_var_by_value(holder, key, exp_list, 0, rt_value, j);
+	holder = ft_rewrite(holder);
+	return holder;
 }

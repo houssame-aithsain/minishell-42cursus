@@ -6,7 +6,7 @@
 /*   By: hait-hsa <hait-hsa@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/05/07 17:34:31 by gothmane          #+#    #+#             */
-/*   Updated: 2023/05/21 17:58:02 by hait-hsa         ###   ########.fr       */
+/*   Updated: 2023/05/23 23:57:42 by hait-hsa         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -176,7 +176,7 @@ int    checker_export(char *str)
    int	i;
 
    i = 0;
-   while (str[i])
+   while (str && str[i])
    {
 		if (i == 0 && (!ft_isalpha(str[i]) && str[i] != '_'))
 			return (0);
@@ -440,6 +440,8 @@ char	*get_val_for_a_specific_key(t_list_export *exp, char *key)
 	t_list_export *e;
 
 	e = exp;
+	if (!key)
+		return NULL;
 	while (e)
 	{
 		if (ft_strcmp(e->key, key) == 0)

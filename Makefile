@@ -11,8 +11,10 @@ OBJCTS = ${SRC:.c=.o}
 make :
 	make -C ${LIBFT}
 
+# -fsanitize=address
+
 all : ${OBJCTS}
-	gcc -fsanitize=address -lreadline ${SRC} ${LIB} -o ${NAME}
+	gcc  -lreadline ${SRC} ${LIB} -o ${NAME}
 
 re : fclean all
 
