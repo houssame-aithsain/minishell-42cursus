@@ -6,7 +6,7 @@
 /*   By: hait-hsa <hait-hsa@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/04/01 21:33:53 by hait-hsa          #+#    #+#             */
-/*   Updated: 2023/05/24 23:51:23 by hait-hsa         ###   ########.fr       */
+/*   Updated: 2023/05/25 00:17:16 by hait-hsa         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -246,8 +246,15 @@ void ft_copy(char *dst, t_rquotes *var, int flag, t_bash **ptr)
 		if (var->qoute_type == '"' && dst[*v] == '$')
 		{
 			(*v)++;
-			while (dst && dst[*v] && dst[*v] != 39 && dst[*v] != ' ' && dst[*v] != '"' && dst[*v] != '$' && dst[*v] != '*' && dst[*v] != '_' && (ft_isdigit(dst[*v]) || ft_isalpha(dst[*v])))
+			while (dst && dst[*v] && dst[*v] != 39 && dst[*v] != ' ' && dst[*v] != '"' && dst[*v] != '$' && dst[*v] != '*' && dst[*v] != '_' && (ft_isdigit(dst[*v]) || ft_isalpha(dst[*v]) || dst[*v] == '@'))
+			{
+				if (ft_isdigit(dst[*v]) || dst[*v] == '@')
+				{
+					(*v)++;
+					break;
+				}
 				(*v)++;
+			}
 		}
 		if (dst[*v] == '"' || dst[*v] == 39)
 		{
@@ -318,8 +325,15 @@ void qoutes_remover(t_bash **ptr)
 			else if (tmp->command[var.v] == '$')
 			{
 				var.v++;
-				while (tmp->command && tmp->command[var.v] && tmp->command[var.v] != 39 && tmp->command[var.v] != ' ' && tmp->command[var.v] != '"' && tmp->command[var.v] != '$' && tmp->command[var.v] != '*' && tmp->command[var.v] != '_' && (ft_isdigit(tmp->command[var.v]) || ft_isalpha(tmp->command[var.v])))
+				while (tmp->command && tmp->command[var.v] && tmp->command[var.v] != 39 && tmp->command[var.v] != ' ' && tmp->command[var.v] != '"' && tmp->command[var.v] != '$' && tmp->command[var.v] != '*' && tmp->command[var.v] != '_' && (ft_isdigit(tmp->command[var.v]) || ft_isalpha(tmp->command[var.v]) || tmp->command[var.v] == '@'))
+				{
+					if (ft_isdigit(tmp->command[var.v]) || tmp->command[var.v] == '@')
+					{
+						var.v++;
+						break;
+					}
 					var.v++;
+				}
 			}
 			else
 				var.command[var.j++] = tmp->command[var.v++];

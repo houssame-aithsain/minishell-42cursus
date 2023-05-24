@@ -6,7 +6,7 @@
 /*   By: hait-hsa <hait-hsa@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/05/20 18:56:47 by hait-hsa          #+#    #+#             */
-/*   Updated: 2023/05/24 23:38:09 by hait-hsa         ###   ########.fr       */
+/*   Updated: 2023/05/25 00:12:38 by hait-hsa         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -125,7 +125,7 @@ char *ft_replace_var_by_value(char *arg, char **key, t_list_export *exp_list, in
 				rt_value[l++] = value[j++];
 			if (arg[i] == '$')
 				i++;
-			while (arg && arg[i] && arg[i] != 39 && arg[i] != ' ' && arg[i] != '"' && arg[i] != '$' && arg[i] != '*' && arg[i] != '_' && (ft_isdigit(arg[i]) || ft_isalpha(arg[i])))
+			while (arg && arg[i] && arg[i] != 39 && arg[i] != ' ' && arg[i] != '"' && arg[i] != '$' && arg[i] != '*' && arg[i] != '_' && arg[i] != '@' && (ft_isdigit(arg[i]) || ft_isalpha(arg[i])))
 				i++;
 			// printf("after exex------------->%s!\n", rt_value);
 			if (arg[i])
@@ -177,7 +177,7 @@ char *ft_get_arg(char *str)
 
 	i = 0;
 	value = malloc(sizeof(char) * ft_strlen(str) + 1);
-	while (str && str[i] && str[i] != ' ' && str[i] != '"' && str[i] != 39 && str[i] != '$' && str[i] != '*' && (!ft_isdigit(str[i]) || !ft_isalpha(str[i]) || str[i] == '_'))
+	while (str && str[i] && str[i] != ' ' && str[i] != '"' && str[i] != 39 && str[i] != '$' && str[i] != '*' && str[i] != '@' &&(!ft_isdigit(str[i]) || !ft_isalpha(str[i]) || str[i] == '_'))
 	{
 		value[i] = str[i];
 		i++;
