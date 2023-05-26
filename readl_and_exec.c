@@ -6,11 +6,27 @@
 /*   By: hait-hsa <hait-hsa@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/04/01 21:33:53 by hait-hsa          #+#    #+#             */
-/*   Updated: 2023/05/26 00:08:03 by hait-hsa         ###   ########.fr       */
+/*   Updated: 2023/05/26 05:26:16 by hait-hsa         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
+
+char *q_re_write(char *ncoom)
+{
+	int i;
+
+	i = 0;
+	while (ncoom && (ncoom)[i])
+	{
+		if ((ncoom)[i] == 8)
+			(ncoom)[i] = 39;
+		else if ((ncoom)[i] == 9)
+			(ncoom)[i] = '"';
+		i++;
+	}
+	return ncoom;
+}
 
 char quote_typ(char *ncoom, char f_type, char s_type, int flag)
 {
@@ -462,6 +478,7 @@ void get_the_right_forma(char *ncoom, t_bash **ptr, t_list_env **env_list, t_lis
 	check_for_error(ncoom, &var.error);
 	if (ncoom)
 		ex = get_value_from_variable(*exp_list, &ncoom);
+	ncoom = q_re_write(ncoom);
 	var.holder = malloc(sizeof(char) * ft_strlen(ncoom) + 1);
 	while (ncoom && ncoom[var.i])
 	{
