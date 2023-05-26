@@ -6,7 +6,7 @@
 /*   By: hait-hsa <hait-hsa@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/04/01 21:33:53 by hait-hsa          #+#    #+#             */
-/*   Updated: 2023/05/25 00:17:16 by hait-hsa         ###   ########.fr       */
+/*   Updated: 2023/05/26 00:08:03 by hait-hsa         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -280,8 +280,10 @@ int arg_lent(char **arg)
 	return i;
 }
 
-void qoutes_remover(t_bash **ptr)
+void qoutes_remover(t_bash **ptr, t_ex *ex)
 {
+	int k;
+	int len_skiped;
 	t_bash *tmp;
 	t_bash *head;
 	t_rquotes var;
@@ -322,18 +324,35 @@ void qoutes_remover(t_bash **ptr)
 				var.qoute_type = '"';
 				ft_copy(tmp->command, &var, 0, ptr);
 			}
-			else if (tmp->command[var.v] == '$')
+			else if (tmp->command[var.v] && tmp->command[var.v] == '$')
 			{
+				k = 0;
 				var.v++;
-				while (tmp->command && tmp->command[var.v] && tmp->command[var.v] != 39 && tmp->command[var.v] != ' ' && tmp->command[var.v] != '"' && tmp->command[var.v] != '$' && tmp->command[var.v] != '*' && tmp->command[var.v] != '_' && (ft_isdigit(tmp->command[var.v]) || ft_isalpha(tmp->command[var.v]) || tmp->command[var.v] == '@'))
-				{
-					if (ft_isdigit(tmp->command[var.v]) || tmp->command[var.v] == '@')
+				// printf("check ex->key----------->%s<-----------\n", ex->key[0]);
+				while (k < ex->len)
 					{
-						var.v++;
-						break;
+						if (ft_isdigit(tmp->command[var.v]) || tmp->command[var.v] == '@')
+						{
+							var.v++;
+							break;
+						}
+						if ( ex->key[k])
+						{
+							if (!ft_strncmp(tmp->command + var.v, ex->key[k], ft_strlen(ex->key[k])))
+							{
+								// printf("check ex->key----------->%s<-----------\n", ex->key[k]);
+								len_skiped = ft_strlen(ex->key[k]);
+								k = 0;
+								while (k < len_skiped)
+								{
+									k++;
+									var.v++;
+								}
+								break;
+							}
+						}
+						k++;
 					}
-					var.v++;
-				}
 			}
 			else
 				var.command[var.j++] = tmp->command[var.v++];
@@ -433,6 +452,8 @@ char *replace_spaces_in_quotes(char *str)
 
 void get_the_right_forma(char *ncoom, t_bash **ptr, t_list_env **env_list, t_list_export **exp_list)
 {
+	char **key;
+	t_ex *ex;
 	t_format var;
 
 	var.i = 0;
@@ -440,7 +461,7 @@ void get_the_right_forma(char *ncoom, t_bash **ptr, t_list_env **env_list, t_lis
 	*ptr = NULL;
 	check_for_error(ncoom, &var.error);
 	if (ncoom)
-		ncoom = get_value_from_variable(*exp_list, ncoom);
+		ex = get_value_from_variable(*exp_list, &ncoom);
 	var.holder = malloc(sizeof(char) * ft_strlen(ncoom) + 1);
 	while (ncoom && ncoom[var.i])
 	{
@@ -484,7 +505,7 @@ void get_the_right_forma(char *ncoom, t_bash **ptr, t_list_env **env_list, t_lis
 	}
 	// printf("var.holder=========={%p}\n", var.holder);
 	free(var.holder);
-	qoutes_remover(ptr);
+	qoutes_remover(ptr, ex);
 }
 
 void readl_to_parse(char **env)

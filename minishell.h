@@ -19,6 +19,12 @@
 #define S_RD_ERROR	8
 #define NSFOD		9
 // str open
+
+typedef struct expande{
+	int len;
+	char **key;
+} t_ex;
+
 typedef struct s_node{
 	int		*expand_arr;
 	int		expande;
@@ -105,7 +111,7 @@ typedef struct s_list_env
 
 char			quote_typ(char *ncoom, char f_type, char s_type, int flag);
 char			*get_val_for_a_specific_key(t_list_export *exp, char *key);
-char			*get_value_from_variable(t_list_export *exp_list, char *holder);
+t_ex			*get_value_from_variable(t_list_export *exp_list, char **holder);
 char			*ft_strnew_bb(size_t size);
 char			*ft_strjoin_bb(char *s1, char const *s2);
 char			*if_operatore(char *ncoom);
