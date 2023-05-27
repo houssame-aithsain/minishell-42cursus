@@ -6,7 +6,7 @@
 /*   By: hait-hsa <hait-hsa@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/05/20 18:56:47 by hait-hsa          #+#    #+#             */
-/*   Updated: 2023/05/26 05:33:19 by hait-hsa         ###   ########.fr       */
+/*   Updated: 2023/05/27 23:31:06 by hait-hsa         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -71,7 +71,7 @@ int check_if_var(char *str, char quote_type)
 		{
 			if (str[i] == '$')
 			{
-				if (str[i - 1] == '$')
+				if (str[i + 1] == '$')
 					return 0;
 				if ((ft_isdigit(str[i + 1]) || ft_isalpha(str[i + 1])))
 					return 1;
@@ -114,9 +114,9 @@ char *ft_replace_var_by_value(char **arg, t_ex *ex, t_list_export *exp_list, int
 				value = get_val_for_a_specific_key(exp_list, s_key);
 				value = ft_strtrim(value, "\1");
 			}
-			while ((*arg)[i] && (*arg)[i] != quote_type && (*arg)[i] != '$')
-				rt_value[l++] = (*arg)[i++];
 			if ((*arg)[i] == quote_type)
+				rt_value[l++] = (*arg)[i++];
+			while ((*arg)[i] && (*arg)[i] != quote_type && (*arg)[i] != '$')
 				rt_value[l++] = (*arg)[i++];
 			if ((*arg)[i] == '$')
 				i++;
@@ -160,8 +160,12 @@ char *ft_replace_var_by_value(char **arg, t_ex *ex, t_list_export *exp_list, int
 					}
 					break;
 				}
-				else if ((*arg)[i] == '$' && quote_type)
+				else if ((*arg)[i] == '$')
+				{
 					rt_value[l] = 10;
+					i++;
+					break;
+				}
 				else
 					rt_value[l] = (*arg)[i];
 				i++;
@@ -207,11 +211,14 @@ int get_key(char *arg, char **str)
 		if (arg[i] == '$' && arg[i + 1] != '$')
 		{
 			*str = ft_get_arg(arg + i + 1);
-			{
-				// printf("check befooooooore ex->key----------->%s<-----------\n", *str);
-				// printf("check befooooooore (i)----------->%d<-----------\n", i);
-				return i;
-			}
+			i++;
+			while(arg[i] && arg[i] != '$')
+				i++;
+			// printf("arg====={%s}\n",arg + i);
+			// exit(0);
+			return i;
+			// printf("check befooooooore ex->key----------->%s<-----------\n", *str);
+			// printf("check befooooooore (i)----------->%d<-----------\n", i);
 		}
 		i++;
 	}
@@ -221,7 +228,7 @@ int get_key(char *arg, char **str)
 
 t_ex *get_value_from_variable(t_list_export *exp_list, char **holder)
 {
-	int len;
+	size_t len;
 	char *rt_value;
 	size_t cmd_lent;
 	t_ex *ex;
@@ -238,7 +245,7 @@ t_ex *get_value_from_variable(t_list_export *exp_list, char **holder)
 	ex->len = 0;
 	while ((*holder)[i])
 	{
-		if ((*holder)[i] == '$')
+		if ((*holder)[i] == '$' && (*holder)[i + 1] != '$')
 			mlc++;
 		i++;
 	}
@@ -246,9 +253,11 @@ t_ex *get_value_from_variable(t_list_export *exp_list, char **holder)
 	ex->key = malloc(sizeof(char *) * (mlc + 1));
 	while (ex->len < mlc)
 	{
-		len += get_key(*holder + cmd_lent, &ex->key[ex->len]);
+		if (*holder && cmd_lent <= ft_strlen(*holder))
+			len += get_key(*holder + cmd_lent, &ex->key[ex->len]);
 		if (ex->key[ex->len])
-			cmd_lent += ft_strlen(ex->key[ex->len]) + len;
+			cmd_lent += len;
+		// printf("%zu\n", cmd_lent);
 		// printf("check ex->key----------->%s<-----------\n", ex->key[ex->len]);
 		ex->len++;
 	}

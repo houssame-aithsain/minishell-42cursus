@@ -6,26 +6,64 @@
 /*   By: hait-hsa <hait-hsa@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/04/01 21:33:53 by hait-hsa          #+#    #+#             */
-/*   Updated: 2023/05/26 05:26:16 by hait-hsa         ###   ########.fr       */
+/*   Updated: 2023/05/27 22:55:01 by hait-hsa         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
 
-char *q_re_write(char *ncoom)
+void q_re_write(t_bash **ptr)
 {
+	t_bash *tmp;
+	t_bash *head;
 	int i;
+	int j;
 
-	i = 0;
-	while (ncoom && (ncoom)[i])
+	j = 0;
+	tmp = *ptr;
+	head = tmp;
+	while (tmp)
 	{
-		if ((ncoom)[i] == 8)
-			(ncoom)[i] = 39;
-		else if ((ncoom)[i] == 9)
-			(ncoom)[i] = '"';
-		i++;
+		i = 0;
+		while ((*ptr)->command && ((*ptr)->command)[i])
+		{
+			if (((*ptr)->command)[i] == 8)
+				((*ptr)->command)[i] = 39;
+			else if (((*ptr)->command)[i] == 9)
+				((*ptr)->command)[i] = '"';
+			i++;
+		}
+		i = 0;
+		while ((*ptr)->arg[i])
+		{
+			j = 0;
+			while ((*ptr)->arg[i][j])
+			{
+				if (((*ptr)->arg)[i][j] == 8)
+					((*ptr)->arg)[i][j] = 39;
+				else if (((*ptr)->arg)[i][j] == 9)
+					((*ptr)->arg)[i][j] = '"';
+				j++;
+			}
+			i++;
+		}
+		i = 0;
+		while ((*ptr)->file[i])
+		{
+			j = 0;
+			while ((*ptr)->file[i][j])
+			{
+				if (((*ptr)->file)[i][j] == 8)
+					((*ptr)->file)[i][j] = 39;
+				else if (((*ptr)->file)[i][j] == 9)
+					((*ptr)->file)[i][j] = '"';
+				j++;
+			}
+			i++;
+		}
+		tmp = tmp->link;
 	}
-	return ncoom;
+	ptr = &head;
 }
 
 char quote_typ(char *ncoom, char f_type, char s_type, int flag)
@@ -299,6 +337,7 @@ int arg_lent(char **arg)
 void qoutes_remover(t_bash **ptr, t_ex *ex)
 {
 	int k;
+	int daller_counter;
 	int len_skiped;
 	t_bash *tmp;
 	t_bash *head;
@@ -344,31 +383,39 @@ void qoutes_remover(t_bash **ptr, t_ex *ex)
 			{
 				k = 0;
 				var.v++;
-				// printf("check ex->key----------->%s<-----------\n", ex->key[0]);
+				// daller_counter = 1;
+				// while (tmp->command[var.v] && tmp->command[var.v] == '$')
+				// {
+				// 	if (tmp->command[var.v] == '$')
+				// 		daller_counter++;
+				// 	if ((daller_counter % 2) && (!tmp->command[var.v + 1] || tmp->command[var.v + 1] != '$'))
+				// 		break;
+				// 	var.v++;
+				// }
 				while (k < ex->len)
+				{
+					if (ft_isdigit(tmp->command[var.v]) || tmp->command[var.v] == '@')
 					{
-						if (ft_isdigit(tmp->command[var.v]) || tmp->command[var.v] == '@')
+						var.v++;
+						break;
+					}
+					if (ex->key[k])
+					{
+						if (!ft_strncmp(tmp->command + var.v, ex->key[k], ft_strlen(ex->key[k])))
 						{
-							var.v++;
+							// printf("check ex->key----------->%s<-----------\n", ex->key[k]);
+							len_skiped = ft_strlen(ex->key[k]);
+							k = 0;
+							while (k < len_skiped)
+							{
+								k++;
+								var.v++;
+							}
 							break;
 						}
-						if ( ex->key[k])
-						{
-							if (!ft_strncmp(tmp->command + var.v, ex->key[k], ft_strlen(ex->key[k])))
-							{
-								// printf("check ex->key----------->%s<-----------\n", ex->key[k]);
-								len_skiped = ft_strlen(ex->key[k]);
-								k = 0;
-								while (k < len_skiped)
-								{
-									k++;
-									var.v++;
-								}
-								break;
-							}
-						}
-						k++;
 					}
+					k++;
+				}
 			}
 			else
 				var.command[var.j++] = tmp->command[var.v++];
@@ -478,7 +525,7 @@ void get_the_right_forma(char *ncoom, t_bash **ptr, t_list_env **env_list, t_lis
 	check_for_error(ncoom, &var.error);
 	if (ncoom)
 		ex = get_value_from_variable(*exp_list, &ncoom);
-	ncoom = q_re_write(ncoom);
+	// exit(0);
 	var.holder = malloc(sizeof(char) * ft_strlen(ncoom) + 1);
 	while (ncoom && ncoom[var.i])
 	{
@@ -523,6 +570,7 @@ void get_the_right_forma(char *ncoom, t_bash **ptr, t_list_env **env_list, t_lis
 	// printf("var.holder=========={%p}\n", var.holder);
 	free(var.holder);
 	qoutes_remover(ptr, ex);
+	q_re_write(ptr);
 }
 
 void readl_to_parse(char **env)
