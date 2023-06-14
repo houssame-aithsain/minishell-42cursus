@@ -6,7 +6,7 @@
 /*   By: gothmane <gothmane@student.1337.ma>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/05/15 16:42:26 by gothmane          #+#    #+#             */
-/*   Updated: 2023/05/16 01:16:32 by gothmane         ###   ########.fr       */
+/*   Updated: 2023/06/07 22:15:53 by gothmane         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -43,6 +43,7 @@ void	ft_free_args(char **arg)
 		free(arg[i]);
 		i++;
 	}
+	free(arg);
 }
 
 char	*ft_check_access_cmd(t_bash *cmd, t_list_env *env)
@@ -53,6 +54,8 @@ char	*ft_check_access_cmd(t_bash *cmd, t_list_env *env)
 
 	i = 0;
 	path_sp = ft_getpath_cmd(env);
+	if (!path_sp)
+		return (NULL);
 	sgl_path = NULL;
 	while (path_sp && path_sp[i])
 	{
@@ -77,6 +80,19 @@ int	ft_count_cmds(t_bash *cmd)
 	i = 0;
 	while (cmd->arg[i])
 		i++;
+	return (i);
+}
+
+int	ft_count_cmds_exp(t_bash *cmd)
+{
+	int	i;
+
+	i = 0;
+	while (cmd)
+	{
+		i++;
+		cmd = cmd->link;
+	}
 	return (i);
 }
 
@@ -106,13 +122,14 @@ char	**ft_lst_to_array(t_list_env *env)
 	int			i;
 
 	env_ls = env;
-	new_ls = malloc(sizeof(char *) * (ft_lstsize_env(env) + 1));
+	new_ls = malloc(sizeof(char *) * (ft_lstsize_env(env) + 1 ));
 	i = 0;
 	while (env_ls)
 	{
 		new_ls[i++] = env_ls->content;
 		env_ls = env_ls->next;
 	}
+	new_ls[i] = 0;
 	return (new_ls);
 }
 

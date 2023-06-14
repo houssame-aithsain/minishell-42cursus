@@ -1,18 +1,26 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   minishell.c                                        :+:      :+:    :+:   */
+/*   c_d_sig.c                                          :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: hait-hsa <hait-hsa@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2023/04/01 19:42:55 by hait-hsa          #+#    #+#             */
-/*   Updated: 2023/06/08 06:04:32 by hait-hsa         ###   ########.fr       */
+/*   Created: 2023/06/08 06:23:08 by hait-hsa          #+#    #+#             */
+/*   Updated: 2023/06/14 11:22:39 by hait-hsa         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "minishell.h"
+#include "../minishell.h"
 
-int main(int argc, char **argv, char **env)
+void	handler(int sig_t)
 {
-	readl_to_parse(env);
+	int fd;
+	if (sig_t == SIGINT)
+	{
+		if (r)
+			printf("\n");
+		rl_catch_signals = 1;
+		r = 0;
+		close(0);
+	}
 }

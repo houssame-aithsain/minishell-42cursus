@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   redir.c                                            :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: gothmane <gothmane@student.1337.ma>        +#+  +:+       +#+        */
+/*   By: hait-hsa <hait-hsa@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/05/16 17:29:13 by gothmane          #+#    #+#             */
-/*   Updated: 2023/05/16 23:52:42 by gothmane         ###   ########.fr       */
+/*   Updated: 2023/05/28 21:48:43 by hait-hsa         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -53,7 +53,7 @@ int	ft_open_files(t_bash *cmd)
 		files_fd = malloc(sizeof(int) * file_counter);
 		while (files[i])
 		{
-			printf("file = %s\n", files[i]);
+			// printf("file = %s\n", files[i]);
 			files_fd[i] = open(files[i], O_RDWR, NULL);
 			if (files_fd[i] == -1)
 				files_fd[i] = open(files[i], O_RDWR | O_CREAT, 0664);

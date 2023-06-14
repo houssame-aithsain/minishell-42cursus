@@ -1,18 +1,18 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   ft_split.c                                         :+:      :+:    :+:   */
+/*   ft_split_e.c                                       :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: hait-hsa <hait-hsa@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/10/05 14:25:33 by gothmane          #+#    #+#             */
-/*   Updated: 2023/06/02 07:46:43 by hait-hsa         ###   ########.fr       */
+/*   Updated: 2023/06/14 10:47:52 by hait-hsa         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "libft.h"
+#include "../minishell.h"
 
-int	ft_countersplit(char *s, char c)
+int	ft_countersplit_e(char *s)
 {
 	int	i;
 	int	counter;
@@ -21,24 +21,26 @@ int	ft_countersplit(char *s, char c)
 	i = 0;
 	while (s[i])
 	{
-		if (s[i] != c && (i == 0 || s[i - 1] == c))
+		if ((s[i] != ' ' && s[i] != '\t')
+			&& (i == 0 || s[i - 1] == ' ' || s[i
+					- 1] == '\t'))
 			counter++;
 		i++;
 	}
 	return (counter);
 }
 
-int	get_index(char *t, char c)
+int	get_index_e(char *t)
 {
 	int	i;
 
 	i = 0;
-	while (t[i] && (t[i] != c))
+	while (t[i] && (t[i] != ' ' && t[i] != '\t'))
 		i++;
 	return (i);
 }
 
-char	**ft_split(char const *s, char c)
+char	**ft_split_e(char const *s)
 {
 	char	**strings;
 	int		count;
@@ -47,19 +49,19 @@ char	**ft_split(char const *s, char c)
 	j = 0;
 	if (!s)
 		return (0);
-	count = ft_countersplit((char *)s, c);
-	strings = (char **) malloc(sizeof(char *) * (count + 1));
+	count = ft_countersplit_e((char *)s);
+	strings = (char **)malloc(sizeof(char *) * (count + 1));
 	if (!strings)
 		return (0);
 	while (*s)
 	{
-		if (*s == c)
+		if (*s == ' ' || *s == '\t')
 			s++;
 		else
 		{
-			strings[j] = ft_substr(s, 0, get_index((char *)s, c));
+			strings[j] = ft_substr(s, 0, get_index_e((char *)s));
 			j++;
-			s += get_index((char *)s, c);
+			s += get_index_e((char *)s);
 		}
 	}
 	strings[j] = 0;

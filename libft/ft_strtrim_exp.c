@@ -1,18 +1,18 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   ft_strtrim.c                                       :+:      :+:    :+:   */
+/*   ft_strtrim_exp.c                                   :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: hait-hsa <hait-hsa@student.42.fr>          +#+  +:+       +#+        */
+/*   By: gothmane <gothmane@student.1337.ma>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/10/04 12:33:05 by gothmane          #+#    #+#             */
-/*   Updated: 2023/06/02 01:47:11 by hait-hsa         ###   ########.fr       */
+/*   Updated: 2023/06/03 21:41:10 by gothmane         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "libft.h"
 
-int	ft_exist(const char *s1, char c)
+int	ft_exist_(const char *s1, char c)
 {
 	int	i;
 
@@ -26,7 +26,35 @@ int	ft_exist(const char *s1, char c)
 	return (0);
 }
 
-char	*ft_strtrim(char const *s1, char const *set)
+int	getlindex(const char *s1, const char *set)
+{
+	int	i;
+
+	i = 0;
+	while (s1[i])
+	{
+		if (!ft_exist_(set, s1[i]))
+			return (i);
+		i++;
+	}
+	return (-1);
+}
+
+int	getrindex(const char *s1, const char *set)
+{
+	int	lengths1;
+
+	lengths1 = ft_strlen(s1);
+	while (lengths1 > 0)
+	{
+		if (!ft_exist_(set, s1[lengths1 - 1]))
+			return (lengths1);
+		lengths1--;
+	}
+	return (-1);
+}
+
+char	*ft_strtrim_exp(char const *s1, char const *set)
 {
 	char	*trimmed;
 	int		lcounter;
@@ -36,8 +64,8 @@ char	*ft_strtrim(char const *s1, char const *set)
 	i = 0;
 	if (!s1 || !set)
 		return (0);
-	lcounter = 1;
-	rcounter = ft_strlen(s1) - 1;
+	lcounter = getlindex(s1, set);
+	rcounter = getrindex(s1, set);
 	trimmed = (char *) malloc(sizeof(char) * (rcounter - lcounter + 1));
 	if (!trimmed)
 		return (NULL);

@@ -6,7 +6,7 @@
 /*   By: gothmane <gothmane@student.1337.ma>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/09/28 13:18:39 by gothmane          #+#    #+#             */
-/*   Updated: 2023/05/13 15:57:29 by gothmane         ###   ########.fr       */
+/*   Updated: 2023/05/28 06:22:03 by gothmane         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -51,6 +51,7 @@ void	ft_putchar_fd(char c, int fd);
 void	ft_putendl_fd(char *s, int fd);
 void	ft_putnbr_fd(int n, int fd);
 void	ft_putstr_fd(char *s, int fd);
+char	*ft_strtrim_exp(char const *s1, char const *set);
 
 typedef struct s_list
 {

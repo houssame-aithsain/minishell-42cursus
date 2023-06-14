@@ -6,64 +6,239 @@
 /*   By: gothmane <gothmane@student.1337.ma>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/04/15 22:09:30 by gothmane          #+#    #+#             */
-/*   Updated: 2023/05/15 20:25:10 by gothmane         ###   ########.fr       */
+/*   Updated: 2023/06/12 15:16:06 by gothmane         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../minishell.h"
 
-// ft_echo
-void ft_echo(char **str)
+void ft_second_delete_func_part(t_list_env **curr, char *key)
+{
+    t_list_env *current = *curr;
+    t_list_env *temp = *curr;
+    while (current->next != NULL)
+    {
+        if (ft_strcmp(current->next->key, key) == 0)
+        {
+            temp = current->next;
+            current->next = current->next->next;
+            free(temp->content);
+            free(temp->key);
+            free(temp);
+            break;
+        }
+        else
+            current = current->next;
+    }
+}
+
+void ft_wrapped_free_for_delete(t_list_export *temp)
+{
+    if (temp->key)
+        free(temp->key);
+    if (temp->value)
+        free(temp->value);
+    if (temp->content)
+        free(temp->content);
+    if (temp)
+        free(temp);
+}
+
+int ft_check_minus_n_(char *str)
 {
     int i;
-    int n;
+    int j;
 
-    n = 0;
+    i = 0;
+    j = 0;
+    if (!str)
+        return (0);
+    while (str[i])
+    {
+        if (i == 0 && str[i] == '-')
+            j++;
+        if (str[i] == 'n')
+            j++;
+        i++;
+    }
+    if (i == j && i != 0)
+        return (1);
+    return (0);
+}
+
+void ft_print_minus_n_after(char **str)
+{
+    int i;
+
     i = 0;
     while (str[i])
     {
-        if (((n != 1) && (i == 0) && str[i][0] == '-' && str[i][1] == 'n'))
-            n = 1;
-        else
+        if (ft_check_minus_n_(str[i]) == 1)
         {
-            if (n == 1 && ft_strncmp(str[i], "-n", 2) == 0)
-                i++;
-            else
-            {
-                printf("%s", str[i]);
-                if (str[i + 1])
-                    printf(" ");
-            }
+            printf("%s", str[i]);
+            if (str[i + 1])
+                printf(" ");
         }
         i++;
     }
-    if (n == 0)
+}
+// ft_echo
+void    ft_printing_echo_content(char **str, int *i, int c)
+{
+    printf("%s", str[*i]);
+    if (str[*i + 1])
+    {
+        printf(" ");
+        if (c == 1)
+            ft_print_minus_n_after(&str[*i]);
+    }
+    (*i)++;
+}
+void    ft_echo(char **str)
+{
+    int i;
+    int c;
+    int k;
+
+    c = 0;
+    i = 0;
+    k = 0;
+    while (str[i])
+    {
+        k = ft_check_minus_n_(str[i]);
+        if (i == 0 && k == 1)
+        {
+            c = 1;
+            i++;
+        }
+        else if (i > 0 && k == 1 && c == 1)
+            i++;
+        else if (i != 0 || k == 0)
+            ft_printing_echo_content(str, &i, c);
+        else
+            i++;
+    }
+    if (c == 0)
         printf("\n");
+    ft_free_args(str);
 }
 // end ft_echo
 
+int ft_find_key__v2(t_list_env *env)
+{
+    while (env)
+    {
+        if (ft_strcmp(env->key, "HOME") == 0)
+            return (1);
+        env = env->next;
+    }
+    return (0);
+}
+
+char *ft_getval_env(char *key, t_list_env *env_ls)
+{
+    t_list_env *env;
+
+    env = env_ls;
+    while (env)
+    {
+        if (ft_strcmp(key, env->key) == 0)
+            return (env->value);
+        // printf("key = %s\n", env->key);
+        env = env->next;
+    }
+    return (NULL);
+}
+
+void ft_wrapped_free_for_delete_env(t_list_env *temp)
+{
+    if (temp->key)
+        free(temp->key);
+    if (temp->value)
+        free(temp->value);
+    if (temp->content)
+        free(temp->content);
+    if (temp)
+        free(temp);
+}
+
+void ft_delete_node_env_for_cd(t_list_env **head, char *key)
+{
+    t_list_env *temp;
+    t_list_env *current;
+
+    current = *head;
+    if (ft_strcmp((*head)->key, key) == 0)
+    {
+        temp = *head;
+        *head = (*head)->next;
+        ft_wrapped_free_for_delete_env(temp);
+    }
+    else
+    {
+        while (current->next != NULL)
+        {
+            if (ft_strcmp(current->next->key, key) == 0)
+            {
+                temp = current->next;
+                current->next = current->next->next;
+                ft_wrapped_free_for_delete_env(temp);
+                break;
+            }
+            else
+                current = current->next;
+        }
+    }
+}
+
+void ft_replace_pwd(t_list_env **env_ls)
+{
+    char *oldpwd;
+    char *pwd;
+    char *buffer;
+    char *value;
+
+    value = ft_getval_env("PWD", *env_ls);
+    if (!value)
+        return;
+    buffer = getcwd(NULL, 0);
+    oldpwd = ft_strdup("OLDPWD=");
+    oldpwd = ft_strjoin(oldpwd, value);
+    ft_delete_node_env_for_cd(env_ls, "OLDPWD");
+    ft_lstadd_back_env(env_ls, ft_lstnew_mod_env(oldpwd));
+    ft_delete_node_env(env_ls, "PWD");
+    pwd = ft_strdup("PWD=");
+    if (buffer)
+        pwd = ft_strjoin(pwd, buffer);
+    ft_lstadd_back_env(env_ls, ft_lstnew_mod_env(pwd));
+    free(oldpwd);
+    free(buffer);
+    free(value);
+    free(pwd);
+}
+
 // ft_cd
-void ft_cd(char *path)
+void ft_cd(char *path, t_list_env **env_ls)
 {
     int err;
     char *p;
 
     err = 0;
     if (!path || ft_strncmp(path, "~", 1) == 0)
-    {
-        // printf("IN CD\n");
-        // p = ft_strjoin(p, getenv("PATH"));
-        // printf("PATH = {%s}\n", p);
         err = chdir(getenv("HOME"));
-        printf("err = %d\n", err);
-        // free(p);
-    }
     else
     {
-        chdir(path);
+        err = chdir(path);
+        ft_replace_pwd(env_ls);
     }
     if (err == -1)
-        printf("ERROR ASI IN CD\n");
+    {
+        printf("minishell: No such file or directory\n");
+        if (ft_find_key__v2(*env_ls) == 1)
+            exit_status = 0;
+        else
+            exit_status = 1;
+    }
 }
 // end ft_cd
 
@@ -75,8 +250,10 @@ int ft_pwd(void)
     if (buffer)
     {
         printf("%s\n", buffer);
+        free(buffer);
         return (1);
     }
+    free(buffer);
     return (0);
 }
 
@@ -92,27 +269,27 @@ int ft_count_2d(char **two_dem)
 
 t_list_env *ft_lstnew_mod_env(char *content)
 {
-    t_list_env  *ls;
-	int         i;
-	char        *key;
-	char        *declare;
+    t_list_env *ls;
+    int i;
+    char *key;
+    char *declare;
 
-	i = 0;
-	ls = malloc(sizeof(t_list_env));
-	declare = "";
-	key = NULL;
-	if (!ls)
-		return (0);
-	ls->key = ft_getkey(content);
-	ls->value = ft_getvalue_env(content);
-	declare = ft_strjoin_bb(declare, ls->key);
-	if (ft_detect_equal(ls->key, content) == 0)
-		declare = ft_strjoin(declare, "=");
-	if (ls->value)
-		declare = ft_strjoin(declare, ls->value);
-	ls->content = declare;
-	ls->next = NULL;
-	return (ls);
+    i = 0;
+    ls = malloc(sizeof(t_list_env));
+    declare = "";
+    key = NULL;
+    if (!ls)
+        return (0);
+    ls->key = ft_getkey(content);
+    ls->value = ft_getvalue_env(content);
+    declare = ft_strjoin_bb(declare, ls->key);
+    if (ft_detect_equal(ls->key, content) == 0)
+        declare = ft_strjoin(declare, "=");
+    if (ls->value)
+        declare = ft_strjoin(declare, ls->value);
+    ls->content = declare;
+    ls->next = NULL;
+    return (ls);
 }
 
 t_list_env *ft_lstlast_env(t_list_env *lst)
@@ -145,6 +322,8 @@ t_list_env *put_env_to_ls(char **env)
 
     i = 0;
     env_ls = NULL;
+    node = ft_lstnew_mod_env("x");
+    ft_lstadd_back_env(&env_ls, node);
     while (env[i])
     {
         node = ft_lstnew_mod_env(env[i]);
@@ -154,101 +333,46 @@ t_list_env *put_env_to_ls(char **env)
     return (env_ls);
 }
 
-
-
-char	*ft_getvalue_env(char *content)
+char *ft_getvalue_env(char *content)
 {
-	int		i;
-	int		j;
-	char	*value;
-    char    *temp;
-    
-	i = 0;
-	j = 0;
-	value = "";
-	while (content[i])
-	{
-		if (content[i] == '=' || (content[i] == '+' && content[i + 1] == '='))
-		{
-			j = i;
-			break;
-		}
-		i++;
-	}
-	if (j == 0)
-		return (content);
-	if (j > 0)
+    int i;
+    int j;
+    char *value;
+    char *temp;
+
+    i = 0;
+    j = 0;
+    value = "";
+    while (content[i])
     {
-        temp = ft_substr(content, j+1, ft_strlen(content));
-		value = ft_strjoin_bb(value, temp);
+        if (content[i] == '=' || (content[i] == '+' && content[i + 1] == '='))
+        {
+            j = i;
+            break;
+        }
+        i++;
+    }
+    if (j == 0)
+        return (content);
+    if (j > 0)
+    {
+        temp = ft_substr(content, j + 1, ft_strlen(content));
+        value = ft_strjoin_bb(value, temp);
         free(temp);
     }
-	return (value);
+    return (value);
 }
-
-
-// char    **ft_unset(char **env, char *var_to_unset)
-// {
-//     int i;
-//     int j;
-//     int c;
-//     int checker;
-//     int trigger;
-//     int size_var_to_unset;
-//     char **new_env;
-// 	int ee = 0;
-
-//     new_env = malloc(sizeof(char *) * ft_count_2d(env) + 1);
-//     checker = 0;
-//     j = 0;
-//     i = 0;
-//     c = 0;
-//     trigger = 0;
-//     if (var_to_unset)
-//         size_var_to_unset = ft_strlen(var_to_unset);
-//     else
-//         return (0);
-//     while (env[i])
-//     {
-//         j = 0;
-//         size_var_to_unset = ft_strlen(var_to_unset);
-// 		if (ee >= 1)
-// 			trigger = 0;
-//        while (env[i][j])
-//        {
-//             if(size_var_to_unset == 0 && trigger == 0 && ee == 0)
-//             {
-//                 trigger = 1;
-// 				break;
-//             }
-//             if (env[i][j] != '=')
-//             {
-//                 if(env[i][j] == var_to_unset[j])
-//                     size_var_to_unset--;
-//             }
-// 			else
-// 				break;
-//             j++;
-//        }
-//         if (trigger == 0)
-//         {
-//             new_env[c] = ft_substr(env[i], 0, ft_strlen(env[i]));
-// 			printf("%s\n", new_env[c]);
-//             c++;
-//         }
-// 		else
-// 			ee++;
-//        i++;
-//     }
-//     return (new_env);
-// }+
 
 void ft_print_lst_env(t_list_env *ls)
 {
     t_list_env *la = ls;
+
+    if (!la)
+        return;
     while (la)
     {
-        printf("%s\n", la->content);
+        if (ft_strcmp(la->content, "xx") != 0)
+            printf("%s\n", la->content);
         la = la->next;
     }
 }
@@ -257,43 +381,34 @@ void ft_search_for_var_to_unset(t_list_env **head, char *key)
 {
     t_list_env *temp;
     t_list_env *current;
-    
+
     current = *head;
-    if (ft_strcmp((*head)->key, key) == 0)
+    if (current && ft_strcmp((*head)->key, key) == 0)
     {
         temp = *head;
         *head = (*head)->next;
-        free(temp);
+        if (temp->key)
+            free(temp->key);
+        if (temp->content)
+            free(temp->content);
+        if (temp)
+            free(temp);
     }
     else
-    {
-        while (current->next != NULL)
-        {
-            if (ft_strcmp(current->next->key, key) == 0)
-            {
-                temp = current->next;
-                current->next = current->next->next;
-                free(temp);
-                break;
-            }
-            else
-                current = current->next;
-        }
-    }
+        ft_second_delete_func_part(head, key);
 }
-
 
 void ft_search_for_var_to_unset_export(t_list_export **head, char *key)
 {
     t_list_export *temp;
     t_list_export *current;
-    
+
     current = *head;
     if (ft_strcmp((*head)->key, key) == 0)
     {
         temp = *head;
         *head = (*head)->next;
-        free(temp);
+        ft_wrapped_free_for_delete(temp);
     }
     else
     {
@@ -303,7 +418,7 @@ void ft_search_for_var_to_unset_export(t_list_export **head, char *key)
             {
                 temp = current->next;
                 current->next = current->next->next;
-                free(temp);
+                ft_wrapped_free_for_delete(temp);
                 break;
             }
             else
@@ -312,18 +427,21 @@ void ft_search_for_var_to_unset_export(t_list_export **head, char *key)
     }
 }
 
-void    ft_unset(t_list_env **env, t_list_export **exp, char *var_to_unset)
+void ft_unset(t_list_env **env, t_list_export **exp, char **var_to_unset)
 {
-    t_list_env      *env_ls;
-    t_list_env      *temp;
-    t_list_export   *temp_exp;
+    t_list_env *env_ls;
+    t_list_env *temp;
+    t_list_export *temp_exp;
+    int i;
 
+    i = 0;
     temp = *env;
     temp_exp = *exp;
-    if (var_to_unset)
+    while (var_to_unset[i])
     {
-        ft_search_for_var_to_unset(&temp, var_to_unset);
-        ft_search_for_var_to_unset_export(&temp_exp, var_to_unset);
+        ft_search_for_var_to_unset_export(&temp_exp, var_to_unset[i]);
+        ft_search_for_var_to_unset(&temp, var_to_unset[i]);
+        i++;
     }
 }
 
@@ -336,38 +454,89 @@ void ft_env(char **env)
         printf("%s\n", env[i]);
 }
 
-void ft_exit(void)
+int _ft_exit_v(t_bash *ptr, int size_c)
 {
-    // smtg to free
-    printf("exit\n");
-    exit(0);
+    int j = 0;
+
+    while (ptr->arg[0][j])
+    {
+        if (ft_isalpha(ptr->arg[0][j]) == 1)
+        {
+            printf("minishell: exit: %s: numeric argument required\n", ptr->arg[0]);
+            exit(255);
+        }
+        if (size_c > 1)
+        {
+            printf("minishell: exit: too many arguments\n");
+            exit_status = 1;
+            return (1);
+        }
+        j++;
+    }
+    return (0);
 }
+
+int _ft_exit_check_arg(t_bash *ptr)
+{
+    int j = 0;
+    int i = 0;
+    while (ptr->arg[i])
+    {
+        j = 0;
+        while (ptr->arg[i][j])
+        {
+            if (ft_isalpha(ptr->arg[i][j]) == 1)
+            {
+                printf("minishell: exit: %s: numeric argument required\n", ptr->arg[i]);
+                exit(255);
+            }
+            j++;
+        }
+        i++;
+    }
+    return (0);
+}
+
+void ft_exit(t_bash *ptr)
+{
+    int a;
+    int size_c;
+
+    a = -404;
+    size_c = 0;
+    if (ptr->arg)
+        size_c = ft_count_2d(ptr->arg);
+    if (!ptr)
+        return;
+    if (size_c == 0)
+        exit(exit_status);
+    if (_ft_exit_v(ptr, size_c) == 1)
+        return;
+    _ft_exit_check_arg(ptr);
+    if (ptr->arg[0])
+        a = ft_atoi(ptr->arg[0]);
+    else
+        exit(exit_status);
+    if (a != -404)
+        exit(a);
+}
+
+
 
 void ft_delete_node_env(t_list_env **head, char *key)
 {
-	t_list_env *temp;
-	t_list_env *current;
+    t_list_env *temp;
+    t_list_env *current;
 
-	current = *head;
-	if (ft_strcmp((*head)->key, key) == 0)
-	{
-		temp = *head;
-		*head = (*head)->next;
-		free(temp);
-	}
-	else
-	{
-		while (current->next != NULL)
-		{
-			if (ft_strcmp(current->next->key, key) == 0)
-			{
-				temp = current->next;
-				current->next = current->next->next;
-				free(temp);
-				break;
-			}
-			else
-				current = current->next;
-		}
-	}
+    current = *head;
+    if (ft_strcmp((*head)->key, key) == 0)
+    {
+        temp = *head;
+        *head = (*head)->next;
+        free(temp->content);
+        free(temp->key);
+        free(temp);
+    }
+    else
+        ft_second_delete_func_part(head, key);
 }

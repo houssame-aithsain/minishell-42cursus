@@ -35,6 +35,7 @@ SRCS	= ft_striteri.c\
 		ft_putendl_fd.c \
 		ft_strmapi.c\
 		ft_itoa.c \
+		ft_strtrim_exp.c \
 
 SRCS_BONUS = ft_lstnew.c\
 			ft_lstadd_front.c\

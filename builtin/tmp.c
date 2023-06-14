@@ -1,16 +1,17 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   ft_export.c                                        :+:      :+:    :+:   */
+/*   tmp.c                                              :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: gothmane <gothmane@student.1337.ma>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/05/07 17:34:31 by gothmane          #+#    #+#             */
-/*   Updated: 2023/06/12 14:53:44 by gothmane         ###   ########.fr       */
+/*   Updated: 2023/06/12 20:05:31 by gothmane         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../minishell.h"
+
 
 char	*ft_get_v_for_value(char *content, int j)
 {
@@ -28,6 +29,7 @@ char	*ft_get_v_for_value(char *content, int j)
 	value = ft_strjoin(value, "\"");
 	return (value);
 }
+
 
 char	*ft_getvalue(char *content)
 {
@@ -97,7 +99,8 @@ int	ft_detect_equal(char *key, char *content)
 	if (key)
 	{
 		i = ft_strlen(key);
-		if ((content && content[i] == '=') || (content[i] == '+' && content[i + 1] == '=') )
+		if ((content && content[i] == '=')
+			|| (content[i] == '+' && content[i + 1] == '='))
 			return (0);
 	}
 	return (1);
@@ -128,6 +131,7 @@ t_list_export *ft_lstnew_mod(char *content)
 	ls->content = declare;
 	ls->next = NULL;
 	return (ls);
+	
 }
 
 
@@ -201,29 +205,37 @@ char	*ft_strtrim_exp_free(char *s1, char const *set)
 
 t_list_env *ft_lstnew_mod_e(char *content)
 {
-	t_list_env	*ls;
-	char		*declare;
-	char		*value;
-	char		*old_ls_v;
-	
-	declare = "";
-	value = ft_getvalue(content);
+	t_list_env *ls;
+	int i;
+	char *key;
+	char *declare;
+	char *value;
+
+	i = 0;
 	ls = malloc(sizeof(t_list_env));
+	declare = "";
+	key = ft_getkey(content);
+	value = ft_getvalue(content);
 	if (!ls)
 		return (0);
-	ls->key = ft_getkey(content);
+	ls->key = key;
 	ls->value = ft_strtrim_exp_free(value, "\"");
 	declare = ft_strjoin_bb(declare, ls->key);
 	if (ft_detect_equal(ls->key, content) == 0)
 		declare = ft_strjoin(declare, "=");
 	if (ls->value)
 	{
-		old_ls_v = ls->value;
+		char *old_ls_v = ls->value;
 		declare = ft_strjoin(declare, old_ls_v);
 		free(old_ls_v);
 	}
+	// free(declare);
+
+	// declare = ft_strtrim_exp(declare, "\"");
 	ls->content = declare;
 	ls->next = NULL;
+	// free(key);
+	// free(value);
 	return (ls);
 }
 
@@ -236,8 +248,9 @@ int    checker_export(char *str)
    {
 		if (i == 0 && (!ft_isalpha(str[i]) && str[i] != '_'))
 			return (0);
-		else if ((ft_isdigit(str[i]) || ft_isalpha(str[i]) || str[i] == '_') 
-			|| (str[i] == '+' && str[i + 1] == '='))
+		else if ((ft_isdigit(str[i])
+				|| ft_isalpha(str[i]) || str[i] == '_')
+				|| (str[i] == '+' && str[i + 1] == '='))
 			i++;
 		else
 			return (0);
@@ -367,100 +380,33 @@ char *ft_getkey(char *content)
 	key = ft_substr(content, 0, i);
 	return (key);
 }
-char	*ft_get_v_for_value_for_qst(char *content, int j)
+
+// t_list_export *ft_create_export_lst(char **env)
+// {
+//     t_list_export	*node;
+//     t_list_export	*exp;
+//     int				i;
+
+//     i = 0;
+//     exp = NULL;
+//     node = ft_lstnew_mod("?=0");
+//     ft_lstadd_back_export(&exp, node);
+//     while (env[i])
+//     {
+//         node = ft_lstnew_mod(env[i]);
+//         ft_lstadd_back_export(&exp, node);
+//         i++;
+//     }
+//     return (exp);
+// }
+
+void ft_print_lst(t_list_export *ls)
 {
-	char	*value;
-	char	*tmp;
-	
-	tmp = NULL;
-	value = ft_strdup("\"");
-	if (j > 0)
-	{
-		tmp = ft_substr(content, j + 1, ft_strlen(content));
-		value = ft_strjoin(value, tmp);
-		free(tmp);
-	}
-	value = ft_strjoin(value, "\"");
-	free(content);
-	return (value);
-}
-
-char	*ft_getvalue_for_qst(char *content)
-{
-	int		i;
-	int		j;
-	char	*value;
-
-	i = 0;
-	j = 0;
-	value = NULL;
-	while (content[i])
-	{
-		if (content[i] == '=')
-		{
-			j = i;
-			break;
-		}
-		i++;
-	}
-	if (j == 0)
-		return (0);
-	value = ft_get_v_for_value_for_qst(content, j);
-	return (value);
-}
-
-t_list_export *ft_lstnew_mod_for_qst(char *content)
-{
-	t_list_export *ls;
-	int i;
-	char *key;
-	char *value;
-	char *declare;
-
-	i = 0;
-	ls = malloc(sizeof(t_list_export));
-	declare = "declare -x ";
-	key = ft_getkey(content);
-	value = ft_getvalue_for_qst(content);
 	if (!ls)
-		return (0);
-	ls->key = key;
-	ls->value = value;
-	declare = ft_strjoin_bb(declare, ls->key);
-	if (ft_detect_equal(ls->key, content) == 0)
-		declare = ft_strjoin(declare, "=");
-	if (ls->value)
-		declare = ft_strjoin(declare, ls->value);
-	ls->content = declare;
-	ls->next = NULL;
-	return (ls);
-}
-
-
-t_list_export *ft_create_export_lst(char **env)
-{
-    t_list_export	*node;
-    t_list_export	*exp;
-    int				i;
-
-    i = 0;
-    exp = NULL;
-	node = ft_lstnew_mod("?=0");
-   	ft_lstadd_back_export(&exp, node);
-    while (env[i])
-    {
-        node = ft_lstnew_mod(env[i]);
-        ft_lstadd_back_export(&exp, node);
-        i++;
-    }
-    return (exp);
-}
-
-void ft_print_lst(t_list_export *la)
-{
-	int	i;
-
-	i = 0;
+		return ;
+	t_list_export *la = ls;
+	int	i = 0;
+	
 	while (la)
 	{
 		if (la->key[0] == '?')
@@ -538,8 +484,8 @@ void ft_second_delete_func_part_export(t_list_export **curr, char *key)
             temp = current->next;
             current->next = current->next->next;
             free(temp->content);
-            free(temp->key);
 			free(temp->value);
+            free(temp->key);
             free(temp);
             break;
         }
@@ -688,3 +634,324 @@ char **ft_export(t_list_export **exp_lst, char **arg, t_list_env **env_lst)
 	}
 	return (exported);
 }
+// HD
+
+
+/* ************************************************************************** */
+/*                                                                            */
+/*                                                        :::      ::::::::   */
+/*   heredoc.c                                          :+:      :+:    :+:   */
+/*                                                    +:+ +:+         +:+     */
+/*   By: gothmane <gothmane@student.1337.ma>        +#+  +:+       +#+        */
+/*                                                +#+#+#+#+#+   +#+           */
+/*   Created: 2023/05/19 12:27:58 by gothmane          #+#    #+#             */
+/*   Updated: 2023/06/12 15:36:29 by gothmane         ###   ########.fr       */
+/*                                                                            */
+/* ************************************************************************** */
+
+#include "../minishell.h"
+// last v
+int ft_heredocs_counter(char **redir)
+{
+	int i;
+	int counter;
+	int size_redir;
+
+	i = 0;
+	counter = 0;
+	if (!redir)
+		return (-404);
+	size_redir = 0;
+	while (redir[i])
+	{
+		if (ft_strcmp(redir[i], "<<") == 0)
+			counter++;
+		i++;
+	}
+	return (counter);
+}
+
+char *ft_heredoc(t_bash *cmd, t_list_export *exp)
+{
+	int i;
+	char *arr;
+	char *eof;
+	char *data_hd;
+	int j;
+	int k = 0;
+	int fd = -404;
+	char *temp;
+
+	i = 0;
+	arr = NULL;
+	eof = NULL;
+	data_hd = ft_strdup("");
+	temp = NULL;
+	while (cmd && !cmd->redirection[0])
+		cmd = cmd->link;
+	// printf("IN HEREDOC\n");
+	j = ft_heredocs_counter(cmd->redirection);
+	while (cmd->redirection[i] && j != -404)
+	{
+		if (ft_strcmp(cmd->redirection[i], "<<") == 0)
+		{
+			eof = ft_strdup(cmd->file[i]);
+			while (ft_strcmp(cmd->redirection[i], "<<") == 0)
+			{
+				// printf("%d\n", ft_strcmp(cmd->redirection[i], "<<"));
+				// printf("file = %s\n", cmd->file[i]);
+				if (k < (j - 1))
+				{
+					while (k < (j - 1))
+					{
+						arr = readline("> ");
+						if (!arr || ft_strcmp(arr, eof) == 0)
+						{
+							i++;
+							free(eof);
+							eof = ft_strdup(cmd->file[i]);
+							k++;
+							free(arr);
+							break;
+						}
+						free(arr);
+					}
+				}
+				else if (k == (j - 1))
+				{
+					arr = readline("> ");
+					if (!arr || ft_strcmp(arr, eof) == 0)
+					{
+						eof = ft_strjoin(eof, ".tmp");
+						fd = open(eof, O_CREAT | O_RDWR, 0777);
+						cmd->fd_heredoc = fd;
+						write(fd, data_hd, ft_strlen(data_hd));
+						if (data_hd)
+							free(data_hd);
+						if (eof)
+							free(eof);
+						if (arr)
+							free(arr);
+						return (0);
+					}
+					else if (ft_strcmp(arr, eof) != 0)
+					{
+						temp = ft_expand_in_heredoc(arr, exp);
+						if (temp && cmd->h_expn == 0)
+						{
+							if (!data_hd)
+								data_hd = ft_strjoin_bb(data_hd, temp);
+							else
+								data_hd = ft_strjoin(data_hd, temp);
+							data_hd = ft_strjoin(data_hd, "\n");
+						}
+						else
+						{
+							data_hd = ft_strjoin(data_hd, arr);
+							data_hd = ft_strjoin(data_hd, "\n");
+						}
+						free(temp);
+					}
+					free(arr);
+				}
+			}
+		}
+		// close(fd);
+		i++;
+	}
+	free(data_hd);
+	return (0);
+}
+
+int ft_rm_quotes(char *str)
+{
+	int i;
+	char *ptr = malloc(sizeof(char *) * ft_strlen(str) - 2);
+
+	ptr = ft_substr(str, 1, ft_strlen(str) - 2);
+	return (1);
+}
+
+char **ft_exp_here_helper(char *arg, t_list_export *exp)
+{
+	char	**ee;
+	char	*second;
+	int 	e;
+	int 	k;
+	
+	e = 0;
+	k = 0;
+	ee = ft_split(arg, '$');
+	if (!ee)
+		return (NULL);
+	while (ee[e])
+	{
+		k = 0;
+		while (ee[e][k] && ee[e][k] != 39 && ee[e][k] != ' ' && ee[e][k] != '-' && ee[e][k] != '"' && ee[e][k] != '$' && ee[e][k] != '*' && ee[e][k] != '@' &&
+			   (ft_isdigit(ee[e][k]) || ft_isalpha(ee[e][k]) || ee[e][k] == '_' || ee[e][k] == '?'))
+			k++;
+		if (k > 0)
+		{
+			second = ft_substr(ee[e], (0), (k));
+			free(second);
+			second = ft_substr(get_val_for_a_specific_key(exp, second), 1, ft_strlen(get_val_for_a_specific_key(exp, second)) - 2);
+			char *subbed = ft_substr(ee[e], k, ft_strlen(ee[e]));
+			second = ft_strjoin(second, subbed);
+			free(ee[e]);
+			ee[e] = second;
+			free(subbed);
+		}
+		e++;
+	}
+	return (ee);
+}
+char *ft_expand_in_heredoc(char *arg, t_list_export *exp)
+{
+	int		i;
+	int		checker;
+	int		e;
+	char	*joined;
+	char	**ee;
+	
+	e = 0;
+	i = 0;
+	checker = 0;
+	ee = NULL;
+	joined = NULL;
+	if (arg)
+	{
+		ee = ft_exp_here_helper(arg, exp);
+		if (ee[0])
+		{
+			joined = ft_strdup(ee[0]);
+			free(ee[0]);
+		}
+		else
+			return (NULL);
+		e = 1;
+		while (ee[e])
+		{
+			joined = ft_strjoin(joined, ee[e]);
+			free(ee[e]);
+			e++;
+		}
+		free(ee);
+		return (joined);
+	}
+	else
+		return (NULL);
+	return (0);
+}
+
+
+// char *ft_expand_in_heredoc(char *arg, t_list_export *exp)
+// {
+// 	int i;
+// 	char *ptr;
+// 	int j;
+// 	int checker;
+// 	char *first;
+// 	char *last;
+// 	char *second;
+
+// 	i = 0;
+// 	j = 0;
+// 	int tmp_i = 0;
+// 	int k = 0;
+// 	first = NULL;
+// 	second = NULL;
+// 	last = NULL;
+// 	checker = 0;
+// 	while (arg[i])
+// 	{
+// 		if (arg[i] == '$')
+// 		{
+// 			checker = 1;
+// 			break;
+// 		}
+// 		i++;
+// 	}
+// 	if (arg && checker == 1)
+// 	{
+// 		tmp_i = i;
+// 		j = (i + 1);
+// 		// while (arg[j] && arg[j] != 39 && arg[j] != ' ' && arg[j] != '-' && arg[j] != '"' && arg[j] != '$' && arg[j] != '*' && arg[j] != '@' && (ft_isdigit(arg[j]) || ft_isalpha(arg[j]) || arg[j] == '_' || arg[j] == '?'))
+// 		// 	j++;
+// 		char **ee = ft_split(arg, '$');
+// 		int e = 0;
+// 		int k = 0;
+// 		while (ee[e])
+// 		{
+// 			k = 0;
+// 			while (ee[e][k] && ee[e][k] != 39 && ee[e][k] != ' ' && ee[e][k] != '-' && ee[e][k] != '"' && ee[e][k] != '$' && ee[e][k] != '*' && ee[e][k] != '@' &&
+// 				   (ft_isdigit(ee[e][k]) || ft_isalpha(ee[e][k]) || ee[e][k] == '_' || ee[e][k] == '?'))
+// 				k++;
+// 			if (k > 0)
+// 			{
+// 				second = ft_substr(ee[e], (0), (k));
+// 				free(second);
+// 				second = ft_substr(get_val_for_a_specific_key(exp, second), 1, ft_strlen(get_val_for_a_specific_key(exp, second)) - 2);
+// 				char *subbed = ft_substr(ee[e], k, ft_strlen(ee[e]));
+// 				second = ft_strjoin(second, subbed);
+// 				free(ee[e]);
+// 				ee[e] = second;
+// 				free(subbed);
+// 			}
+// 			// ee[e] = second;
+// 			e++;
+// 		}
+// 		// printf("%s\n", ee[0]);
+// 		char *joined = ft_strdup(ee[0]);
+// 		free(ee[0]);
+// 		e = 1;
+// 		while (ee[e])
+// 		{
+// 			joined = ft_strjoin(joined, ee[e]);
+// 			free(ee[e]);
+// 			e++;
+// 		}
+// 		free(ee);
+// 		return (joined);
+// 		// pause();
+// 		// if (i > 0)
+// 		// {
+// 		// 	first = ft_substr(arg, 0, i);
+// 		// }
+// 		// i = tmp_i;
+// 		// if (i >= 0 && j >= 0)
+// 		// {
+// 		// 	second = ft_substr(arg, (i + 1), (j - i - 1));
+// 		// 	free(second);
+// 		// 	second = ft_substr(get_val_for_a_specific_key(exp, second), 1, ft_strlen(get_val_for_a_specific_key(exp, second)) - 2);
+// 		// }
+// 		// k = j;
+// 		// while (arg[k])
+// 		// 	k++;
+// 		// if (k > j)
+// 		// {
+// 		// 	last = ft_substr(arg, j, (k - j));
+// 		// }
+// 		// if (first && second && last)
+// 		// {
+// 		// 	first = ft_strjoin(first, second);
+// 		// 	first = ft_strjoin(first, last);
+// 		// 	free(second);
+// 		// 	free(last);
+// 		// 	return (first);
+// 		// }
+// 		// else if (!first && second && last)
+// 		// {
+// 		// 	second = ft_strjoin(second, last);
+// 		// 	free(last);
+// 		// 	return (second);
+// 		// }
+// 		// else if (!first && !last && second)
+// 		// {
+// 		// 	return (second);
+// 		// }
+// 	}
+// 	else
+// 		return (NULL);
+
+// 	return (ptr);
+// }
