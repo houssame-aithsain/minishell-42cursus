@@ -6,7 +6,7 @@
 /*   By: hait-hsa <hait-hsa@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/06/07 03:47:15 by hait-hsa          #+#    #+#             */
-/*   Updated: 2023/06/11 18:12:37 by hait-hsa         ###   ########.fr       */
+/*   Updated: 2023/06/14 23:10:12 by hait-hsa         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,6 +14,7 @@
 
 int	rm_args_empty_vars(t_bash *tmp, t_bash **ptr, t_rquotes *var, t_ex *ex)
 {
+	(void)ptr;
 	if (ex->key[var->k_c])
 	{
 		if (!ft_strncmp(tmp->arg[var->count] + var->arg_c,

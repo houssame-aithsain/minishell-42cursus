@@ -6,7 +6,7 @@
 /*   By: hait-hsa <hait-hsa@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/06/06 04:57:22 by hait-hsa          #+#    #+#             */
-/*   Updated: 2023/06/14 10:49:17 by hait-hsa         ###   ########.fr       */
+/*   Updated: 2023/06/14 23:11:54 by hait-hsa         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -28,6 +28,7 @@ void	_main_rd_finder_(t_bash **dst, char *split, char *split_plus)
 
 void	_side_rd_finder_(t_bash **dst, char *split, char *split_plus)
 {
+	(void)split;
 	(*dst)->file_free++;
 	(*dst)->file[(*dst)->flex] = malloc(sizeof(char) * ft_strlen(split_plus)
 			+ 1);

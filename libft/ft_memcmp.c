@@ -3,13 +3,13 @@
 /*                                                        :::      ::::::::   */
 /*   ft_memcmp.c                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: gothmane <gothmane@student.1337.ma>        +#+  +:+       +#+        */
+/*   By: hait-hsa <hait-hsa@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2022/10/02 11:42:41 by gothmane          #+#    #+#             */
-/*   Updated: 2022/10/03 11:15:12 by gothmane         ###   ########.fr       */
+/*   Created: 2022/10/02 11:42:41 by hait-hsa          #+#    #+#             */
+/*   Updated: 2023/06/16 19:44:51 by hait-hsa         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
-#include "libft.h"
+
 
 int	ft_memcmp(const void *s1, const void *s2, size_t n)
 {

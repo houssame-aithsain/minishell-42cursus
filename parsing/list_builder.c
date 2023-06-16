@@ -6,7 +6,7 @@
 /*   By: hait-hsa <hait-hsa@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/06/06 02:16:50 by hait-hsa          #+#    #+#             */
-/*   Updated: 2023/06/11 13:40:12 by hait-hsa         ###   ########.fr       */
+/*   Updated: 2023/06/14 23:21:57 by hait-hsa         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -21,6 +21,7 @@ t_bash	*get_last(t_bash *ptr)
 
 t_bash	*get_new_node(t_bash *new, char *str)
 {
+	(void)str;
 	new = malloc(sizeof(t_bash));
 	if (!new)
 		return (0);

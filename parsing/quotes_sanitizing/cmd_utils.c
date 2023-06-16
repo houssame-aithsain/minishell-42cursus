@@ -6,13 +6,13 @@
 /*   By: hait-hsa <hait-hsa@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/06/06 06:03:49 by hait-hsa          #+#    #+#             */
-/*   Updated: 2023/06/11 18:09:45 by hait-hsa         ###   ########.fr       */
+/*   Updated: 2023/06/15 16:12:40 by hait-hsa         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../../minishell.h"
 
-void	ft_free_q(t_bash *tmp, t_rquotes *var)
+void	ft_free_q(t_bash *tmp)
 {
 	int	i;
 
@@ -29,6 +29,7 @@ void	ft_free_q(t_bash *tmp, t_rquotes *var)
 
 int	rm_cmd_empty_vars(t_bash *tmp, t_bash **ptr, t_rquotes *var, t_ex *ex)
 {
+	(void)ptr;
 	if (ex->key[var->k_c])
 	{
 		if (!ft_strncmp(tmp->command + var->cmd_c,
@@ -69,6 +70,7 @@ void	_s_q_c(t_bash **ptr, t_bash *tmp, t_rquotes *var)
 
 int	if_valide_c(t_bash *tmp, t_rquotes *var, t_ex *ex)
 {
+	(void)ex;
 	if (tmp->command[var->cmd_c] && tmp->command[var->cmd_c] == '$'
 		&& tmp->command[var->cmd_c] && tmp->command[var->cmd_c] != ' '
 		&& tmp->command[var->cmd_c + 1] != '?')

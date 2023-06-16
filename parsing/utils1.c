@@ -6,7 +6,7 @@
 /*   By: hait-hsa <hait-hsa@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/06/06 02:07:06 by hait-hsa          #+#    #+#             */
-/*   Updated: 2023/06/14 09:27:40 by hait-hsa         ###   ########.fr       */
+/*   Updated: 2023/06/14 23:13:23 by hait-hsa         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -63,6 +63,7 @@ int	get_operator_length(char *str)
 	int	quote_count;
 	int	quote_type;
 
+	quote_count = 0;
 	quote_type = _get_q_type(str, 0);
 	i = 0;
 	while (str && str[i])

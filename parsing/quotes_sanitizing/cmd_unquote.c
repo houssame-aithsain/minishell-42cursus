@@ -6,7 +6,7 @@
 /*   By: hait-hsa <hait-hsa@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/06/06 05:38:26 by hait-hsa          #+#    #+#             */
-/*   Updated: 2023/06/14 09:29:17 by hait-hsa         ###   ########.fr       */
+/*   Updated: 2023/06/14 23:08:31 by hait-hsa         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,8 +14,15 @@
 
 int	if_empty_cmd(t_bash *tmp, t_bash **ptr, t_rquotes *var, t_ex *ex)
 {
+	(void)ptr;
 	while (var->k_c < ex->len)
 	{
+		if (tmp->command[var->arg_c] == '$' && (!tmp->command[var->arg_c + 1]
+				|| tmp->command[var->arg_c + 1] == ' '))
+		{
+			var->command[var->arg_c++] = tmp->command[var->cmd_c++];
+			return (1);
+		}
 		if (ft_isdigit(tmp->command[var->cmd_c])
 			|| tmp->command[var->cmd_c] == '@')
 		{
@@ -88,7 +95,7 @@ void	quote_sanitizer(t_bash **ptr, t_ex *ex)
 		_cmd_q_rm(tmp, ptr, &var, ex);
 		_args_q_rm(tmp, ptr, &var, ex);
 		_files_q_rm(tmp, ptr, &var, ex);
-		ft_free_q(tmp, &var);
+		ft_free_q(tmp);
 		tmp->file = var.file;
 		tmp->command = var.command;
 		tmp->arg = var.arg;

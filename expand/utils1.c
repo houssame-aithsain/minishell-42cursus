@@ -6,7 +6,7 @@
 /*   By: hait-hsa <hait-hsa@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/06/12 14:57:19 by hait-hsa          #+#    #+#             */
-/*   Updated: 2023/06/14 09:12:12 by hait-hsa         ###   ########.fr       */
+/*   Updated: 2023/06/15 16:19:57 by hait-hsa         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,19 +14,23 @@
 
 int	rd_check(char *str, int i)
 {
+	if (i < 0)
+		return (0);
 	while (i)
 	{
 		if (str[i] == '>' || str[i] == '<')
 			return (1);
 		if (str[i] == ' ')
 		{
-			while (str && str[i] == ' ')
+			while (str && str[i] == ' ' && i)
 				i--;
 			if (str[i] == '>' || str[i] == '<')
 				return (1);
 			else
 				return (0);
 		}
+		if (!i)
+			break ;
 		i--;
 	}
 	return (0);
@@ -61,6 +65,7 @@ int	if_expnd(char *holder, t_ex **expn)
 
 	i = 0;
 	cp = 0;
+	(void)expn;
 	tmp = malloc(sizeof(char) * ft_strlen(holder) + 1);
 	while (holder && holder[i])
 	{

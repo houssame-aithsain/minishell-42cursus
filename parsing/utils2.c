@@ -6,7 +6,7 @@
 /*   By: hait-hsa <hait-hsa@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/06/07 08:40:12 by hait-hsa          #+#    #+#             */
-/*   Updated: 2023/06/14 09:28:18 by hait-hsa         ###   ########.fr       */
+/*   Updated: 2023/06/14 23:11:08 by hait-hsa         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -51,7 +51,7 @@ void	_pipe_checker(t_cp *var, t_bash *dst)
 	}
 }
 
-char	_s_d_quote_t(char *ncoom, char f_type, char s_type, int flag)
+char	_s_d_quote_t(char *ncoom, char f_type, char s_type)
 {
 	int		i;
 	char	quote_type;
@@ -84,7 +84,7 @@ char	quote_t(char *ncoom, char f_type, char s_type, int flag)
 	quote_type = 0;
 	if (flag)
 	{
-		quote_type = _s_d_quote_t(ncoom, f_type, s_type, flag);
+		quote_type = _s_d_quote_t(ncoom, f_type, s_type);
 		return (quote_type);
 	}
 	while (ncoom && ncoom[i])

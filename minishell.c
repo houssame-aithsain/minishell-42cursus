@@ -6,13 +6,15 @@
 /*   By: hait-hsa <hait-hsa@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/04/01 19:42:55 by hait-hsa          #+#    #+#             */
-/*   Updated: 2023/06/08 06:04:32 by hait-hsa         ###   ########.fr       */
+/*   Updated: 2023/06/15 18:33:00 by hait-hsa         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
 
-int main(int argc, char **argv, char **env)
+int	main(int argc, char **argv, char **env)
 {
+	(void)(argc);
+	(void)(argv);
 	readl_to_parse(env);
 }

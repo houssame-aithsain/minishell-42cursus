@@ -6,7 +6,7 @@
 /*   By: hait-hsa <hait-hsa@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/06/11 18:41:38 by hait-hsa          #+#    #+#             */
-/*   Updated: 2023/06/11 18:42:52 by hait-hsa         ###   ########.fr       */
+/*   Updated: 2023/06/15 16:19:42 by hait-hsa         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -37,6 +37,7 @@ t_rquotes	*_var_changer(t_rquotes *var, int flag)
 
 void	str_cp(char *dst, t_rquotes *var, int flag, t_bash **ptr)
 {
+	(void)ptr;
 	var = _var_changer(var, flag);
 	var->quote_numb = 1;
 	(*var->c_c)++;

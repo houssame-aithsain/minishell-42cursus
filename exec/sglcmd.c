@@ -3,29 +3,33 @@
 /*                                                        :::      ::::::::   */
 /*   sglcmd.c                                           :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: gothmane <gothmane@student.1337.ma>        +#+  +:+       +#+        */
+/*   By: hait-hsa <hait-hsa@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2023/05/15 16:42:26 by gothmane          #+#    #+#             */
-/*   Updated: 2023/06/07 22:15:53 by gothmane         ###   ########.fr       */
+/*   Created: 2023/05/15 16:42:26 by hait-hsa          #+#    #+#             */
+/*   Updated: 2023/06/16 19:44:51 by hait-hsa         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../minishell.h"
 
-char	**ft_getpath_cmd(t_list_env *env)
+char	**ft_getpath_cmd(t_list_env **env)
 {
 	int			i;
 	char		**path_splited;
 	t_list_env	*env_ls;
+	int			j;
 
+	j = 0;
 	i = 0;
 	path_splited = NULL;
-	env_ls = env;
+	env_ls = *env;
 	while (env_ls)
 	{
 		if (ft_strcmp(env_ls->key, "PATH") == 0)
 		{
-			path_splited = ft_split(env_ls->value, ':');
+			while (env_ls->content[j] != '=')
+				j++;
+			path_splited = ft_split(&env_ls->content[j + 1], ':');
 			return (path_splited);
 		}
 		env_ls = env_ls->next;
@@ -46,7 +50,7 @@ void	ft_free_args(char **arg)
 	free(arg);
 }
 
-char	*ft_check_access_cmd(t_bash *cmd, t_list_env *env)
+char	*ft_check_access_cmd(t_bash *cmd, t_list_env **env)
 {
 	char	**path_sp;
 	char	*sgl_path;
@@ -65,7 +69,7 @@ char	*ft_check_access_cmd(t_bash *cmd, t_list_env *env)
 		{
 			sgl_path = ft_strdup(path_sp[i]);
 			ft_free_args(path_sp);
-			return(sgl_path);
+			return (sgl_path);
 		}
 		i++;
 	}
@@ -81,88 +85,4 @@ int	ft_count_cmds(t_bash *cmd)
 	while (cmd->arg[i])
 		i++;
 	return (i);
-}
-
-int	ft_count_cmds_exp(t_bash *cmd)
-{
-	int	i;
-
-	i = 0;
-	while (cmd)
-	{
-		i++;
-		cmd = cmd->link;
-	}
-	return (i);
-}
-
-int	ft_lstsize_env(t_list_env *lst)
-{
-	int		count;
-	t_list_env	*n;
-
-	count = 0;
-	n = NULL;
-	if (!lst)
-		return (0);
-	n = lst;
-	while (n)
-	{
-		count++;
-		n = n->next;
-	}
-	return (count);
-}
-
-
-char	**ft_lst_to_array(t_list_env *env)
-{
-	t_list_env	*env_ls;
-	char		**new_ls;
-	int			i;
-
-	env_ls = env;
-	new_ls = malloc(sizeof(char *) * (ft_lstsize_env(env) + 1 ));
-	i = 0;
-	while (env_ls)
-	{
-		new_ls[i++] = env_ls->content;
-		env_ls = env_ls->next;
-	}
-	new_ls[i] = 0;
-	return (new_ls);
-}
-
-char	**ft_final_exec_sgl_cmd(t_bash *cmd, t_list_env *env)
-{
-	char	*path_sp;
-	char	**args;
-	int		i;
-	char	**env_arr;
-
-	i = 0;
-	path_sp = ft_check_access_cmd(cmd, env);
-	args = malloc(sizeof(char *) * (ft_count_cmds(cmd) + 2));
-	env_arr = NULL;
-	if (path_sp)
-	{
-		args[0] = cmd->command;
-		while (cmd->arg[i])
-		{
-			args[i + 1] = cmd->arg[i];
-			i++;
-		}
-		args[i + 1] = NULL;
-		i = fork();
-		if (i == 0)
-		{
-			env_arr = ft_lst_to_array(env);
-			execve(path_sp, args, env_arr);
-		}
-		wait(NULL);
-		free(path_sp);
-		// ft_free_args(args);
-		// return (args);
-	}
-	return (0);
 }

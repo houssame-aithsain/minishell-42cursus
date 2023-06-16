@@ -6,13 +6,13 @@
 /*   By: hait-hsa <hait-hsa@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/06/07 07:26:57 by hait-hsa          #+#    #+#             */
-/*   Updated: 2023/06/14 10:59:54 by hait-hsa         ###   ########.fr       */
+/*   Updated: 2023/06/14 23:05:15 by hait-hsa         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../minishell.h"
 
-int	__rd_errors(char *tmp, int *error, char quote_type, int i)
+void	rr_checker(char *tmp, int *error, char quote_type, int i)
 {
 	if ((tmp[i] == '>' || tmp[i] == '<') && tmp[i] != quote_type)
 		*error = RD_ERROR;
@@ -20,6 +20,11 @@ int	__rd_errors(char *tmp, int *error, char quote_type, int i)
 		i++;
 	if ((tmp[i] == '>' || tmp[i] == '<'))
 		*error = RD_ERROR;
+}
+
+int	__rd_errors(char *tmp, int *error, char quote_type, int i)
+{
+	rr_checker(tmp, error, quote_type, i);
 	if (tmp[i] && tmp[i] == ' ')
 	{
 		while (tmp[i] && tmp[i] == ' ')
@@ -98,6 +103,8 @@ void	check_str_errors(char *tmp, int *error)
 	char	quote_type;
 
 	i = 0;
+	quote_type = 0;
+	*error = 0;
 	while (tmp[i] && tmp[i] == ' ')
 		i++;
 	if (tmp[i] == '|')

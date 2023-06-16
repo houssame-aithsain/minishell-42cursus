@@ -6,7 +6,7 @@
 /*   By: hait-hsa <hait-hsa@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/06/03 19:12:04 by hait-hsa          #+#    #+#             */
-/*   Updated: 2023/06/14 09:11:57 by hait-hsa         ###   ########.fr       */
+/*   Updated: 2023/06/14 23:18:49 by hait-hsa         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -32,6 +32,7 @@ int	get_keys_lent(char *str)
 
 int	if_expn(char *str, t_ex *expn, t_list_export *exp_list)
 {
+	(void)exp_list;
 	if (check_if_var(str + expn->arg_i, expn->q_type)
 		&& !expn->is_heredoc && str[expn->arg_i] == '$')
 		return (1);

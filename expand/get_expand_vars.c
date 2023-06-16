@@ -6,7 +6,7 @@
 /*   By: hait-hsa <hait-hsa@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/05/20 18:56:47 by hait-hsa          #+#    #+#             */
-/*   Updated: 2023/06/14 10:39:39 by hait-hsa         ###   ########.fr       */
+/*   Updated: 2023/06/14 23:16:30 by hait-hsa         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -18,6 +18,7 @@ char	*ft_get_value(char *arg, t_ex *expn, t_list_export *exp_list)
 	int	i;
 
 	i = 0;
+	(void)exp_list;
 	while (arg && arg[i] && arg[i] != expn->q_type)
 	{
 		k_len = -1;
@@ -65,12 +66,12 @@ int	check_if_var(char *str, char quote_type)
 
 char	*if_status(char *holder, t_list_export *exp_list)
 {
-	t_format var;
+	t_format	var;
 
 	var.in = 0;
 	var.len = 0;
 	var.value = NULL;
-	var.arr = malloc(sizeof(char) * ft_strlen(holder));
+	var.arr = malloc(sizeof(char) * ft_strlen(holder) + 1);
 	while (holder && holder[var.in])
 	{
 		if (holder[var.in] == '$' && holder[var.in + 1] == '?')
@@ -119,6 +120,7 @@ t_ex	*get_expand_vars(t_list_export *exp_list, char *holder)
 {
 	t_ex	*expn;
 
+	(void)exp_list;
 	expn = malloc(sizeof(t_ex));
 	expn->i = 0;
 	expn->len = 0;

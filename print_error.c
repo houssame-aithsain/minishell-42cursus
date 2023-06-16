@@ -3,90 +3,43 @@
 /*                                                        :::      ::::::::   */
 /*   print_error.c                                      :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: gothmane <gothmane@student.1337.ma>        +#+  +:+       +#+        */
+/*   By: hait-hsa <hait-hsa@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/05/29 07:49:38 by hait-hsa          #+#    #+#             */
-/*   Updated: 2023/06/12 00:37:05 by gothmane         ###   ########.fr       */
+/*   Updated: 2023/06/15 16:30:19 by hait-hsa         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
 
-int print_error(t_bash *ptr)
+void	print_r(char *str, int ex_s)
 {
-	while(ptr)
+	t_e.exit_status = ex_s;
+	write(2, str, ft_strlen(str));
+}
+
+int	print_error(t_bash *ptr)
+{
+	while (ptr)
 	{
-		if (ptr->error == S_QUOTE)
+		if (ptr->error == S_QUOTE || ptr->error == D_QUOTE)
 		{
-			// write(2,"ERROR\n",6);
-			printf("minishell: unexpected EOF while looking for matching\n");
-			exit_status = 2;
-			return 1;
+			print_r("minishell: unexpected EOF while looking for matching\n", 2);
+			return (1);
 		}
-		else if (ptr->error == D_QUOTE)
+		else if (ptr->error == PIPE || ptr->error == BACK_SLASH
+			|| ptr->error == SEMICOLON || ptr->error == S_ERROR
+			|| ptr->error == RD_ERROR || ptr->error == S_RD_ERROR)
 		{
-			// write(2,"ERROR\n",6);
-			printf("minishell: unexpected EOF while looking for matching\n");
-			exit_status = 2;
-			return 1;
-		}
-		else if (ptr->error == PIPE)
-		{
-			// write(2,"ERROR\n",6);
-			printf("minishell: syntax error\n");
-			exit_status = 2;
-			return 1;
-		}
-		else if (ptr->error == BACK_SLASH)
-		{
-			// write(2,"ERROR\n",6);
-			printf("minishell: syntax error\n");
-			exit_status = 2;
-			return 1;
-		}
-		else if (ptr->error == SEMICOLON)
-		{
-			// write(2,"ERROR\n",6);
-			printf("minishell: syntax error\n");
-			exit_status = 2;
-			return 1;
-		}
-		else if (ptr->error == S_ERROR)
-		{
-			// write(2,"ERROR\n",6);
-			printf("minishell: syntax error\n");
-			exit_status = 2;
-			return 1;
-		}
-		else if (ptr->error == RD_ERROR)
-		{
-			// write(2,"ERROR\n",6);
-			printf("minishell: syntax error\n");
-			exit_status = 2;
-			return 1;
-		}
-		else if (ptr->error == S_RD_ERROR)
-		{
-			// write(2,"ERROR\n",6);
-			printf("minishell: syntax error\n");
-			exit_status = 2;
-			return 1;
+			print_r("minishell: syntax error\n", 2);
+			return (1);
 		}
 		else if (ptr->error == NSFOD)
 		{
-			// write(2,"ERROR\n",6);
-			printf("minishell: No such file or directory\n");
-			exit_status = 2;
-			return 127;
+			print_r("minishell: No such file or directory\n", 2);
+			return (127);
 		}
-		// else if (ptr->error == AR)
-		// {
-		// // 	// write(2,"ERROR\n",6);
-		// 	printf("minishell: ambiguous redirect\n");
-		// 	exit_status = 2;
-		// 	return 1;
-		// }
 		ptr = ptr->link;
 	}
-	return 0;
+	return (0);
 }
