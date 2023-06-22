@@ -26,7 +26,7 @@ void	handler(int sig_t)
 	if (sig_t == SIGQUIT)
 	{
 		rl_on_new_line();
-		// rl_replace_line("", 0);
+		rl_replace_line("", 0);
 		rl_redisplay();
 	}
 }
