@@ -3,7 +3,7 @@
 <body>
   <h1>Minishell 42 Project</h1>
   
-  <img src="https://your-image-url.com" alt="Minishell 42 Project">
+  <img src="https://www.showmetech.com.br/wp-content/uploads//2020/04/WINDOWS-LINUX.png" alt="Minishell 42 Project">
   
   <p>Welcome to the Minishell 42 Project! This project is part of the 42 curriculum and focuses on building a basic shell implementation.</p>
 
@@ -15,9 +15,9 @@
   
   <ol>
     <li>Clone the repository:</li>
-    <pre><code>git clone https://github.com/your-username/minishell.git</code></pre>
+    <pre><code>git clone https://github.com/houssame-aithsain/minishell-42cursus.git</code></pre>
     <li>Change into the project directory:</li>
-    <pre><code>cd minishell</code></pre>
+    <pre><code>cd minishell-42cursus</code></pre>
     <li>Compile the project:</li>
     <pre><code>make</code></pre>
     <li>Once the compilation is complete, you can start using the minishell executable.</li>
