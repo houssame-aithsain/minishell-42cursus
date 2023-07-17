@@ -40,18 +40,6 @@ Hello, World!</code></pre>
   
   <p>For detailed documentation and usage examples, refer to the <a href="https://github.com/your-username/minishell/wiki">Minishell 42 Project Wiki</a>.</p>
 
-  <h2>Contributing</h2>
-  
-  <p>Contributions to the Minishell 42 Project are welcome! If you find any bugs, have suggestions for improvements, or want to add new features, please open an issue or submit a pull request. Make sure to follow the project's code style and guidelines.</p>
-  
-  <ol>
-    <li>Fork the repository</li>
-    <li>Create your feature branch (<code>git checkout -b feature/your-feature</code>)</li>
-    <li>Commit your changes (<code>git commit -am 'Add some feature'</code>)</li>
-    <li>Push to the branch (<code>git push origin feature/your-feature</code>)</li>
-    <li>Open a pull request</li>
-  </ol>
-
   <h2>Introduction</h2>
   <p>The objective of the Minishell 42 Project is to build a basic shell that can interpret and execute commands. You will learn about processes, file descriptors, and various shell functionalities. By completing this project, you will gain a deeper understanding of how shells work and improve your programming skills.</p>
   <h2>Common Instructions</h2>
@@ -105,6 +93,34 @@ Hello, World!</code></pre>
     <li>Implement logical operators (&& and ||) with parenthesis for priorities.</li>
     <li>Make the wildcard * work for the current working directory.</li>
   </ul>
+        <h2>Key Concepts</h2>
+  <h3>Variables</h3>
+  <p>In the Minishell project, you will work with various variables. Environment variables play an important role in storing information about the system environment. You will need to handle these variables and implement built-in commands to manipulate them, such as <code>export</code> and <code>unset</code>.</p>
+  <h3>Command Line</h3>
+  <p>The command line is where users can input commands to be executed by the shell. In your Minishell, you will parse and interpret the command line, handle different types of commands and arguments, and execute them accordingly.</p>
+  <h3>Environment</h3>
+  <p>The environment in the context of a shell refers to the collection of variables, settings, and resources available to the shell and its subprocesses. You will work with the environment variables and manage their values and interactions within your Minishell.</p>
+  <h3>Parsing</h3>
+  <p>Parsing is the process of analyzing and breaking down a command line into its individual components, such as command, arguments, and options. You will need to implement a parsing mechanism to extract the necessary information from the command line in order to execute the commands correctly.</p>
+  <h3>Expansion</h3>
+  <p>Expansion involves expanding variables or special characters to their corresponding values. You will handle the expansion of environment variables (e.g., <code>$HOME</code>) and implement the necessary logic to substitute these variables with their actual values during command execution.</p>
+  <h3>Pipe</h3>
+  <p>The pipe allows the output of one command to be passed as input to another command. You will implement the pipe functionality in your Minishell to enable the execution of commands in a pipeline, where the output of one command serves as the input for the next command.</p>
+  <h3>Leaks and Memory</h3>
+  <p>In Minishell, it is essential to manage memory properly and avoid leaks. Make sure to allocate and free memory appropriately for variables, command execution, and any dynamically allocated resources. Avoid memory leaks to ensure the stability and efficiency of your shell.</p>
+  <h3>Linux</h3>
+  <p>Minishell is designed to run on Linux systems. Familiarize yourself with Linux system calls, file descriptors, signals, and other relevant Linux concepts to implement the required functionality in your shell.</p>
+       <h2>Contributing</h2>
+  
+  <p>Contributions to the Minishell 42 Project are welcome! If you find any bugs, have suggestions for improvements, or want to add new features, please open an issue or submit a pull request. Make sure to follow the project's code style and guidelines.</p>
+  
+  <ol>
+    <li>Fork the repository</li>
+    <li>Create your feature branch (<code>git checkout -b feature/your-feature</code>)</li>
+    <li>Commit your changes (<code>git commit -am 'Add some feature'</code>)</li>
+    <li>Push to the branch (<code>git push origin feature/your-feature</code>)</li>
+    <li>Open a pull request</li>
+  </ol>
 </body>
 </html>
 </body>
