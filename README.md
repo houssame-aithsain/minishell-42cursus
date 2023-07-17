@@ -37,8 +37,6 @@ Hello, World!</code></pre>
   <h2>Documentation</h2>
   
   <p>The Minishell 42 Project involves implementing various features and functionalities of a basic shell. The project documentation provides detailed information on the supported shell commands, syntax, and usage examples. You can find the documentation in the project's repository and follow the guidelines and specifications provided.</p>
-  
-  <p>For detailed documentation and usage examples, refer to the <a href="https://github.com/your-username/minishell/wiki">Minishell 42 Project Wiki</a>.</p>
 
   <h2>Introduction</h2>
   <p>The objective of the Minishell 42 Project is to build a basic shell that can interpret and execute commands. You will learn about processes, file descriptors, and various shell functionalities. By completing this project, you will gain a deeper understanding of how shells work and improve your programming skills.</p>
