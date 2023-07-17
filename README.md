@@ -3,7 +3,7 @@
 <body>
   <h1>Minishell 42 Project</h1>
   
-  <img src="https://www.showmetech.com.br/wp-content/uploads//2020/04/WINDOWS-LINUX.png" alt="Minishell 42 Project">
+  <img src="https://img2.freepng.es/20180615/pxs/kisspng-bash-shell-script-gnu-bourne-shell-bash-5b239a62056153.0040296515290599380221.jpg" alt="Minishell 42 Project">
   
   <p>Welcome to the Minishell 42 Project! This project is part of the 42 curriculum and focuses on building a basic shell implementation.</p>
 
