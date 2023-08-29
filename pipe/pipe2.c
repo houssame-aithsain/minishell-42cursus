@@ -28,10 +28,7 @@ int	ft_find_occur(char *cmd, char c)
 
 int	ft_check_slash_dot(t_bash *cmd, t_list_env *env)
 {
-	int	i;
-
 	(void)env;
-	i = 0;
 	if (ft_find_occur(cmd->command, '/') == 1)
 	{
 		if (access(cmd->command, X_OK | F_OK) == 0)

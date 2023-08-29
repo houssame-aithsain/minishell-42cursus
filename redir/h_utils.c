@@ -24,6 +24,7 @@ int	ft_rm_quotes(char *str)
 {
 	char	*ptr;
 
+	(void)ptr;
 	ptr = malloc(sizeof(char *) * ft_strlen(str) - 2);
 	ptr = ft_substr(str, 1, ft_strlen(str) - 2);
 	return (1);

@@ -52,13 +52,9 @@ void	ft_search_for_var_to_unset_export(t_list_export **head, char *key)
 
 void	ft_unset(t_list_env **env, t_list_export **exp, char **var_to_unset)
 {
-	t_list_env		*temp;
-	t_list_export	*temp_exp;
 	int				i;
 
 	i = 0;
-	temp = *env;
-	temp_exp = *exp;
 	while (var_to_unset[i] && ft_strcmp(var_to_unset[i], "?") != 0
 		&& ft_strcmp(var_to_unset[i], "\t") != 0)
 	{

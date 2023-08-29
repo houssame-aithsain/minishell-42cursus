@@ -12,6 +12,8 @@
 
 #include "../minishell.h"
 
+struct s_ex_s_rl t_e;
+
 void	handler(int sig_t)
 {
 	if (sig_t == SIGINT)

@@ -97,9 +97,7 @@ void	ft_exit(t_bash *ptr)
 void	ft_delete_node_env(t_list_env **head, char *key)
 {
 	t_list_env	*temp;
-	t_list_env	*current;
 
-	current = *head;
 	if (ft_strcmp((*head)->key, key) == 0)
 	{
 		temp = *head;

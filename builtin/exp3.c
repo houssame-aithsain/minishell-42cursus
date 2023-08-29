@@ -58,15 +58,11 @@ int	checker_export(char *str)
 t_list_export	*ft_lstnew_mod_q_merge(char *content, char *ks)
 {
 	t_list_export	*ls;
-	int				i;
-	char			*key;
 	char			*declare;
 
-	i = 0;
 	ls = malloc(sizeof(t_list_export));
 	declare = malloc(sizeof(char *) * ft_strlen(content) + 13);
 	declare = "declare -x ";
-	key = NULL;
 	if (!ls)
 		return (0);
 	ls->key = ks;

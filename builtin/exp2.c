@@ -15,12 +15,10 @@
 t_list_export	*ft_lstnew_mod(char *content)
 {
 	t_list_export	*ls;
-	int				i;
 	char			*key;
 	char			*value;
 	char			*declare;
 
-	i = 0;
 	ls = malloc(sizeof(t_list_export));
 	declare = "declare -x ";
 	key = ft_getkey(content);

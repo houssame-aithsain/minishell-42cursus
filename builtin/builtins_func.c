@@ -83,14 +83,10 @@ int	ft_count_2d(char **two_dem)
 t_list_env	*ft_lstnew_mod_env(char *content)
 {
 	t_list_env	*ls;
-	int			i;
-	char		*key;
 	char		*declare;
 
-	i = 0;
 	ls = malloc(sizeof(t_list_env));
 	declare = "";
-	key = NULL;
 	if (!ls)
 		return (0);
 	ls->key = ft_getkey(content);

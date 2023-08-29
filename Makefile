@@ -46,7 +46,7 @@ OBJS		=	$(SRCS:.c=.o)
 all			:	$(NAME)
 
 $(NAME)		:	$(OBJS) $(LIBFT) 
-				$(CC) ${LDFLAGS} ${CPPFLAGS} ${CFLAGS} $(OBJS) -o $(NAME) $(LIBFT) 
+				$(CC) $(OBJS) $(LIBFT) -o $(NAME) ${LDFLAGS} ${CPPFLAGS}
 $(LIBFT)	:
 				make -C ./libft
 

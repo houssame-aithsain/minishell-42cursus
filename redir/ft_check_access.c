@@ -39,11 +39,9 @@ int	ft_check_access_redir(t_bash *cmd)
 int	ft_check_access_inred(t_bash *cmd)
 {
 	int	i;
-	int	fd;
 	int	counter;
 
 	i = 0;
-	fd = -1;
 	counter = 0;
 	if (!cmd)
 		return (404);

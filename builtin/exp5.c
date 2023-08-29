@@ -67,9 +67,7 @@ void	ft_second_delete_func_part_export(t_list_export **curr, char *key)
 void	ft_delete_node(t_list_export **head, char *key)
 {
 	t_list_export	*temp;
-	t_list_export	*current;
 
-	current = *head;
 	if (ft_strcmp((*head)->key, key) == 0)
 	{
 		temp = *head;

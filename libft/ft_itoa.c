@@ -54,10 +54,8 @@ char	*ft_itoa(int n)
 {
 	int		i;
 	char	*ms;
-	int		sign;
 	long	ln;
 
-	sign = 0;
 	ln = n;
 	i = ft_counter(ln);
 	ms = malloc(i + 1);

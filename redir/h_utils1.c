@@ -16,13 +16,11 @@ int	ft_heredocs_counter(char **redir)
 {
 	int	i;
 	int	counter;
-	int	size_redir;
 
 	i = 0;
 	counter = 0;
 	if (!redir)
 		return (-404);
-	size_redir = 0;
 	while (redir[i])
 	{
 		if (ft_strcmp(redir[i], "<<") == 0)

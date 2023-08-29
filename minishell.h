@@ -13,6 +13,7 @@
 #ifndef MINISHELL_H
 # define MINISHELL_H
 
+# include <stddef.h>
 # include <stdio.h>
 # include "./libft/libft.h"
 # include <fcntl.h>
@@ -21,6 +22,8 @@
 # include <signal.h>
 # include <stdlib.h>
 # include <unistd.h>
+# include <sys/types.h>
+# include <sys/wait.h>
 
 # define TRUE 1
 # define D_QUOTE 2
@@ -34,12 +37,12 @@
 # define NSFOD 9
 # define AR 10
 
-struct s_ex_s_rl
+extern struct s_ex_s_rl
 {
 	int							rl_catch_signals;
 	int							exit_status;
 	int							r;	
-}							t_e;
+}								t_e;
 
 typedef struct s_op
 {

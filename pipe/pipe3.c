@@ -70,14 +70,10 @@ void	_ft_wait_childs_ndexit(t_pipe_s *sp, t_list_env **env, t_bash *cmd,
 void	_ft_free_all_for_pipes(t_pipe_s *sp)
 {
 	int	s;
-	int	se;
 
 	s = 0;
-	se = 0;
 	if ((*sp).pid)
 		free((*sp).pid);
-	if ((*sp).e)
-		se = ft_count_2d((*sp).e);
 	if ((*sp).e)
 		free((*sp).e);
 	if ((*sp).fd)
@@ -94,13 +90,10 @@ void	_ft_free_all_for_pipes(t_pipe_s *sp)
 void	n_pipe(t_bash *cmd, t_list_env **env, t_list_export **exp_ls)
 {
 	t_pipe_s	sp;
-	int			c;
 
-	c = 0;
 	_ft_pipe_init_vars(&sp);
 	if (!cmd)
 		return ;
-	c = __ft_check_heredoc(cmd, *exp_ls);
 	sp.number_of_pipes = ft_count_cmds_exp(cmd) - 1;
 	if (sp.number_of_pipes == 0 && _ft_check_builtin_return_int(cmd) == 0)
 		_ft_cond_one_pipe(cmd, env, exp_ls, &sp.status);

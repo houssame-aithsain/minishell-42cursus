@@ -32,9 +32,7 @@ int	ft_isalpha_check(char c)
 int	ft_export_arg_checker(char *arg)
 {
 	int	is_valid;
-	int	j;
 
-	j = -1;
 	is_valid = 1;
 	if (arg[0] && ft_isalpha_check(arg[0]) == 0)
 		is_valid = 0;

@@ -15,9 +15,7 @@
 t_list_env	*ft_lstnew_mod_env_withplus(char *content, char *key)
 {
 	t_list_env	*ls;
-	int			i;
 
-	i = 0;
 	ls = malloc(sizeof(t_list_env));
 	if (!ls)
 		return (0);
@@ -60,10 +58,8 @@ void	__ft_first_handler_exp_v2(t_list_export **exp_lst, t_list_env **env_lst,
 		char *arg)
 {
 	char		*key;
-	t_list_env	*ss;
 
 	key = NULL;
-	ss = NULL;
 	key = ft_getkey(arg);
 	ft_delete_node(exp_lst, key);
 	ft_delete_node_env(env_lst, key);

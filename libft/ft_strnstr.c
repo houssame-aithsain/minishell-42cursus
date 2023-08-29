@@ -17,12 +17,10 @@ char	*ft_strnstr(const char *haystack, const char *needle, size_t len)
 	size_t	i;
 	size_t	j;
 	size_t	c;
-	size_t	tmp;
 
 	i = 0;
 	j = 0;
 	c = 0;
-	tmp = 0;
 	while (needle[j] && i < len && haystack[i])
 	{
 		if (haystack[i] == needle[j] && j < ft_strlen(needle))

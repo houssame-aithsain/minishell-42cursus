@@ -14,13 +14,11 @@
 
 char	**ft_getpath_cmd(t_list_env **env)
 {
-	int			i;
 	char		**path_splited;
 	t_list_env	*env_ls;
 	int			j;
 
 	j = 0;
-	i = 0;
 	path_splited = NULL;
 	env_ls = *env;
 	while (env_ls)
